@@ -1,0 +1,1276 @@
+﻿
+
+@{
+    ViewBag.Title = "TonKhoMin";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+<link href="~/App_Themes/select2/css/select2.min.css" rel="stylesheet" />
+<style>
+    .select2-container--default {
+        width: 58.333333% !important
+    }
+
+    .dataTables_filter, .dataTables_info {
+        display: none;
+    }
+
+    #them-tonkhomin .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    #sua-tonkhomin .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    input[readonly] {
+        background: #ccc
+    }
+
+    #tb-import-vitri input {
+        height: 30px;
+        border-radius: 5px;
+        width: 100%;
+        padding: 5px;
+    }
+</style>
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="wrap-table__button">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="list-button text-left">
+                        <a href="javascript:;" class="btn btn-add inline" data-toggle="modal"
+                           data-target="#them-tonkhomin">
+                            <img src="../App_Themes/assets/images/btn-add.png" alt=""
+                                 class="inline">
+                            <span class="inline">Thêm</span>
+                        </a>
+                        <a href="javascript:;" class="btn btn-fix tonkhomin-btn-edit inline" data-toggle="modal"
+                           data-target="#form-add-group-user">
+                            <img src="../App_Themes/assets/images/btn-fix.png" alt=""
+                                 class="inline"><span class="inline">Sửa</span>
+                        </a>
+                        <a href="javascript:;" class="btn btn-del tonkhomin-btn-delete inline">
+                            <img src="../App_Themes/assets/images/btn-del.png" alt=""
+                                 class="inline"><span class="inline">Xóa</span>
+                        </a>
+                        <a href="javascript:;" class="btn btn-import tonkhomin-refresh inline">
+                            <img src="../App_Themes/assets/images/btn-import.png" alt=""
+                                 class="inline"><span class="inline">Nạp</span>
+                        </a>
+                        <a href="javascript:;" class="btn btn-export tonkhomin-export inline">
+                            <img src="../App_Themes/assets/images/btn-export.png" alt=""
+                                 class="inline"><span class="inline">Xuất</span>
+                        </a>
+                        <input type="file" id="FileUploadTonKhoMin" style="display: none" />
+                        <button id="btnFileUploadTonKhoMin" class="btn btn-default ">
+                            <img src="/App_Themes/assets/images/paste-excel.png"
+                                 alt=""> Import
+                        </button>
+                        <button id="btn-create-file-excel" class="btn btn-default ">
+                            <img src="/App_Themes/assets/images/paste-excel.png"
+                                 alt=""> Mẫu nhập
+                        </button>
+                        @*<a href="javascript:;" class="btn btn-export vi-tri-btn-import inline">
+                                <img src="../App_Themes/assets/images/btn-import-2.png" alt=""
+                                     class="inline"><span class="inline">Nhập</span>
+                            </a>*@
+                        @*<a href="#" class="btn btn-export
+                                            inline" id="import-vitrimathang">
+                                <img src="/App_Themes/assets/images/btn-import-2.png"
+                                     alt="" class="inline"><span class="inline">Nhập</span>
+                            </a>*@
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div hidden class="box-choose-time" id="date-vitri">
+                        <p class="mr-2">Từ</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_From" data-date-format="mm/dd/yyyy">
+                        <p class="mr-2">Đến</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_To" data-date-format="mm/dd/yyyy">
+
+                        <button class="btn btn-trans" id="btn-search-vitri">
+                            <img src="../App_Themes/assets/images/loading.png" alt="" class="inline">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__body">
+            <div class="wrap-height-table">
+                <table class="table display table-striped" style="width: 100%;"
+                       id="table-tonkhomin">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Mã hàng</th>
+                            <th>Tên hàng</th>
+                            <th>Tồn kho Min A-KH</th>
+                            <th>Tồn kho Min B-CH</th>
+                            <th>Tồn kho Min C-DP</th>
+                            <th>Quy cách</th>
+                            <th>Ngày cập nhật</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+@*<div class="modal fade default-popup " data-keyboard="false" data-backdrop="static" id="import-vi-tri"
+         tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Vị trí mặt hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="default-form">
+                                    <div class="form-group">
+                                        <a href="javascript:;" class="btn btn-success btn-import-vitri">Chọn file</a>
+                                        <a href="/Upload/ExcelExample/vi-tri-mat-hang.xlsx" class="btn btn-export inline">
+                                            <img src="../App_Themes/assets/images/paste-excel.png" alt=""
+                                                 class="inline"><span class="inline">File nhập Mẫu</span>
+                                        </a>
+                                        <input type="file" style="display:none" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class=" hidden import-vitri-excel" />
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>*@
+<!-- nhập vị trí mặt hàng file excel-->
+<div class="modal fade default-popup popup-danh-sach-khach-hang"
+     id="btn-nhap-vitrimathang" tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                    Import vị trí mặt hàng file Excel
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body import-excel-nhapkho">
+                <div class="container-fluid wrap-table-2 table-mat-hang p-0">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="wrap-height-table-2 bg-white p-2 mt-2 border">
+                                <table class="table display table-striped" id="table-import-vitrimathang" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Mã hàng</th>
+                                            <th>Vị trí KH</th>
+                                            <th>Vị trí CH</th>
+                                            <th>Vị trí DP</th>
+                                            <th>Quy Cách</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-2 pl-0 sidebar-search">
+                            <div class="box-border mt-4">
+                                <p class="box-border__title bg-gray">Import Excel</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <input type="file" id="FileUploadTonKhoMin" style="display: none" />
+                                    <select name="" id="" class="col-10 h-100">
+                                    </select>
+                                    <button id="btnFileUploadTonKhoMin" class="btn btn-default ">
+                                        <img src="/App_Themes/assets/images/paste-excel.png"
+                                             alt="">
+                                    </button>
+                                </div>
+                                <div class="list-button mt-2">
+                                    @*<a id="btn-nap-file-excel" href="#" class="btn   btn-search d-block">
+                                            <img src="/App_Themes/assets/images/loading.png" alt=""
+                                                 class="inline"><span class="inline">
+                                                Nạp lại từ
+                                                Excel
+                                            </span>
+                                        </a>*@
+                                    <a id="btn-create-file-excel" href="#" class="btn btn-search d-block">
+                                        <img src="/App_Themes/assets/images/btn-export.png" alt=""
+                                             class="inline"><span class="inline">
+                                            Tạo mẫu nhập
+                                            liệu
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                            @*<div class="list-button list-button-last mt-3">
+                                    <p> <u>Chú ý</u>: Khi import hệ thống sẽ không import những dòng trên excel có số lượng = 0 và những mặt hàng nào bị trùng hệ thống sẽ tự động tăng số lượng </p>
+                                </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-ghi-import-vitrimathang" type="button" class="btn btn-primary">Lưu</button>
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade default-popup popup-them-so-du-quy" data-keyboard="true" data-backdrop="static" id="them-tonkhomin"
+     tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                    Tồn kho min
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="default-form">
+                                <div class="form-group">
+                                    <label for="">Mặt hàng</label>
+                                    <select id="sl-tonkhomin" name="sl-tonkhomin" class="col-7 p-0">
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Tồn kho Min A-KH</label>
+                                    <input type="number" name="txt-tonkhomin1" class="col-7 p-0" />
+                                    @*<select name="vt1" class="col-7 p-0 select-kho-hang">
+                                            <option value="0">-Chọn vị trí 1-</option>
+                                        </select>*@
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Tồn kho Min B-CH</label>
+                                    <input type="number" name="txt-tonkhomin2" class="col-7 p-0" />
+                                    @*<select name="vt2" class="col-7 p-0 select-kho-hang">
+                                            <option value="0">-Chọn vị trí 2-</option>
+                                        </select>*@
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Tồn kho Min C-DP</label>
+                                    <input type="number" name="txt-tonkhomin3" class="col-7 p-0" />
+                                    @*<select name="vt3" class="col-7 p-0 select-kho-hang">
+                                            <option value="0">-Chọn vị trí 3-</option>
+                                        </select>*@
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Quy Cách</label>
+                                    <input name="txt-quycach" class="col-7 p-0" />
+                                    @*<select name="vt4" class="col-7 p-0 select-kho-hang">
+                                            <option value="0">-Chọn vị trí 4-</option>
+                                        </select>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary tonkhomin-add">Lưu</button>
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade default-popup popup-them-so-du-quy" id="sua-tonkhomin" data-keyboard="true" data-backdrop="static"
+     tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                    Vị trí mặt hàng
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="default-form">
+                                <div class="form-group">
+                                    <label for="">Mặt hàng</label>
+                                    <input id="sl-tonkhomin-edit" readonly name="sl-tonkhomin-edit" class="col-7 p-0" />
+                                    <input type="hidden" name="MHID-edit" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Tồn kho Min A-KH</label>
+                                    <input type="number" name="txt-edit-tonkho1" class="col-7 p-0" />
+                                    @*<select name="vt1-edit" class="col-7 p-0 select-kho-hang">
+                                            <option value="0">-Chọn vị trí 1-</option>
+                                        </select>*@
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Tồn kho Min B-CH</label>
+                                    <input type="number" name="txt-edit-tonkho2" class="col-7 p-0" />
+                                    @*<select name="vt2-edit" class="col-7 p-0 select-kho-hang">
+                                            <option value="0">-Chọn vị trí 2-</option>
+                                        </select>*@
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Tồn kho Min C-DP</label>
+                                    <input type="number" name="txt-edit-tonkho3" class="col-7 p-0" />
+                                    @*<select name="vt3-edit" class="col-7 p-0 select-kho-hang">
+                                            <option value="0">-Chọn vị trí 3-</option>
+                                        </select>*@
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Quy Cách</label>
+                                    <input name="txt-edit-quycach" class="col-7 p-0" />
+                                    @*<select name="vt4-edit" class="col-7 p-0 select-kho-hang">
+                                            <option value="0">-Chọn vị trí 4-</option>
+                                        </select>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary tonkhomin-edit">Lưu</button>
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section myScripts{
+    <script src="~/App_Themes/select2/js/select2.full.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('input[name="chooseDate_From"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            $('input[name="chooseDate_To"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            let fdate = moment(new Date()).format('DD/MM/yyyy');
+            let tdate = moment(new Date()).format('DD/MM/yyyy');
+            let tblTonkhomin_filterValues = {};
+
+            // Import excel
+            $("#btnFileUploadTonKhoMin").click(function () {
+                $("#FileUploadTonKhoMin").click();
+            })
+            $("#FileUploadTonKhoMin").change(function (event) {
+                UploadFile(event);
+            })
+            //end
+
+            function UploadFile(event) {
+                let input, files;
+                input = event.target;
+                files = input.files;
+                Array.from(files).map((file, index) => {
+                    console.log(file);
+                    var formdata = new FormData();
+                    formdata.append('fileupload', file);
+                    $.ajax({
+                        async: false,
+                        type: 'POST',
+                        url: '/TonKhoMin/Import',
+                        data: formdata,
+                        dataType: 'json',
+                        contentType: false,
+                        processData: false,
+                        success: function (msg) {
+                            console.log(msg.data);
+                            if (msg.status == 1) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: 'Thành công',
+                                    icon: 'check',
+                                    classBackground: 'noti-success',
+                                    timeout: 3000
+                                })
+                                table_tonkhomin.columns.adjust().draw();
+                            }
+                            else if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                $("#FileUploadTonKhoMin").val('');
+                            }
+                            else if (msg.status == 3) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                            }
+                        },
+                        error: function (error) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: 'Không thành công, vui lòng kiểm tra file import và thử lại',
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            $("#FileUploadTonKhoMin").val('');
+                        }
+                    });
+                })
+            }
+
+            $('#table-tonkhomin thead tr').clone(true).appendTo('#table-tonkhomin thead');
+            $('#table-tonkhomin thead tr:eq(1) th').each(function (i) {
+                var title = $(this).text();
+                if (i == 0 || i == 3 || i == 4 || i == 5 || i == 6 || i == 7) {
+                    return $(this).html('');
+                }
+                else {
+                    $(this).html('<input type="text" placeholder="Search ' + title.trim() + '" data-search-tonkhomin="' + i + '"/>');
+                }
+            });
+            var table_tonkhomin = $('#table-tonkhomin').DataTable({
+                serverSide: true,
+                bFilter: false,
+                bInfo: false,
+                "order": [[7, "desc"]],
+                ajax: function (data, callback, settings) {
+                    tblTonkhomin_filterValues.draw = data.draw;
+                    tblTonkhomin_filterValues.search = data.search["value"];
+                    tblTonkhomin_filterValues.fdate = fdate;
+                    tblTonkhomin_filterValues.tdate = tdate;
+                    tblTonkhomin_filterValues.start = data.start;
+                    tblTonkhomin_filterValues.length = data.length;
+                    tblTonkhomin_filterValues.order = data.order[0].column;
+                    tblTonkhomin_filterValues.dir = data.order[0].dir;
+
+                    tblTonkhomin_filterValues.search1 = $('input[data-search-tonkhomin=1]').val();
+                    tblTonkhomin_filterValues.search2 = $('input[data-search-tonkhomin=2]').val();
+                    //tblTonkhomin_filterValues.search3 = $('input[data-search-tonkhomin=3]').val();
+                    //tblTonkhomin_filterValues.search4 = $('input[data-search-tonkhomin=4]').val();
+                    //tblTonkhomin_filterValues.search5 = $('input[data-search-tonkhomin=5]').val();
+                    //tblTonkhomin_filterValues.search6 = $('input[data-search-tonkhomin=6]').val();
+
+                    $.ajax({
+                        url: '/TonKhoMin/LoadTonKhoMin',
+                        method: 'GET',
+                        data: tblTonkhomin_filterValues,
+                        success: function (msg) {
+                            console.log(msg.data);
+                            if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                return false;
+                            } else if (msg.status == 3) {
+                                if (tblTonkhomin_filterValues.draw != 1) {
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'error_outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                    return false;
+                                }
+                            }
+                        },
+                    }).done(callback, () => {
+
+                    });
+                },
+                columnDefs: [
+                    {
+                        "targets": [0],
+                        "orderable": false
+                    },
+                ],
+                columns: [
+                    { "data": null },
+                    { "data": "MHCODE" },
+                    { "data": "MHTEN" },
+                    { "data": "MinA" },
+                    { "data": "MinB" },
+                    { "data": "MinC" },
+                    { "data": "QuyCach" },
+                    { "data": "NgaySuaString" }
+                ],
+                fnCreatedRow: function (nRow, data, iDataIndex) {
+                    $(nRow).attr('data-id', data.MHID);
+
+                },
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                    return nRow;
+                },
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 15
+                },
+                // scrollY: '300px',
+                scrollResize: true,
+                scrollY: 100,
+                scrollCollapse: true,
+                bInfo: false,
+                paging: true,
+                searching: true,
+                pageLength: 5,
+                lengthChange: false,
+                orderCellsTop: true
+            });
+
+            $(table_tonkhomin.table().container()).on('keyup change', 'thead input', delay(function (e) {
+                table_tonkhomin.draw();
+            }, 1000));
+
+            //Search ngày -> ngày
+            $('#btn-search-vitri').click(function () {
+                fdate = $('#date-vitri input[name="chooseDate_From"]').val();
+                tdate = $('#date-vitri input[name="chooseDate_To"]').val();
+                table_tonkhomin.columns.adjust().draw();
+            });
+
+            //Click
+            $(document).on('click', '#table-tonkhomin tbody tr', function () {
+                $(this).addClass('selected');
+                $('#table-tonkhomin tbody tr').not(this).removeClass('selected');
+            });
+
+            //Double Click
+            $(document).on('dblclick', '#table-tonkhomin tbody tr', async function () {
+                $(this).addClass('selected');
+                $('#table-tonkhomin tbody tr').not(this).removeClass('selected');
+                let id = $(this).attr('data-id');
+                $.ajax({
+                    async: false,
+                    type: 'GET',
+                    url: '/TonKhoMin/LoadTonKhoMinInfo?MHID=' + id + '',
+                    dataType: 'json',
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            if (msg.data.length <= 0) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: 'Không tìm thấy sản phẩm',
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                })
+                            } else {
+                                $('input[name="MHID-edit"]').val(msg.data[0].MHID);
+                                $('input[name="sl-tonkhomin-edit"]').val(msg.data[0].MHCODE + ' - ' + msg.data[0].MHTEN);
+                                $('input[name="txt-edit-tonkho1"]').val(msg.data[0].MinA);
+                                $('input[name="txt-edit-tonkho2"]').val(msg.data[0].MinB);
+                                $('input[name="txt-edit-tonkho3"]').val(msg.data[0].MinC);
+                                $('input[name="txt-edit-quycach"]').val(msg.data[0].QuyCach);
+                                $('#sua-tonkhomin').modal();
+                            }
+                        } else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            })
+                        } else {
+                            if (msg.draw != 1) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                                return false;
+                            }
+                        }
+                    },
+                    error: function (error) {
+                        console.log('e');
+                    }
+                });
+            });
+
+            //Save (Insert)
+            $('.tonkhomin-add').click(function () {
+                let data = new FormData();
+                let mh = $('select[name="sl-tonkhomin"]').val();
+
+                if (mh == '' || mh == undefined || mh == null) {
+                    toast.create({
+                        title: 'Notification!',
+                        text: 'Vui lòng chọn mặt hàng',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    })
+                    return false;
+                }
+                data.append("MHID", $('select[name="sl-tonkhomin"]').val());
+
+                let va = $('input[name="txt-tonkhomin1"]').val();
+                if (va == "") {
+                    toast.create({
+                        title: 'Notification!',
+                        text: 'Vui lòng số tồn kho min cho mặt hàng',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    })
+                    return false;
+                }
+                data.append("MinA", $('input[name="txt-tonkhomin1"]').val());
+                data.append("MinB", $('input[name="txt-tonkhomin2"]').val());
+                data.append("MinC", $('input[name="txt-tonkhomin3"]').val());
+                data.append("QuyCach", $('input[name="txt-quycach"]').val());
+
+                $.ajax({
+                    async: false,
+                    type: 'POST',
+                    url: '/TonKhoMin/InsertTonKhoMin',
+                    data: data,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            table_tonkhomin.draw();
+                            $('#them-tonkhomin').modal('hide');
+                            toast.create({
+                                title: 'Notification!',
+                                text: 'Thành công',
+                                icon: 'check',
+                                classBackground: 'noti-success',
+                                timeout: 3000
+                            })
+                        } else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            })
+                        } else {
+                            if (msg.draw != 1) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                                return false;
+                            }
+                        }
+                    },
+                    error: function (error) {
+                        console.log('e');
+                    }
+                });
+            });
+
+            //Update
+            $('.tonkhomin-btn-edit').click(function () {
+                let id = $('#table-tonkhomin tbody tr.selected').attr('data-id');
+                if (id == undefined) {
+                    toast.create({
+                        title: 'Notification!',
+                        text: 'Vui lòng chọn mặt hàng',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    async: false,
+                    type: 'GET',
+                    url: '/TonKhoMin/LoadTonKhoMinInfo?MHID=' + id + '',
+                    dataType: 'json',
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            if (msg.data.length <= 0) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: 'Không tìm thấy sản phẩm',
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                })
+                            } else {
+                                $('input[name="MHID-edit"]').val(msg.data[0].MHID);
+                                $('input[name="sl-tonkhomin-edit"]').val(msg.data[0].MHCODE + ' - ' + msg.data[0].MHTEN);
+
+                                $('input[name="txt-edit-tonkho1"]').val(msg.data[0].MinA);
+                                $('input[name="txt-edit-tonkho2"]').val(msg.data[0].MinB);
+                                $('input[name="txt-edit-tonkho3"]').val(msg.data[0].MinC);
+                                $('input[name="txt-edit-quycach"]').val(msg.data[0].QuyCach);
+                                $('#sua-tonkhomin').modal();
+                            }
+                        } else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            })
+                        } else {
+                            if (msg.draw != 1) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                                return false;
+                            }
+                        }
+                    },
+                    error: function (error) {
+                        console.log('e');
+                    }
+                });
+
+
+            });
+
+            //Delete
+            $('.tonkhomin-btn-delete').click(function () {
+                let $this = $('#table-tonkhomin tbody tr.selected');
+
+                let id = $('#table-tonkhomin tbody tr.selected').attr('data-id');
+                if (id == undefined) {
+                    toast.create({
+                        title: 'Notification!',
+                        text: 'Vui lòng chọn mặt hàng',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    });
+                    return false;
+                }
+                if (confirm('Bạn có muốn xóa mặt hàng này?')) {
+                    $.ajax({
+                        async: false,
+                        type: 'POST',
+                        url: '/TonKhoMin/DeleteTonKhoMin?MHID=' + id + '',
+                        dataType: 'json',
+                        success: function (msg) {
+                            if (msg.status == 1) {
+                                table_tonkhomin.ajax.reload();
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: 'Thành công',
+                                    icon: 'check',
+                                    classBackground: 'noti-success',
+                                    timeout: 3000
+                                });
+                            } else if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                })
+                            } else {
+                                if (msg.draw != 1) {
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'error_outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                    return false;
+                                }
+                            }
+                        },
+                        error: function (error) {
+                            console.log('e');
+                        }
+                    });
+
+                }
+            });
+
+            //Reset
+            $('.tonkhomin-refresh').click(function () {
+                table_tonkhomin.draw();
+            });
+
+            //Export
+            $('.tonkhomin-export').click(function () {
+                $.ajax({
+                    method: "GET",
+                    url: "/TonKhoMin/CheckRoleXuatTonKhoMin",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            //let link = window.location.origin;
+                            //link = link + "/TonKhoMin/TonKhoMinExport?" + serialize(tblTonkhomin_filterValues) + ``;
+                            let link = "/TonKhoMin/TonKhoMinExport?" + serialize(tblTonkhomin_filterValues) + ``;
+                            window.open(link);
+                        }
+                        else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                        }
+                        else if (msg.status == 3) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            location.reload();
+                        }
+                    }
+                })
+            });
+
+            //#region Select2 mặt hàng
+            $("#sl-tonkhomin").select2({
+                ajax: {
+                    url: "/MatHang/LoadMatHangSelect2",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            start: (params.page || 0) * 50,
+                            length: 50,
+                            page: params.page
+                        }
+                        // Query parameters will be ?search=[term]&type=public
+                        return query;
+                    },
+                    processResults: function (data, params) {
+                        var select2Data = $.map(data.data, function (obj) {
+                            obj.text = obj.text + " - " + obj.MHTEN;
+                            return obj;
+                        });
+                        return {
+                            results: select2Data,
+                            pagination: {
+                                more: ((params.page + 1) * 50) < data.recordsTotal
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: 'Nhập mã mặt hàng / tên mặt hàng',
+                minimumInputLength: 1,
+                templateResult: formatRepo,
+                dropdownParent: $('#them-tonkhomin')
+            });
+
+            function formatRepo(repo) {
+                if (repo.loading) {
+                    return repo.text;
+                }
+                var $container = $(
+                    "<div class='select2-result-repository clearfix'>" + repo.text +
+                    "</div>"
+                );
+                return $container;
+            }
+            //#endregion
+
+            //Save (Update)
+            $('.tonkhomin-edit').click(function () {
+                let data = new FormData();
+                let id = $('input[name="MHID-edit"]').val();
+                data.append("MHID", id);
+                data.append("MinA", $('input[name="txt-edit-tonkho1"]').val());
+                data.append("MinB", $('input[name="txt-edit-tonkho2"]').val());
+                data.append("MinC", $('input[name="txt-edit-tonkho3"]').val());
+                data.append("QuyCach", $('input[name="txt-edit-quycach"]').val());
+                $.ajax({
+                    async: false,
+                    type: 'POST',
+                    url: '/TonKhoMin/UpdateTonKhoMin',
+                    data: data,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            table_tonkhomin.ajax.reload();
+                            $('#sua-tonkhomin').modal('hide');
+                            $('input[name="MHID-edit"]').val('');
+                            toast.create({
+                                title: 'Notification!',
+                                text: 'Thành công',
+                                icon: 'check',
+                                classBackground: 'noti-success',
+                                timeout: 3000
+                            })
+                        } else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            })
+                        } else {
+                            if (msg.draw != 1) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                                return false;
+                            }
+                        }
+                    },
+                    error: function (error) {
+                        console.log('e');
+                    }
+                });
+            });
+
+            // Nút Tạo Excel nhập liệu
+            $('#btn-create-file-excel').on('click', function () {
+                $.ajax({
+                    method: "GET",
+                    url: "/TonKhoMin/CheckRoleXuatTonKhoMin",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            var link = `/TonKhoMin/CreateTonKhoMinExcel`
+                            window.open(link)
+                        }
+                        else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                        }
+                        else if (msg.status == 3) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            location.reload();
+                        }
+                    }
+                })
+            })
+
+            //var objmathangimport = [];
+
+            //$("#import-vitrimathang").click(function () {
+            //    $.ajax({
+            //        method: "GET",
+            //        url: "/TonKhoMin/CheckRoleXuatTonKhoMin",
+            //        contentType: "application/json; charset=utf-8",
+            //        dataType: "json",
+            //        success: function (msg) {
+            //            if (msg.status == 1) {
+            //                $('#btn-nhap-vitrimathang').modal();
+            //            }
+            //            else if (msg.status == 2) {
+            //                toast.create({
+            //                    title: 'Notification!',
+            //                    text: msg.message,
+            //                    icon: 'error_outline',
+            //                    classBackground: 'noti-error',
+            //                    timeout: 3000
+            //                });
+            //            }
+            //            else if (msg.status == 3) {
+            //                toast.create({
+            //                    title: 'Notification!',
+            //                    text: msg.message,
+            //                    icon: 'error_outline',
+            //                    classBackground: 'noti-error',
+            //                    timeout: 3000
+            //                });
+            //                location.reload();
+            //            }
+            //        }
+            //    })
+            //})
+
+            //$("#btn-nhap-vitrimathang").on('shown.bs.modal', function () {
+            //    $("#btn-ghi-import-vitrimathang").prop('disabled', true);
+            //    tbTonKhoMinImport.columns.adjust().draw();
+            //})
+            //$('#btn-nhap-vitrimathang').on('hidden.bs.modal', function (e) {
+            //    objmathangimport = [];
+            //    tbTonKhoMinImport.clear();
+            //    tbTonKhoMinImport.rows.add(objmathangimport);
+            //    tbTonKhoMinImport.columns.adjust().draw();
+            //    $("#FileUploadTonKhoMin").val('');
+            //})
+            //$("#btn-ghi-import-vitrimathang").click(function () {
+            //    console.log(objmathangimport);
+            //    $.ajax({
+            //        async: false,
+            //        type: 'POST',
+            //        url: '/TonKhoMin/ImportInsertViTri',
+            //        data: JSON.stringify(objmathangimport),
+            //        dataType: 'json',
+            //        contentType: "application/json; charset=utf-8",
+            //        success: function (msg) {
+            //            if (msg.status == 1) {
+            //                table_tonkhomin.draw();
+            //                $("#btn-nhap-vitrimathang").modal('hide');
+            //                toast.create({
+            //                    title: 'Notification!',
+            //                    text: 'Thành công',
+            //                    icon: 'check',
+            //                    classBackground: 'noti-success',
+            //                    timeout: 3000
+            //                })
+            //            } else if (msg.status == 2) {
+            //                toast.create({
+            //                    title: 'Notification!',
+            //                    text: msg.message,
+            //                    icon: 'error_outline',
+            //                    classBackground: 'noti-error',
+            //                    timeout: 3000
+            //                })
+            //            } else if (msg.status == 3) {
+            //                toast.create({
+            //                    title: 'Notification!',
+            //                    text: msg.message,
+            //                    icon: 'error_outline',
+            //                    classBackground: 'noti-error',
+            //                    timeout: 3000
+            //                });
+            //                location.reload();
+            //            }
+            //        },
+            //        error: function (error) {
+            //            console.log('e');
+            //        }
+            //    });
+            //})
+
+
+            //$("#btnFileUploadTonKhoMin").click(function () {
+            //    $("#FileUploadTonKhoMin").click();
+            //})
+            //$("#FileUploadTonKhoMin").change(function (event) {
+            //    let input, files;
+            //    input = event.target;
+            //    files = input.files;
+            //    Array.from(files).map((file, index) => {
+            //        console.log(file);
+            //        var formdata = new FormData();
+            //        formdata.append('fileupload', file);
+            //        $.ajax({
+            //            async: false,
+            //            type: 'POST',
+            //            url: '/TonKhoMin/Import',
+            //            data: formdata,
+            //            dataType: 'json',
+            //            contentType: false,
+            //            processData: false,
+            //            success: function (msg) {
+            //                console.log(msg.data);
+            //                if (msg.status == 1) {
+            //                    objmathangimport = msg.data;
+            //                    tbTonKhoMinImport.clear();
+            //                    tbTonKhoMinImport.rows.add(objmathangimport);
+            //                    tbTonKhoMinImport.columns.adjust().draw();
+            //                    $("#btn-ghi-import-vitrimathang").prop('disabled', false);
+            //                }
+            //                else if (msg.status == 2) {
+            //                    toast.create({
+            //                        title: 'Notification!',
+            //                        text: msg.message,
+            //                        icon: 'error_outline',
+            //                        classBackground: 'noti-error',
+            //                        timeout: 3000
+            //                    });
+            //                    $("#FileUploadTonKhoMin").val('');
+            //                }
+            //                else if (msg.status == 3) {
+            //                    toast.create({
+            //                        title: 'Notification!',
+            //                        text: msg.message,
+            //                        icon: 'error_outline',
+            //                        classBackground: 'noti-error',
+            //                        timeout: 3000
+            //                    });
+            //                    location.reload();
+            //                }
+            //            },
+            //            error: function (error) {
+            //                toast.create({
+            //                    title: 'Notification!',
+            //                    text: 'Không thành công, vui lòng kiểm tra file import và thử lại',
+            //                    icon: 'error_outline',
+            //                    classBackground: 'noti-error',
+            //                    timeout: 3000
+            //                });
+            //                $("#FileUploadTonKhoMin").val('');
+            //            }
+            //        });
+            //    })
+            //})
+            //var objmathangimport = [];
+            //var tbTonKhoMinImport = $('#table-import-vitrimathang').DataTable({
+            //    bFilter: false,
+            //    bInfo: false,
+            //    data: objmathangimport,
+            //    select: true,
+            //    fnCreatedRow: function (nRow, data, iDataIndex) {
+            //        $(nRow).attr('data-id', data.MHID);
+            //    },
+            //    "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+            //        var info = $(this).DataTable().page.info();
+            //        $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+            //        return nRow;
+            //    },
+            //    columns: [
+            //        { data: null },
+            //        { data: "MHCODE" },
+            //        { data: "ViTri1" },
+            //        { data: "ViTri2" },
+            //        { data: "ViTri3" },
+            //        { data: "ViTri4" },
+            //    ],
+            //    scrollX: true,
+            //    scrollResize: true,
+            //    scrollY: 100,
+            //    scrollCollapse: true,
+            //    searching: "true",
+            //    paging: true,
+            //    scroller: {
+            //        loadingIndicator: true,
+            //        displayBuffer: 200,
+            //    },
+            //    'lengthChange': false,
+            //    "footerCallback": function (row, data, start, end, display) {
+            //        var api = this.api(), data;
+            //        var total = data.length;
+            //        if (total > 0) {
+            //            ////update footer
+            //            $(api.column(0).footer()).html(total);
+            //        }
+            //        else {
+            //            $(api.column(0).footer()).html("0");
+            //        }
+            //    }
+            //});
+        });
+        serialize = function (obj) {
+            var str = [];
+            for (var p in obj)
+                if (obj.hasOwnProperty(p)) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+            return str.join("&");
+        }
+        function delay(fn, ms) {
+            let timer = 0
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(fn.bind(this, ...args), ms || 0)
+            }
+        }
+
+
+
+    </script>
+}

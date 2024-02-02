@@ -1,0 +1,922 @@
+﻿
+@{
+    ViewBag.Title = "DanhSachPhienKiemHang";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+<link href="~/App_Themes/select2/css/select2.min.css" rel="stylesheet" />
+<style>
+    #sua-vi-tri .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    input[readonly] {
+        background: #ccc
+    }
+
+    #tb-import-vitri input {
+        height: 30px;
+        border-radius: 5px;
+        width: 100%;
+        padding: 5px;
+    }
+    main.wrapper {
+        height: calc(100vh - 30px) !important;
+    }
+    .wrap-table__body .wrap-height-table {
+        height: 100%!important;
+    }
+</style>
+<main class="wrapper">
+    <div class="container-fluid"style="height: 100%;">
+        <div class="wrap-table__header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box-choose-time" id="date-vitri">
+                        <p class="mr-2">Từ</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_From" data-date-format="mm/dd/yyyy">
+                        <p class="mr-2">Đến</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_To" data-date-format="mm/dd/yyyy">
+                        <div class="list-button">
+                            <a href="#" class="btn btn-export
+                            inline" id="btn-search-phienkiemhang">
+                                <img src="/App_Themes/assets/images/btn-search.png" alt="" class="inline"><span class="inline">Tìm kiếm</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__body" style="height: calc(100% - 35px);">
+            <div class="wrap-height-table" style="height: 100%;">
+                <table class="table display table-striped" style="width: 100%;"
+                       id="table-phien-kiem-hang">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Mã phiên kiểm kho</th>
+                            <th>Nhà cung cấp</th>
+                            <th>Người kiểm</th>
+                            <th>Ghi chú</th>
+                            <th>Ngày kiểm</th>
+                            <th>Trạng thái</th>
+                            <th>Người khóa</th>
+                            <th>Ngày khóa</th>
+                            <th>Thùng hàng</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="modal fade default-popup popup-danh-sach-km"
+     id="danhsachthunghang"
+     tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                    Danh sách thùng hàng
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="wrap-height-table">
+                                <table class="table"
+                                       id="table_danhsachthunghang" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Mã đơn</th>
+                                            <th>Mã thùng</th>
+                                            <th>Ghi chú mã đơn</th>
+                                            <th>Ngày tạo</th>
+                                            <th>Người tạo</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade default-popup popup-danh-sach-khach-hang"
+     id="chitietthunghang"
+     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                    Chi tiet thùng hàng
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid mt-3">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="box-border h-100">
+                                <div class="default-form">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="">Thùng hàng</label>
+                                                <input type="hidden" name="txt_thunghangid" />
+                                                <input type="text"
+                                                       class="col-7 p-0" name="txt_mathung" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 pl-0 pr-5">
+                                            <div class="form-group">
+                                                <label for="">Mã đơn</label>
+                                                <input type="text"
+                                                       class="col-9
+                                        p-0" name="txt_madon" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="">Ghi chú</label>
+                                                <textarea class="col-md-10 p-0" name="txt_ghichuthung"
+                                                          cols="30" rows="4"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="box-border h-100">
+                                <form action="" class="default-form">
+                                    <div class="form-group">
+                                        <label for="">Phiếu</label>
+                                        <input type="text" class="col-7
+                                p-0" name="txt_phieu" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Ngày kiểm phiếu</label>
+                                        <input type="text"
+                                               class="choose-date datetimepicker date-only
+                                col-7 p-0" name="txt_ngaytaothung" disabled>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="box-border h-100">
+                                <label for="">Search mặt hàng</label>
+                                <select id="sl-mathang" name="sl-mathang" class="col-12 p-0 mt-1">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="wrap-height-table">
+                                <table class="table display nowrap table-striped
+                                    row-border
+                                    order-column"
+                                       id="table_chitietthunghang" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên hàng</th>
+                                            <th>SL kiểm</th>
+                                            <th>SL đã về</th>
+                                            <th>Ghi chú</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn_updatethunghang">Lưu</button>
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section myScripts{
+    <script src="~/App_Themes/select2/js/select2.full.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var objDanhSachThungHang = [];
+            var objDanhSachCTThungHang = [];
+            var objDeleteDanhSachCTThungHang = [];
+            $('input[name="chooseDate_From"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            $('input[name="chooseDate_To"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            let fdate = moment(new Date()).format('DD/MM/yyyy');
+            let tdate = moment(new Date()).format('DD/MM/yyyy');
+            let tbPhienKiemKho_filterValues = {};
+            $('#table-phien-kiem-hang thead tr').clone(true).appendTo('#table-phien-kiem-hang thead');
+            $('#table-phien-kiem-hang thead tr:eq(1) th').each(function (i) {
+                var title = $(this).text();
+                if (i == 0 || i == 5 || i == 6 || i == 7 || i == 8 || i == 9) {
+                    return $(this).html('');
+                }
+                else {
+                    $(this).html('<input type="text" placeholder="Search ' + title.trim() + '" data-search-vitri-mathang="' + i + '"/>');
+                }
+                $('input', this).on('keyup change', delay(function () {
+                    table_phienkiemhang
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                }, 1000));
+            });
+
+
+            var table_phienkiemhang = $('#table-phien-kiem-hang').DataTable({
+                serverSide: true,
+                bFilter: false,
+                bInfo: false,
+                "order": [[1, "desc"]],
+                ajax: function (data, callback, settings) {
+                    tbPhienKiemKho_filterValues.draw = data.draw;
+                    tbPhienKiemKho_filterValues.search = data.search["value"];
+                    tbPhienKiemKho_filterValues.FromDate = fdate;
+                    tbPhienKiemKho_filterValues.ToDate = tdate;
+                    tbPhienKiemKho_filterValues.start = data.start;
+                    tbPhienKiemKho_filterValues.length = data.length;
+                    tbPhienKiemKho_filterValues.order = data.order[0].column;
+                    tbPhienKiemKho_filterValues.dir = data.order[0].dir;
+
+                    tbPhienKiemKho_filterValues.SearchMaNhapKho = $('input[data-search-vitri-mathang=1]').val();
+                    tbPhienKiemKho_filterValues.SearchNCC = $('input[data-search-vitri-mathang=2]').val();
+                    tbPhienKiemKho_filterValues.SearchNguoiLap = $('input[data-search-vitri-mathang=3]').val();
+                    tbPhienKiemKho_filterValues.SearchGhiChu = $('input[data-search-vitri-mathang=4]').val();
+
+                    $.ajax({
+                        url: '/KiemHang/DataPhienKiemHang',
+                        method: 'GET',
+                        data: tbPhienKiemKho_filterValues,
+                        success: function (msg) {
+                            console.log(msg.data);
+                            if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                return false;
+                            } else if (msg.status == 3) {
+                                if (tbPhienKiemKho_filterValues.draw != 1) {
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'error_outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                    return false;
+                                }
+                            }
+                        },
+                    }).done(callback, () => {
+
+                    });
+                },
+                columns: [
+                    { "data": null },
+                    { "data": "maPhienNhapKho" },
+                    { "data": "khachHangTen" },
+                    { "data": "nguoiTao" },
+                    { "data": "ghiChu" },
+                    { "data": "ngayTao" },
+                    {
+                        "data": "trangThai",
+                        render: function (data, type, row) {
+                            if (data == 0) {
+                                return 'Chưa khóa';
+                            }
+                            else if (data == 1) {
+                                return 'Đã khóa';
+                            }
+                            return ''
+                        }
+                    },
+                    { data: "nguoiSua" },
+                    { data: "ngaySua" },
+                    {
+                        data: "phienKiemHangID",
+                        render: function (data, type, row) {
+                            return '<a type="button" id="chuanbihang-choxuly" value="' + data + '" href="#" class="btn btn-success text-white mr-1" >Danh sách thùng hàng</a>';
+                        }
+                    }
+                ],
+                columnDefs: [
+                    {
+                        "targets": [0],
+                        "orderable": false
+                    },
+                ],
+                fnCreatedRow: function (nRow, data, iDataIndex) {
+                    $(nRow).attr('data-phienKiemHangID', data.phienKiemHangID);
+                    $(nRow).attr('data-phienNhapKhoID', data.phienNhapKhoID);
+                },
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                    return nRow;
+                },
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 15
+                },
+                // scrollY: '300px',
+                scrollResize: true,
+                scrollY: 100,
+                scrollCollapse: true,
+                bInfo: false,
+                paging: true,
+                searching: false,
+                pageLength: 5,
+                lengthChange: false,
+                orderCellsTop: true
+            });
+
+            //$(table_phienkiemhang.table().container()).on('keyup change', 'thead input', delay(function (e) {
+            //    table_phienkiemhang.draw();
+            //}, 1000));
+
+            //Search ngày -> ngày
+            $('#btn-search-phienkiemhang').click(function () {
+                fdate = $('#date-vitri input[name="chooseDate_From"]').val();
+                tdate = $('#date-vitri input[name="chooseDate_To"]').val();
+                table_phienkiemhang.columns.adjust().draw();
+            });
+
+            //Click
+            $(document).on('click', '#table-phien-kiem-hang tbody tr', function () {
+                $(this).addClass('selected');
+                $('#table-phien-kiem-hang tbody tr').not(this).removeClass('selected');
+            });
+
+            //Double Click
+            $(document).on('dblclick', '#table-phien-kiem-hang tbody tr', async function () {
+                $(this).addClass('selected');
+                $('#table-phien-kiem-hang tbody tr').not(this).removeClass('selected');
+                let phienKiemHangID = $(this).attr('data-phienKiemHangID');
+                let phienNhapKhoID = $(this).attr('data-phienNhapKhoID');
+                if (phienKiemHangID != undefined && phienKiemHangID != '' && phienNhapKhoID != undefined && phienNhapKhoID != '') {
+                    let link = '/KiemHang/LoadChiTietPhienKiemHang?phienKiemHangID=' + phienKiemHangID + '&phienNhapKhoID=' + phienNhapKhoID;
+                    window.open(link);
+                }
+                else {
+                    toast.create({
+                        title: 'Notification!',
+                        text: 'Không tìm thấy phiên',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    })
+                }
+            });
+            //#endregion
+
+            $('#table-phien-kiem-hang').on('click', 'a[type="button"]', function () {
+                let phienKiemHangID = $(this).attr('value');
+                DanhSachThunghang(phienKiemHangID);
+            });
+
+            // Danh sách mặt hàng
+            var table_DanhSachThungHang = $('#table_danhsachthunghang').DataTable({
+                serverSide: false,
+                data: objDanhSachThungHang,
+                bFilter: false,
+                bInfo: false,
+                "order": [[1, "desc"]],
+                columns: [
+                    { "data": null },
+                    { "data": "maDon" },
+                    { "data": "maThung" },
+                    { data: "ghiChu" },
+                    {
+                        data: "ngayTao",
+                        type: 'datetime',
+                    },
+                    { data: "nguoiTao"}
+                ],
+                columnDefs: [
+                    {
+                        "targets": [0],
+                        "orderable": false
+                    },
+                ],
+                scrollX: true,
+                scrollResize: true,
+                scrollY: true,
+                scrollCollapse: true,
+                //searching: "true",
+                paging: true,
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 100,
+                },
+                fnCreatedRow: function (nRow, data, iDataIndex) {
+                    $(nRow).attr('data-id', data.thungHangID);
+                },
+                'lengthChange': false,
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                    return nRow;
+                },
+            });
+
+            function DanhSachThunghang(phienKiemHangID) {
+                $.ajax({
+                    type: "GET",
+                    url: "/KiemHang/LoadDataDanhSachThunghang",
+                    data: { phienKiemHangID: phienKiemHangID },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        console.log(msg)
+                        if (msg.status == 1) {
+                            objDanhSachThungHang = [];
+                            objDanhSachThungHang = msg.data
+                            table_DanhSachThungHang.clear();
+                            table_DanhSachThungHang.rows.add(objDanhSachThungHang);
+                            $('#danhsachthunghang').modal();
+                            console.log(objDanhSachThungHang);
+                            table_DanhSachThungHang.columns.adjust().draw();
+                        }
+                        else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                        }
+                        else if (msg.status == 3) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            location.reload();
+                        }
+                    }
+                })
+            }
+            $('#danhsachthunghang').on('shown.bs.modal', function () {
+                table_DanhSachThungHang.columns.adjust().draw();
+            });
+            //end
+
+
+            // Chi tiết thùng hàng
+            var table_ctthunghang = $('#table_chitietthunghang').DataTable({
+                serverSide: false,
+                data: objDanhSachCTThungHang,
+                bFilter: false,
+                bInfo: false,
+                "order": [[1, "desc"]],
+                columns: [
+                    { "data": null },
+                    { "data": "matHangCode" },
+                    { "data": "matHangTen" },
+                    {
+                        "data": "soLuongKiem",
+                        render: function (data, type, full, meta) {
+                            return '<input type="text" style="width:100%" name="txt_soluongkiem" value="' + data + '"/>';
+                        }
+                    },
+                    {
+                        "data": "soLuongDaVe",
+                        render: function (data, type, full, meta) {
+                            return '<input type="text" style="width:100%" name="txt_soluongdave" value="' + data + '"/>';
+                        }
+                    },
+                    {
+                        data: "ghiChu",
+                        render: function (data, type, full, meta) {
+                            return '<input type="text" style="width:100%" name="txt_ghichumathang" value="' + data + '"/>';
+                        }
+                    },
+                    {
+                        data: null,
+                        "className": "text-center",
+                        defaultContent: '<a type="button" id="xoa-ctphieu" class="btn btn-danger text-white" >Xóa</a>'
+                    },
+                ],
+                columnDefs: [
+                    {
+                        "targets": [0],
+                        "orderable": false
+                    },
+                ],
+                scrollX: true,
+                scrollResize: true,
+                scrollY: true,
+                scrollCollapse: true,
+                //searching: "true",
+                paging: true,
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 100,
+                },
+                'lengthChange': false,
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                    return nRow;
+                },
+            });
+            $('#table_danhsachthunghang tbody').on('dblclick', 'tr', function () {
+                $(this).addClass('selected')
+                $('#table_danhsachthunghang tbody tr').not(this).removeClass('selected')
+                let thungHangID = $(this).attr('data-id');
+                let phienKiemHangID = table_phienkiemhang.row('.selected').data().phienKiemHangID;
+                DetailThungHang(phienKiemHangID, thungHangID);
+                CTThungHang(phienKiemHangID, thungHangID);
+            });
+            function DetailThungHang(phienKiemHangID, thungHangID) {
+                $.ajax({
+                    type: "GET",
+                    url: "/KiemHang/LoadDataDetailThungHang",
+                    data: { phienKiemHangID: phienKiemHangID, thungHangID: thungHangID },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        console.log(msg)
+                        if (msg.status == 1) {
+                            $('input[name="txt_thunghangid"]').val(thungHangID);
+                            $('input[name="txt_ngaytaothung"]').val(msg.data[0].ngayTao);
+                            $('input[name="txt_madon"]').val(msg.data[0].maDon);
+                            $('input[name="txt_mathung"]').val(msg.data[0].maThung);
+                            $('textarea[name="txt_ghichuthung"]').val(msg.data[0].ghiChu);
+                            $('input[name="txt_phieu"]').val(table_phienkiemhang.row('.selected').data().maPhienNhapKho);
+                        }
+                        else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                        }
+                        else if (msg.status == 3) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            location.reload();
+                        }
+                    }
+                })
+            }
+            function CTThungHang(phienKiemHangID, thungHangID) {
+                $.ajax({
+                    type: "GET",
+                    url: "/KiemHang/LoadDataCTThungHang",
+                    data: { phienKiemHangID: phienKiemHangID, thungHangID: thungHangID },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        console.log(msg)
+                        if (msg.status == 1) {
+                            objDanhSachCTThungHang = [];
+                            objDanhSachCTThungHang = msg.data
+                            table_ctthunghang.clear();
+                            table_ctthunghang.rows.add(objDanhSachCTThungHang);
+                            $('#chitietthunghang').modal();
+                            console.log(objDanhSachCTThungHang);
+                        }
+                        else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                        }
+                        else if (msg.status == 3) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            location.reload();
+                        }
+                    }
+                })
+            }
+            $('#chitietthunghang').on('shown.bs.modal', function () {
+                table_ctthunghang.columns.adjust().draw();
+            });
+
+            function ResetThungHang() {
+                $('input[name="txt_thunghangid"]').val('');
+                objDanhSachCTThungHang = [];
+                objDeleteDanhSachCTThungHang = [];
+                $('#chitietthunghang').modal('hide');
+                let phienKiemHangID = table_phienkiemhang.row('.selected').data().phienKiemHangID;
+                DanhSachThunghang(phienKiemHangID);
+                table_DanhSachThungHang.columns.adjust().draw();
+            }
+
+            //#Region Thay doi du lieu o chi tiet ban hang
+            $("#table_chitietthunghang").on("change", "tr", async function () {
+                let soLuongKiem = $(this).find('input[name="txt_soluongkiem"]').val();
+                let soLuongDaVe = $(this).find('input[name="txt_soluongdave"]').val();
+                let ghiChu = $(this).find('input[name="txt_ghichumathang"]').val();
+                let obj = table_ctthunghang.row($(this)).data();
+                let i = table_ctthunghang.row($(this)).index();
+                if (objDanhSachCTThungHang[i].matHangID == obj.matHangID) {
+                    if (objDanhSachCTThungHang[i].status == 1) {
+                        objDanhSachCTThungHang[i].status = 2;
+                    }
+                    objDanhSachCTThungHang[i].soLuongKiem = soLuongKiem;
+                    objDanhSachCTThungHang[i].soLuongDaVe = soLuongDaVe
+                    objDanhSachCTThungHang[i].ghiChu = ghiChu;
+                    console.log(objDanhSachCTThungHang);
+                }
+                else {
+                    toast.create({
+                        title: 'Notification!',
+                        text: 'Không tìm thấy mặt hàng vui lòng bấm F5',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    });
+                    return;
+                }
+                table_ctthunghang.clear();
+                table_ctthunghang.rows.add(objDanhSachCTThungHang);
+                table_ctthunghang.columns.adjust().draw();
+                table_ctthunghang.row(i).select();
+            });
+            //end
+
+            $('#btn_updatethunghang').click(function () {
+                UpdateThungHang();
+            })
+
+            async function UpdateThungHang() {
+                if (objDanhSachCTThungHang.length <= 0) {
+                    alert("Hãy chọn 1 mặt hàng trước khi ghi");
+                    return;
+                }
+                let data = {};
+                data.idPhienKiemHang = table_phienkiemhang.row('.selected').data().phienKiemHangID;
+                data.ghiChu = $('textarea[name="txt_ghichuthung"]').val();
+                data.ID = $('input[name="txt_thunghangid"]').val();
+                let objchange = objDanhSachCTThungHang.filter((element) => {
+                    if (element.status >= 2) {
+                        return element
+                    }
+                })
+                $.ajax({
+                    type: 'POST',
+                    url: '/KiemHang/UpdateThungHang',
+                    data: JSON.stringify({
+                        thunghang: data,
+                        dataList: objchange,
+                        dataListDelete: objDeleteDanhSachCTThungHang,
+                    }),
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            ResetThungHang();
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'check',
+                                classBackground: 'noti-success',
+                                timeout: 3000
+                            })
+                        }
+                        else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            })
+                        }
+                        else if (msg.status == 3) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            location.reload();
+                        }
+                    },
+                    error: function (error) {
+                        console.log('e');
+                    }
+                });
+            }
+            //end
+
+            //#region Select2 mặt hàng
+            $("#sl-mathang").select2({
+                ajax: {
+                    url: "/KiemHang/LoadMatHang",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            start: (params.page || 0) * 50,
+                            length: 50,
+                            page: params.page,
+                            phienNhapKhoID: table_phienkiemhang.row('.selected').data().phienNhapKhoID
+                        }
+                        // Query parameters will be ?search=[term]&type=public
+                        return query;
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 0;
+                        return {
+                            results: data.items,
+                            pagination: {
+                                more: ((params.page + 1) * 50) < data.total_count
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: 'Nhập mã mặt hàng / tên mặt hàng',
+                minimumInputLength: 1,
+                templateResult: formatRepo,
+                dropdownParent: $("#chitietthunghang")
+            });
+            function formatRepo(repo) {
+                if (repo.loading) {
+                    return repo.text;
+                }
+                var $container = $(
+                    "<div class='select2-result-repository clearfix'>" + repo.text +
+                    "</div>"
+                );
+                return $container;
+            }
+            $('#chitietthunghang').on('hidden.bs.modal', function (e) {
+                $('#sl-mathang').val('').trigger('change.select2')
+            })
+            //#endregion
+
+            $('#sl-mathang').on('change', function (e) {
+                KiemTraMatHang();
+            });
+            function KiemTraMatHang() {
+                //let matHangCode = $('input[name="txt_mahang"]').val();
+                let matHangID = $('#sl-mathang').val();
+                let data = {};
+                data.matHangID = matHangID;
+                data.PhienNhapKhoID = table_phienkiemhang.row('.selected').data().phienNhapKhoID;
+                data.PhienKiemHangID = table_phienkiemhang.row('.selected').data().phienKiemHangID;
+                $.ajax({
+                    method: "POST",
+                    url: "/KiemHang/KiemTraMatHang",
+                    data: data,
+                    success: function (msg) {
+                        console.log(msg.data[0]);
+                        if (msg.status == 1) {
+                            let data = msg.data[0];
+                            let obj =
+                            {
+                                matHangID: data.matHangID,
+                                matHangCode: data.matHangCode,
+                                matHangTen: data.matHangTen,
+                                soLuongKiem: 0,
+                                soLuongDaVe: 0,
+                                ghiChu: '',
+                                status: 3,
+                                maThung: data.maThung
+                            };
+
+                            var i = objDanhSachCTThungHang.findIndex(x => x.matHangID == obj.matHangID);
+                            if (i >= 0) {
+                                objDanhSachCTThungHang[i].soLuongKiem = intVal(objDanhSachCTThungHang[i].soLuongKiem) + 1;
+                            }
+                            else {
+                                objDanhSachCTThungHang.push(obj);
+                            }
+                            console.log(objDanhSachCTThungHang);
+                            table_ctthunghang.clear();
+                            table_ctthunghang.rows.add(objDanhSachCTThungHang);
+                            table_ctthunghang.columns.adjust().draw();
+                        }
+                        else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                        }
+                        else if (msg.status == 3) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            location.reload();
+                        }
+                    }
+                })
+            }
+            //Delete xóa một hàng
+            $('#table_chitietthunghang').on('click', 'a[type="button"]', function () {
+                let Phieu = table_ctthunghang.row($(this).closest('tr')).data();
+                let index = table_ctthunghang.row($(this).closest('tr')).index();
+                if (Phieu.status == 1 || Phieu.status == 2) {
+                    if (confirm('Bạn chắc chắn muốn xóa không?')) {
+                        objDanhSachCTThungHang.splice(index, 1); //Remove
+                        objDeleteDanhSachCTThungHang.push(Phieu.CTPhienKiemhang);
+                    }
+                }
+                else {
+                    objDanhSachCTThungHang.splice(index, 1); //Remove
+                }
+
+                table_ctthunghang.clear().columns.adjust().draw();
+                table_ctthunghang.rows.add(objDanhSachCTThungHang);
+                table_ctthunghang.columns.adjust().draw();
+            });
+            //END
+
+        });
+        serialize = function (obj) {
+            var str = [];
+            for (var p in obj)
+                if (obj.hasOwnProperty(p)) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+            return str.join("&");
+        }
+        function delay(fn, ms) {
+            let timer = 0
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(fn.bind(this, ...args), ms || 0)
+            }
+        }
+        var intVal = function (i) {
+            return typeof i === 'string' ?
+                i.replace(/\./g, '') :
+                typeof i === 'number' ?
+                    i : 0;
+        };
+    </script>
+}

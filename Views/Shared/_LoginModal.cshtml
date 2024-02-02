@@ -1,0 +1,122 @@
+﻿@{
+
+    if (Session["UID"] == null)
+    {
+        <style>
+            .invalid-message {
+                display: none;
+                width: 100%;
+                margin-top: .25rem;
+                font-size: 80%;
+                color: #dc3545;
+            }
+        </style>
+        <div class="modal fade active default-popup" id="popup-dang-nhap" data-backdrop="static" data-keyboard="false"
+             tabindex="-1"
+             role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                            Đăng
+                            nhập
+                        </h5>
+                    </div>
+                    <div class="modal-body position-relative" style="padding-bottom:1.3rem;">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="wrap-form-login">
+                                        <div class="needs-validation">
+                                            <div class="form-group">
+                                                <label for="txt-userId-login">Tên đăng nhập:</label>
+                                                <input type="text" class="form-control"
+                                                       id="txt-userId-login" placeholder="Username" value=""
+                                                       name="txt-userId-login" required>
+                                                <div class="invalid-feedback">
+                                                    Vui lòng nhập tên đăng nhập
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="txt-pwd-login">Mật khẩu:</label>
+                                                <input type="password"
+                                                       class="form-control" id="txt-pwd-login" value=""
+                                                       placeholder="password"
+                                                       name="txt-pwd-login" required>
+
+                                                <div class="invalid-feedback">
+                                                    Vui lòng nhập mật khẩu
+                                                </div>
+                                            </div>
+                                            <div class="invalid-message">
+
+                                            </div>
+                                            <div class="action-login mt-4">
+                                                <div class="row">
+                                                    <div class="col-md-12 text-center">
+                                                        <button type="button" class="btn btn-primary btn-login">
+                                                            Đăng nhập
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+
+                $('#popup-dang-nhap').modal();
+                $('#popup-dang-nhap').modal({ backdrop: 'static', keyboard: false })
+            });
+            $('#popup-dang-nhap').on('hidden.bs.modal', function () {
+                $('#popup-dang-nhap').modal();
+            });
+            $('.btn-login').click(function () {
+                let userId = $('input[name="txt-userId-login"]').val();
+                let pwd = $('input[name="txt-pwd-login"]').val();
+                let $currentForm = $('#popup-dang-nhap');
+                let inputs = $currentForm.find('*:required');
+                for (let i = 0; i < inputs.length; i++) {
+                    if (inputs[i].value === "") {
+                        $(inputs[i]).parent().addClass('was-validated');
+                        return false;
+                        break;
+                    }
+                }
+                $currentForm.addClass('was-validated');
+                $.ajax({
+                    type: "POST",
+                    url: "/Login/SignIn",
+                    data: '{userId: "' + userId + '",pwd:"' + pwd + '"}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.rs) {
+                            location.reload();
+                        } else {
+                            $('.invalid-message').html(msg.message);
+                            $('.invalid-message').css({ "display": "block" });
+                        }
+                    },
+                    error: function (xmlhttprequest, textstatus, errorthrow) {
+                        console.log("load fails");
+                    }
+                });
+            });
+            $('#popup-dang-nhap').on('keyup', 'input', function (e) {
+                if (e.keyCode === 13) {
+                    $('.btn-login').click();
+                }
+            });
+        </script>
+    }
+}

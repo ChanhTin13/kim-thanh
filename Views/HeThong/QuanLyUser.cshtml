@@ -1,0 +1,1169 @@
+﻿
+@{
+    ViewBag.Title = "QuanLyUser";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+<style>
+    .table-nv tbody tr.selected td:nth-child(3) {
+        color: #ffffff;
+    }
+
+    .table-nv tbody tr.selected td:nth-child(2) {
+        color: #ffffff;
+    }
+    .pull-left {
+        float: left !important;
+    }
+
+    .pull-right {
+        float: right !important;
+    }
+
+    .wrap-height-table {
+        min-height: calc(100vh - 31rem);
+        max-height: calc(100vh - 31rem);
+    }
+
+
+    .was-validated input:required:valid, input:required.is-valid {
+        border-color: #15af76;
+        background-image: url('/App_themes/assets/images/btn-tick.png');
+        background-repeat: no-repeat;
+        background-position: right calc(.375em + .23438rem) center;
+    }
+
+    .was-validated input:required:invalid {
+        border-color: #ff0000;
+        background-image: url(/App_themes/assets/images/error-form.png);
+        background-repeat: no-repeat;
+        background-position: right calc(.375em + 0.1rem) center;
+    }
+
+    table {
+        width: 100% !important
+    }
+
+    .popup-chuc-nang .modal-dialog {
+        max-width: calc(100vw - 150px);
+    }
+
+    .list-button {
+        margin-top: 10px;
+    }
+
+    tr.disabled {
+        background: #f1f1f0;
+    }
+</style>
+
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs tab-default">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab"
+                           href="#nguoi-su-dung">
+                            Người
+                            sử dụng
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#phan-quyen">
+                            Phân
+                            quyền
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div class="tab-pane active" id="nguoi-su-dung">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ql-user user-table">
+                            <div class="user-table__header">
+                                <p>Quản lí user</p>
+                            </div>
+                            <div class="wrap-height-table">
+                                <table class="table display table-striped table-nsd table-fixed" style="width: 100%;" id="table-nsd">
+                                    <thead>
+                                        <tr>
+                                            <th class="stt"></th>
+                                            <th class="name-user">
+                                                Tên truy cập
+                                            </th>
+                                            <th class="name-full">
+                                                Tên đầy đủ
+                                            </th>
+                                            <th>
+                                                Thuộc nhóm
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-action mt-3">
+                                <div class="row">
+                                    @*<div class="col-md-5">
+
+                                            <div class="custom-control custom-checkbox table-checkbox">
+                                                <input type="checkbox"
+                                                       class="custom-control-input"
+                                                       id="defaultUnchecked">
+                                                <label class="custom-control-label"
+                                                       for="defaultUnchecked">
+                                                    Hiển thị cả nhóm
+                                                    trực
+                                                    thuộc
+                                                </label>
+                                            </div>
+                                        </div>*@
+                                    <div class="col-md-12">
+                                        <div class="list-button text-right">
+                                            <a href="javascript:;" class="btn btn-add inline add-new-user">
+                                                <img src="/App_Themes/assets/images/btn-add.png" alt="" class="inline"> <span class="inline">Thêm</span>
+                                            </a>
+                                            <a href="javascript:;" class="btn btn-fix inline  update-user">
+                                                <img src="/App_Themes/assets/images/btn-fix.png" alt="" class="inline"><span class="inline">Sửa</span>
+                                            </a>
+                                            <a href="javascript:;" class="btn btn-fix inline delete-user">
+                                                <img src="/App_Themes/assets/images/btn-del.png"
+                                                     alt="" class="inline"><span class="inline">Xóa</span>
+                                            </a>
+                                            <a href="javascript:;" class="btn btn-fix inline export-user">
+                                                <img src="/App_Themes/assets/images/btn-export.png"
+                                                     alt="" class="inline"><span class="inline">Xuất</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- POPUP FORM ADD -->
+                                <div class="modal fade default-popup popup-form-add" id="form-add"
+                                     tabindex="-1" role="dialog"
+                                     aria-labelledby="exampleModalCenterTitle"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered"
+                                         role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title title-popup"
+                                                    id="exampleModalLongTitle">
+                                                    Thêm/sửa user
+                                                </h5>
+                                                <button type="button" class="close"
+                                                        data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <form class="add-info">
+                                                                <div class="form-row">
+                                                                    <p>Tên đăng nhập</p>
+                                                                    <div class="box-input">
+                                                                        <input name="txt-userId" required type="text">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <p>Mật khẩu</p>
+
+                                                                    <div class="box-input">
+                                                                        <input placeholder="*******" name="txt-userPwd" type="password">
+
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <p>Xác nhận mật khẩu</p>
+                                                                    <div class="box-input">
+                                                                        <input placeholder="*******" name="txt-userPwdConfirm" type="password">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <p>Tên đầy đủ</p>
+                                                                    <div class="box-input">
+                                                                        <input name="txt-userFullName" required type="text">
+                                                                        <span class="search-icon" id="button-danh-sach-nv" data-toggle="modal" data-target="#danh-sach-nv"><i class="fas fa-list"></i></span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <p>Email</p>
+                                                                    <input name="txt-userEmail" type="Email">
+                                                                </div>
+                                                            </form>
+                                                            <div class="wrap-table" style="max-height: 450px; overflow: auto;">
+                                                                <p class="title">
+                                                                    Trực thuộc
+                                                                    nhóm user
+                                                                </p>
+                                                                <table id="table-groupuser" class="table
+                                                                    table-hover
+                                                                    table-fixed
+                                                                    table-ddform-a">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="stt">#</th>
+                                                                            <th class="name-user">
+                                                                                Tên nhóm
+                                                                            </th>
+                                                                            <th class="name-full">
+                                                                                Chọn
+                                                                            </th>
+                                                                            <th>
+                                                                                Nhóm chính
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="tbody-groupuser">
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="content-check-kho">
+                                                                <p class="title-small">
+                                                                    Kho
+                                                                    được quyền nhập liệu
+                                                                </p>
+                                                                <div class="wrap-table">
+                                                                    <p class="title">
+                                                                        Check
+                                                                        vào
+                                                                        các kho cho
+                                                                        phép user sau này
+                                                                        được
+                                                                        quyền nhập liệu
+                                                                    </p>
+                                                                    <table id="table-showroom" class="table
+                                                                            table-hover
+                                                                            table-fixed
+                                                                            table-check-kho">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="stt">#</th>
+                                                                                <th class="name-user">
+                                                                                    Showroom/
+                                                                                    chi
+                                                                                    nhánh
+                                                                                </th>
+                                                                                <th class="name-full">
+                                                                                    Mã kho
+                                                                                </th>
+                                                                                <th>
+                                                                                    <input type="checkbox"
+                                                                                           class="inline check-all">
+                                                                                    <span class="inline">Chọn</span>
+                                                                                </th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody id="tbody-showroom">
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" id="btn-add-user">
+                                                    Lưu
+                                                </button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    Đóng
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Danh mục nhân viên -->
+                                <div class="modal fade default-popup popup-danhsach-nv" id="danh-sach-nv"
+                                     tabindex="-1"
+                                     role="dialog"
+                                     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                                                    Danh
+                                                    mục nhân viên
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="ql-user user-table wrap-table-pq">
+                                                                <div class="user-table__header">
+                                                                    <div class="row justify-content-end">
+                                                                        <div class="col-md-7">
+                                                                            <div class="list-button text-left">
+                                                                                <a href="#" class="btn btn-add inline" id="btn-insert-nhan-vien">
+                                                                                    <img src="~/App_Themes/assets/images/btn-add.png"
+                                                                                         alt="" class="inline">
+                                                                                    <span class="inline">Thêm</span>
+                                                                                </a>
+                                                                                <a href="#" class="btn btn-fix inline" id="btn-update-nhan-vien">
+                                                                                    <img src="~/App_Themes/assets/images/btn-fix.png"
+                                                                                         alt="" class="inline"><span class="inline">Sửa</span>
+                                                                                </a>
+                                                                                <a href="#" class="btn btn-del inline" id="btn-delete-nhan-vien">
+                                                                                    <img src="~/App_Themes/assets/images/btn-del.png"
+                                                                                         alt="" class="inline"><span class="inline">Xóa</span>
+                                                                                </a>
+                                                                                <a href="#" class="btn btn-export inline" id="btn-export-nhan-vien">
+                                                                                    <img src="~/App_Themes/assets/images/btn-export.png"
+                                                                                         alt="" class="inline"><span class="inline">Xuất</span>
+                                                                                </a>
+                                                                                <a href="#" class="btn btn-import inline" id="btn-reset-nhan-vien">
+                                                                                    <img src="~/App_Themes/assets/images/btn-import.png"
+                                                                                         alt="" class="inline"><span class="inline">Nạp</span>
+                                                                                </a>
+                                                                                <a href="#excel-nhanvien" data-toggle="modal" class="btn btn-export inline">
+                                                                                    <img src="/App_Themes/assets/images/btn-import-2.png"
+                                                                                         alt="" class="inline"><span class="inline">Nhập</span>
+                                                                                </a>
+                                                                                @*<a href="#" class="btn btn-print inline" id="btn-print-nhan-vien">
+                                                                                        <img src="~/App_Themes/assets/images/btn-print.png"
+                                                                                             alt="" class="inline"><span class="inline">In</span>
+                                                                                    </a>
+                                                                                    <a href="#" class="btn btn-close inline">
+                                                                                        <img src="~/App_Themes/assets/images/btn-close.png"
+                                                                                             alt="" class="inline"><span class="inline">Đóng</span>
+                                                                                    </a>
+                                                                                    <a href="#" class="btn btn-question inline">
+                                                                                        <img src="~/App_Themes/assets/images/question.png"
+                                                                                             alt="" class="inline"><span class="inline">Hỏi</span>
+                                                                                    </a>*@
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                                <div class="wrap-height-table">
+                                                                    <table class="table display nowrap row-border order-column table-striped table-fixed table-nv" style="width:100%" id="table-nv">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>#</th>
+                                                                                <th>Mã NV</th>
+                                                                                <th>
+                                                                                    Tên NV
+                                                                                </th>
+                                                                                <th>
+                                                                                    Địa chỉ
+                                                                                </th>
+                                                                                <th>
+                                                                                    Điện thoại
+                                                                                </th>
+                                                                                <th>
+                                                                                    Ngày sinh
+                                                                                </th>
+                                                                                <th>
+                                                                                    Giới tính
+                                                                                </th>
+                                                                                <th>
+                                                                                    Chức vụ
+                                                                                </th>
+                                                                                <th>
+                                                                                    Mức lương
+                                                                                </th>
+                                                                                <th>
+                                                                                    CMTND
+                                                                                </th>
+                                                                                <th>
+                                                                                    Theo dõi
+                                                                                </th>
+                                                                                <th>
+                                                                                    Người QL
+                                                                                </th>
+                                                                                <th>
+                                                                                    Ghi chú
+                                                                                </th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Thêm nhân viên -->
+                                <div class="modal fade default-popup popup-them-nv" id="them-nhan-vien" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title title-popup" id="exampleModalLongTitle">Thêm/sửa nhân viên</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <form class="form-2-col" id="staff-info">
+                                                                <input type="hidden" name="idNV" />
+                                                                <div class="form-row">
+                                                                    <label for="">Mã NV</label>
+                                                                    <input type="text" name="maNV" required>
+                                                                    <div id="msg-staff"></div>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <label for="">Tên NV</label>
+                                                                    <input type="text" name="tenNV" required>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <label for="">Ngày sinh</label>
+                                                                    <input type="text" class="datetimepicker datepicker date-only" name="ngaySinhNV">
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <label for="">Giới tính</label>
+                                                                    <select name="slGioiTinhNV">
+                                                                        <option value="1">Nam</option>
+                                                                        <option value="2">Nữ</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <label for="">Chức vụ</label>
+                                                                    <input type="text" name="chucVuNV">
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <label for="">Lương</label>
+                                                                    <input type="text" data-type="currency" name="luongNV">
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <label for="">Số CMND</label>
+                                                                    <input type="text" data-type="number" name="soCMNDNV">
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <label for="">Địa chỉ</label>
+                                                                    <input type="text" name="diaChiNV">
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <label for="">Điện thoại</label>
+                                                                    <input type="text" data-type="number" name="dienThoaiNV">
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <label for="">Di động</label>
+                                                                    <input type="text" data-type="number" name="diDongNV">
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <label for="">Email</label>
+                                                                    <input type="text" name="emailNV">
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <label for="">Làm việc tại CN</label>
+                                                                    <select name="slShowRoom">
+                                                                        <option value="0">--Chọn chi nhánh--</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <label for="">Nhóm</label>
+                                                                    <select name="slNhomNhanVien">
+                                                                        <option value="0">--Chọn nhóm nhân viên--</option>
+                                                                    </select>
+                                                                    <span class="search-icon" id="btn-nhom-nhan-vien">
+                                                                        <i class="fas fa-search"></i>
+                                                                    </span>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <label for="">Quê quán</label>
+                                                                    <input type="text" name="queQuanNV">
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <label for="">Gia đình</label>
+                                                                    <input type="text" name="giaDinhNV">
+                                                                </div>
+                                                                @*<div class="form-row">
+                                                                        <label for="">Theo dõi</label>
+                                                                        <input type="checkbox" class="editor-active" name="cbFollow" />
+                                                                    </div>*@
+                                                            </form>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="box-up-img text-center">
+                                                                <h2>Up ảnh cá nhân tại đây</h2>
+                                                                <div class="avatar-upload">
+                                                                    <div class="avatar-edit">
+                                                                        <input type='file' id="imageUpload"
+                                                                               accept=".png, .jpg, .jpeg" />
+                                                                        <label for="imageUpload">
+                                                                            <i class="fas fa-cloud-upload-alt"></i>
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="avatar-preview">
+                                                                        <div id="imagePreview"
+                                                                             style="background-image: url('../App_Themes/assets/images/rose.jpg');">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div class="form-row mr-auto">
+                                                    <label for="">Theo dõi</label>
+                                                    <input type="checkbox" class="editor-active" name="theoDoiNV" />
+                                                </div>
+                                                <button type="button" class="btn btn-primary" id="btn-save-nhan-vien">Lưu</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Danh mục nhóm nhân viên -->
+                                <div class="modal fade default-popup popup-them-nhom-nv" id="them-nhom-nv" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title title-popup" id="exampleModalLongTitle"> Danh mục nhóm nhân viên </h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="list-button text-left">
+                                                    <a href="#" class="btn btn-add inline" id="btn-insert-nhom-nhan-vien">
+                                                        <img src="~/App_Themes/assets/images/btn-add.png" alt=""
+                                                             class="inline"> <span class="inline">Thêm</span>
+                                                    </a>
+                                                    <a href="#" class="btn btn-fix inline" id="btn-update-nhom-nhan-vien" style="font-weight:500;">
+                                                        <img src="~/App_Themes/assets/images/btn-fix.png"
+                                                             alt="" class="inline"><span class="inline">Sửa</span>
+                                                    </a>
+                                                    <a href="#" class="btn btn-fix inline" id="btn-delete-nhom-nhan-vien">
+                                                        <img src="~/App_Themes/assets/images/btn-del.png" alt=""
+                                                             class="inline"><span class="inline">Xóa</span>
+                                                    </a>
+                                                    <a href="#" class="btn btn-fix inline" id="btn-export-nhom-nhan-vien">
+                                                        <img src="~/App_Themes/assets/images/btn-export.png" alt=""
+                                                             class="inline"><span class="inline">Xuất</span>
+                                                    </a>
+                                                </div>
+                                                <div class="wrap-height-table">
+                                                    <table class="table dislay" id="table-nhom-nv">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Nhóm NV</th>
+                                                                <th>Mô tả</th>
+                                                                <th>Hoa Hồng</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Thêm nhóm nhân viên -->
+                                <div class="modal fade form-add-group-user default-popup" id="form-add-group-user" tabindex="-1" role="dialog" aria-labelledby="form-add-group-user" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title title-popup" id="exampleModalLabel"> Thêm/sửa nhóm nhân viên </h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <input type="hidden" name="idNhomNhanVien" value="" />
+                                                <div>
+                                                    <div class="form-group">
+                                                        <label for="group-staff-name" class="col-form-label">Tên nhóm user:</label>
+                                                        <input type="text" name="tenNhomNhanVien" class="form-control">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="group-staff-note" class="col-form-label">Ghi chú:</label>
+                                                        <textarea name="ghiChuNhomNhanVien" cols="30" rows="3" class="form-control" style="width: 60%;font-size: 12px;"></textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="group-staff-commission" class="col-form-label">Hoa hồng: </label>
+                                                        <input type="text" name="commissionNhomNhanVien" class="form-control" data-type="currency">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" id="btn-save-nhom-nhan-vien">Lưu</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Excel nhân viên-->
+                                <div class="modal fade default-popup popup-danh-sach-khach-hang" id="excel-nhanvien" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                                                    Import nhân viên
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="container-fluid wrap-table-2 table-mat-hang p-0">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="wrap-height-table-2 bg-white p-2 mt-2 border" style="max-height: 250px;">
+                                                                <p class="title-special">Danh sách nhân viên chưa tồn tại trong hệ thống</p>
+                                                                <div class="box-border p-2" style="border: none;">
+                                                                    <table class="table display table-striped" style="width: 100%;" id="table-nhan-vien-chua-co">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>#</th>
+                                                                                <th>Mã NV</th>
+                                                                                <th>Tên NV</th>
+                                                                                <th>Địa chỉ</th>
+                                                                                <th>Điện thoại</th>
+                                                                                <th>Ngày sinh</th>
+                                                                                <th>Giới tính</th>
+                                                                                <th>Chức vụ</th>
+                                                                                <th>Mức lương</th>
+                                                                                <th>CMTND</th>
+                                                                                <th>Theo dõi</th>
+                                                                                <th>Người QL</th>
+                                                                                <th>Ghi chú</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody></tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-inline" style="margin-top: .5rem !important;">
+                                                                <span>Số bản ghi: </span> <span class="ml-5 count-new-nhan-vien">0</span>
+                                                                @*<button type="button" class="btn btn-primary" style="margin-left: 15%;" disabled>Ghi thêm mới</button>*@
+                                                                <div class="ml-auto">
+                                                                    <button type="button" class="btn btn-primary btn-save-nhan-vien-excel" value="0" disabled="disabled">Ghi thêm mới</button>
+                                                                    @*<button type="button" class="btn btn-primary">Export</button>
+                                                                        <button type="button" class="btn btn-primary">Validate</button>*@
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="wrap-height-table-2 bg-white p-2 mt-2 border" style="max-height: 250px;">
+                                                                <p class="title-special">Danh sách nhân viên đã tồn tại trong hệ thống</p>
+                                                                <div class="box-border p-2" style="border: none;">
+                                                                    <table class="table display table-striped" style="width: 100%;" id="table-nhan-vien-da-co">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>#</th>
+                                                                                <th>Mã NV</th>
+                                                                                <th>Tên NV</th>
+                                                                                <th>Địa chỉ</th>
+                                                                                <th>Điện thoại</th>
+                                                                                <th>Ngày sinh</th>
+                                                                                <th>Giới tính</th>
+                                                                                <th>Chức vụ</th>
+                                                                                <th>Mức lương</th>
+                                                                                <th>CMTND</th>
+                                                                                <th>Theo dõi</th>
+                                                                                <th>Người QL</th>
+                                                                                <th>Ghi chú</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody></tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-inline" style="margin-top: .5rem !important;">
+                                                                <span>Số bản ghi: </span> <span class="ml-5 count-old-nhan-vien">0</span>
+                                                                @*<button type="button" class="btn btn-primary" style="margin-left: 15%;" disabled>Ghi sửa thông tin</button>*@
+                                                                <div class="ml-auto">
+                                                                    <button type="button" class="btn btn-primary btn-save-nhan-vien-excel" value="1" disabled="disabled">Ghi sửa thông tin</button>
+                                                                    @*<button type="button" class="btn btn-primary">Export</button>*@
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer mt-2">
+                                                    <div class="w-100">
+                                                        <span>Tìm Excel Sheets để nhập</span>
+                                                        <select name="slExcel-nhanvien" id="" class="w-25"></select>
+                                                        <input type="file" name="excelNhanVien" style="display: none">
+                                                        <button id="btn-import-nhan-vien" class="btn btn-default">
+                                                            <span class="inline">Tìm file export</span>
+                                                        </button>
+                                                    </div>
+
+                                                    <button type="button" id="btn-reset-nhan-vien-excel" class="btn btn-primary">Refrersh</button>
+                                                    <button type="button" class="btn btn-primary" id="btn-create-nhan-vien-excel">Tạo template</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="ql-user user-table">
+                            <div class="user-table__header">
+                                <p>Quản lí nhóm user</p>
+                            </div>
+                            <div class="wrap-height-table">
+                                <table class="table display table-striped table-fixed
+                                    table-group-user" style="width: 100%;" id="table-group-user">
+                                    <thead>
+                                        <tr>
+                                            <th class="stt"></th>
+                                            <th class="name-user">
+                                                Mã nhóm
+                                            </th>
+                                            <th class="name-full">
+                                                Tên nhóm
+                                            </th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-action mt-3">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="list-button text-right">
+                                            <a href="javascript:;" class="btn btn-add-user-group inline">
+                                                <img src="/App_Themes/assets/images/btn-add.png"
+                                                     alt="" class="inline"> <span class="inline">Thêm</span>
+                                            </a>
+                                            <a href="javascript:;" class="btn btn-edit-user-group inline"
+                                               style="font-weight:
+                                                 500;">
+                                                <img src="/App_Themes/assets/images/btn-fix.png"
+                                                     alt="" class="inline"><span class="inline">Sửa</span>
+                                            </a>
+                                            <a href="javascript:;" class="btn btn-delete-group-user inline">
+                                                <img src="/App_Themes/assets/images/btn-del.png"
+                                                     alt="" class="inline"><span class="inline">Xóa</span>
+                                            </a>
+                                            <a href="#" class="btn inline btn-export-user-group">
+                                                <img src="/App_Themes/assets/images/btn-export.png"
+                                                     alt="" class="inline"><span class="inline">Xuất</span>
+                                            </a>
+                                            @*<a href="#" class="btn btn-fix inline">
+                                                <img src="/App_Themes/assets/images/btn-out.png"
+                                                     alt="" class="inline"><span class="inline">Thoát</span>
+                                            </a>*@
+                                        </div>
+                                        <div class="modal fade phan-quyen-form-add-group-user default-popup"
+                                             id="phan-quyen-form-add-group-user" tabindex="-1" role="dialog"
+                                             aria-labelledby="phan-quyen-form-add-group-user" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title title-popup" id="exampleModalLabel">
+                                                            Thêm/sửa nhóm
+                                                            user
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <input type="hidden" name="group-user-id" value="" />
+                                                        <div>
+                                                            <div class="form-group">
+                                                                <label for="group-user-code" class="col-form-label">Mã nhóm user:</label>
+                                                                <input type="text" name="group-user-code" class="form-control">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="group-user-name" class="col-form-label">Tên nhóm user:</label>
+                                                                <input type="text" name="group-user-name" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <a href="javascript:;" data-type="insert" class="btn btn-primary add-group-user">Lưu</a>
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="tab-pane fade" id="phan-quyen">
+            <!-- Modal -->
+            <div class="modal fade default-popup popup-chuc-nang" id="chuc-nang"
+                 tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                                Giải
+                                pháp
+                                chức năng
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body relative">
+                            <div class="list-action">
+                                <button data-toggle="tooltip" title="Chuyển" class="btn btn-turn-right"><i class="fal fa-angle-right"></i></button>
+                                <button data-toggle="tooltip" title="Chuyển tất cả" class="btn btn-turn-right-all"><i class="fal fa-angle-double-right"></i></button>
+                                <div class="m-3"></div>
+                                <button data-toggle="tooltip" title="Chuyển" class="btn btn-turn-left"><i class="fal fa-angle-left"></i></button>
+                                <button data-toggle="tooltip" title="Chuyển tất cả" class="btn btn-turn-left-all"><i class="fal fa-angle-double-left"></i></button>
+                            </div>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-6">
+
+                                        <p class="title-nau mb-1">Chức năng hiện có</p>
+                                        <div class="wrap-height-table">
+                                            <table class="table display table-hover table-chuc-nang" id="table-phan-quyen-chuc-nang-hien-co" style="width: 100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="stt">#</th>
+                                                        <th class="name-user">
+                                                            Mã chức năng
+                                                        </th>
+                                                        <th class="name-full">
+                                                            Tên chức năng
+                                                        </th>
+                                                        <th>
+                                                            Tên chức năng VN
+                                                        </th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+
+                                            </table>
+                                        </div>
+                                        <div class="list-button">
+                                            <a href="#" class="btn btn-export
+                                    inline">
+                                                <img src="/App_Themes/assets/images/btn-export.png"
+                                                     alt="" class="inline"><span class="inline">Xuất</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <p class="title-nau">Chức năng được chọn</p>
+                                        <div class="wrap-height-table">
+                                            <table class="table table-hover table-chuc-nang" id="table-phan-quyen-chuc-nang-duoc-chon">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="stt">#</th>
+                                                        <th class="name-user">
+                                                            Mã chức năng
+                                                        </th>
+                                                        <th class="name-full">
+                                                            Tên chức năng
+                                                        </th>
+                                                        <th>
+                                                            Tên chức năng VN
+                                                        </th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="list-button">
+                                            <a href="#" class="btn btn-export inline">
+                                                <img src="/App_Themes/assets/images/btn-export.png"
+                                                     alt="" class="inline"><span class="inline">Xuất</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="javascript:;" class="btn-add-chuc-nang btn btn-primary">Lưu</a>
+                            <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">
+                                Đóng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="ql-user user-table wrap-table-pq">
+                            <div class="user-table__header">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <p>Chọn nhóm user</p>
+                                        <select name="ddl-user-group" id="ddl-user-group">
+                                        </select>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="list-button text-right">
+                                            <a href="javascript:;" class="btn btn-add phan-quyen-them inline">
+                                                <img src="/App_Themes/assets/images/btn-add.png"
+                                                     alt="" class="inline">
+                                                <span class="inline">Chọn chức năng</span>
+                                            </a>
+                                            <a href="#" class="btn btn-fix phan-quyen-delete inline">
+                                                <img src="/App_Themes/assets/images/btn-del.png"
+                                                     alt="" class="inline"><span class="inline">Xóa</span>
+                                            </a>
+                                            <a href="#" class="btn btn-fix phan-quyen-delete-all inline">
+                                                <img src="/App_Themes/assets/images/btn-del.png"
+                                                     alt="" class="inline"><span class="inline">Xóa tất</span>
+                                            </a>
+                                            <a href="#" class="btn btn-fix phan-quyen-export inline">
+                                                <img src="/App_Themes/assets/images/btn-export.png"
+                                                     alt="" class="inline"><span class="inline">Xuất</span>
+                                            </a>
+                                            <a href="javascript:;" class="btn phan-quyen-save inline">
+                                                <img src="/App_Themes/assets/images/btn-save.png"
+                                                     alt="" class="inline"><span class="inline">Ghi</span>
+                                            </a>
+                                            <a href="#" class="btn btn-fix phan-quyen-btn-refresh inline">
+                                                <img src="/App_Themes/assets/images/btn-close.png"
+                                                     alt="" class="inline"><span class="inline">Nạp</span>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="wrap-height-table">
+                                <table class="table display table-hover responsive " style="width: 100% ;display: table;" id="table-phan-quyen">
+                                    <thead>
+                                        @*<tr>
+                                            <th class="stt"></th>
+                                            <th class="name-user">
+                                            </th>
+                                            <th class="name-full">
+                                            </th>
+                                            <th><input type="checkbox" name="phan-quyen-search" /></th>
+                                            <th><input type="checkbox" name="phan-quyen-write" /></th>
+                                            <th><input type="checkbox" name="phan-quyen-edit" /> </th>
+                                            <th><input type="checkbox" name="phan-quyen-delete" /> </th>
+                                            <th><input type="checkbox" name="phan-quyen-print" /></th>
+                                            <th><input type="checkbox" name="phan-quyen-export" /></th>
+                                        </tr>*@
+                                        <tr>
+                                            <th class="stt">#</th>
+                                            <th class="name-user">
+                                                Mã chức năng
+                                            </th>
+                                            <th class="name-full">
+                                                Tên chức năng VN
+                                            </th>
+                                            <th><span>Tìm</span></th>
+                                            <th><span>Thêm</span></th>
+                                            <th><span>Sửa</span></th>
+                                            <th><span>Xóa</span></th>
+                                            <th><span>In</span></th>
+                                            <th><span>Xuất</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <div class="table-action mt-3">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <!-- Default unchecked -->
+                                        <div class="custom-control custom-checkbox
+                                             table-checkbox">
+                                            <input type="checkbox"
+                                                   class="custom-control-input phan-quyen-check-all"
+                                                   id="choose-all">
+                                            <label class="custom-control-label " style=" cursor: pointer; user-select: none;"
+                                                   for="choose-all">Chọn tất cả</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+
+                                    </div>
+                                </div>
+                                <!-- POPUP FORM ADD -->
+                                <div class="modal fade default-popup popup-form-add" id="form-add"
+                                     tabindex="-1" role="dialog"
+                                     aria-labelledby="exampleModalCenterTitle"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered"
+                                         role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title title-popup"
+                                                    id="exampleModalLongTitle">
+                                                    Thêm/sửa user
+                                                </h5>
+                                                <button type="button" class="close"
+                                                        data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <div class="add-info">
+                                                                <div class="form-row">
+                                                                    <p>Tên đăng nhập</p>
+                                                                    <input type="text">
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <p>Mật khẩu</p>
+                                                                    <input type="password">
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <p>Xác nhận mật khẩu</p>
+                                                                    <input type="password">
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <p>Tên đầy đủ</p>
+                                                                    <input type="text">
+                                                                    <span class="search-icon" id="button-danh-sach-nv">
+                                                                        <i class="fas fa-list"></i>
+                                                                    </span>
+                                                                </div>
+                                                                <div class="form-row">
+                                                                    <p>Email</p>
+                                                                    <input type="Email">
+                                                                </div>
+                                                            </div>
+                                                            <div class="wrap-table">
+                                                                <p class="title">
+                                                                    Trực thuộc
+                                                                    nhóm user
+                                                                </p>
+                                                                <table class="table table-hover
+                                    table-fixed
+                                    table-ddform-a">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="stt">#</th>
+                                                                            <th class="name-user">
+                                                                                Tên nhóm
+                                                                            </th>
+                                                                            <th class="name-full">
+                                                                                Chọn
+                                                                            </th>
+                                                                            <th>
+                                                                                Nhóm chính
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="content-check-kho">
+                                                                <p class="title-small">
+                                                                    Kho
+                                                                    được quyền nhập liệu
+                                                                </p>
+                                                                <div class="wrap-table">
+                                                                    <p class="title">
+                                                                        Check
+                                                                        vào
+                                                                        các kho cho
+                                                                        phép user sau này
+                                                                        được
+                                                                        quyền nhập liệu
+                                                                    </p>
+                                                                    <table class="table
+                                                                        table-hover
+                                                                        table-fixed
+                                                                        table-check-kho">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="stt">#</th>
+                                                                                <th class="name-user">
+                                                                                    Showroom/
+                                                                                    chi
+                                                                                    nhánh
+                                                                                </th>
+                                                                                <th class="name-full">
+                                                                                    Mã kho
+                                                                                </th>
+                                                                                <th>
+                                                                                    <input type="checkbox"
+                                                                                           class="inline">
+                                                                                    <span class="inline">Chọn</span>
+                                                                                </th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn
+                                                        btn-primary">
+                                                    Lưu
+                                                </button>
+                                                <button type="button" class="btn
+                                            btn-secondary" data-dismiss="modal">
+                                                    Đóng
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+@section myScripts{
+    <script src="~/PageScript/NhanVien/nhanvien.js"></script>
+    <script src="~/PageScript/HeThong/quanlyuser.js"></script>
+    <script src="~/PageScript/HeThong/giaiphapchucnang.js"></script>
+}

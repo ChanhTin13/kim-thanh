@@ -1,0 +1,143 @@
+﻿@using KimThanh.ModelsView
+
+@model Mona_LoadChiByCPID
+
+@{
+    DateTime date = DateTime.Parse(Model.Ngay);
+    //decimal? money = 0;
+    //if (Model.TIENTECODE == "VND")
+    //{
+    //    money = Model.CHIPHI1;
+    //}
+    //else
+    //{
+    //    money = Model.FCCHIPHI;
+    //}
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Trang chủ</title>
+    <meta http-equiv="Cache-control" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
+    <meta name="robots" content="noodp,noydir" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="og:site_name" content="" />
+    <meta name="description" content=" " />
+    <meta name="keywords" content="" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="" />
+    <meta property="og:description" content="" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="stylesheet" type="text/css" href="~/App_Themes/export/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/App_Themes/export/css/fonts/Averta/font.css" />
+    <link rel="stylesheet" type="text/css" href="~/App_Themes/export/scss/style.css" />
+    <link rel="stylesheet" type="text/css" href="~/App_Themes/export/css/fontawesome/css/all.css" />
+    <style>
+        .custom {
+            max-width: 450px!important;
+            max-height: 62px!important;
+        }
+        .cus {
+            height: 190px;
+            margin-top: -70px
+        }
+    </style>
+</head>
+<body>
+    <main class="wrapper">
+        <div class="note note-pnk">
+            <div class="note__header">
+                <div class="note__header--time"></div>
+                <div class="note__header--title">
+                    <h2 class="title">PHIẾU CHI</h2>
+                </div>
+                <div class="note__header--box"></div>
+            </div>
+            <div class="note__body">
+                <div class="note__body--header cus">
+                    <div class="left">
+                        <div class="left-in">
+                            <p class="des">Loại chi: </p>
+                            <p class="des">Diễn giải: </p>
+                        </div>
+                        <div class="right-in custom">
+                            <p class="code-detail">@KimThanh.Database.LyDo.LoadLyDoById(Model.LDCID ?? Guid.Empty).TEN</p>
+                            <p class="code-detail">@Model.DIENGIAI &nbsp;</p>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="left-in">
+                            <p>Ngày: </p>
+                            <p>Số phiếu chi: </p>
+                            @*<p>Loại tiền: </p>
+                            <p>Exchange rate: </p>*@
+                        </div>
+                        <div class="right-in mr-3">
+                            <p>@date.ToString("dd/MM/yyyy")</p>
+                            <p class="number-code">@Model.CPCODE</p>
+                            @*<p>@Model.TIENTECODE</p>
+                            <p>@Model.TIGIA</p>*@
+                        </div>
+                    </div>
+                </div>
+                <div class="note__body--header" style="border: 1px solid">
+                    <div class="left ml-3">
+                        <div class="left-in">
+                            <p class="des font-weight-bold" style="text-decoration: none;">Số tiền: </p>
+                            <p class="des font-weight-bold" style="text-decoration: none;">Số tiền bằng chữ: </p>
+                            <p class="des font-weight-bold" style="text-decoration: none;">Ghi chú: </p>
+                        </div>
+                        <div class="right-in">
+                            <p class="code-detail" id="money"></p>
+                            <p class="code-detail">........................................................................................................................................</p>
+                            <p class="code-detail">........................................................................................................................................</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="note__footer">
+                <div class="note__footer--row">
+                    <div class="box">
+                        <p class="sign-name">Giám đốc</p>
+                        <p class="font-italic">(ký, ghi rõ họ tên)</p>
+                    </div>
+                    <div class="box">
+                        <p class="sign-name">Người lập phiếu</p>
+                        <p class="font-italic">(ký, ghi rõ họ tên)</p>
+                    </div>
+                    <div class="box">
+                        <p class="sign-name">Thủ kho xuất</p>
+                        <p class="font-italic">(ký, ghi rõ họ tên)</p>
+                    </div>
+                    <div class="box">
+                        <p class="sign-name">Người vận chuyển</p>
+                        <p class="font-italic">(ký, ghi rõ họ tên)</p>
+                    </div>
+                    <div class="box">
+                        <p class="sign-name">Thủ kho nhập</p>
+                        <p class="font-italic">(ký, ghi rõ họ tên)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+<script language="javascript">
+    window.onload = function () {
+        document.getElementById('money').innerHTML = convertCurrency(parseFloat(@Model.CHIPHI1).toFixed(0));
+    };
+
+    function convertCurrency(value) {
+        let regx = /\D+/g;
+        let number = value.toString().replace(regx, "");
+        return number.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+    };
+</script>

@@ -1,0 +1,160 @@
+﻿@using KimThanh.Controllers
+@model MuaHangController.PrintMDModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>In Phiếu P.O</title>
+    <meta http-equiv="Cache-control" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
+    <meta name="robots" content="noodp,noydir" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="og:site_name" content="" />
+    <meta name="description" content=" " />
+    <meta name="keywords" content="" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="" />
+    <meta property="og:description" content="" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/fonts/Averta/font.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/scss/style.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/fontawesome/css/all.css" />
+</head>
+<body>
+    <style>
+        #square {
+            max-width: 60%;
+            border: 1px solid #212529;
+            padding: 10px;
+            margin: 2px;
+        }
+        body {
+            font-family: "Times New Roman";
+        }
+        .table-pnk {
+            font-size: 180.50% !important;
+        }
+        @@media print {
+            thead, tfoot {
+                display: table-row-group;
+            }
+        }
+    </style>
+    <main class="wrapper">
+        <div>
+            <div class="note__header">
+                <div class="note__header--time">
+                    <div id="qrcode"></div>
+                    <input type="hidden" value="@Model.Detail.MDCODE" id="mdcode" />
+                    <div style="margin-left: 3%;" class="detail">
+                        <p>
+                            <span style="font-size: 130.50%" class="date">@Model.Detail.SUBMITEDDATE.Value.ToString("dd/MM/yyyy")</span>
+                            <span style="font-size: 130.50%" class="clock">@Model.Detail.SUBMITEDDATE.Value.ToString("HH:mm")</span>
+                        </p>
+                        <p style="font-size: 180.50%" class="text-code">Phiếu: @Model.Detail.MDCODE</p>
+                    </div>
+                </div>
+                <div class="note__header--title">
+                    <h2 style="font-size:250.25%;" class="title">Phiếu PO </h2>
+                    <p style="font-size: 180.50%" class="number">(028) 38.547.570</p>
+                </div>
+                <div class="note__header--box">
+                    <p style="font-size:200.50%;" class="text">@Model.Detail.DIENGIAI</p>
+                    <p style="font-size: 180.50%" class="code">@Model.Detail.SUBMITEDDATE.Value.ToString("dd/MM/yyyy")</p>
+                </div>
+            </div>
+            <div class="note__body">
+                <div class="note__body--header">
+                    <div class="left">
+                        <p style="text-align:center; font-size: 130.50%;" id="square"><b>@Model.TenShowRoom</b></p>
+                        <p style="font-size: 130.50%" class="des">Nhà cung cấp: <b style="font-size:116%">@Model.Detail.KHTEN</b></p>
+                        <p style="font-size: 130.50%" class="code">@Model.Detail.KHCODE</p>
+                    </div>
+                    <div class="right">
+                        <p style="font-size: 130.50%" class="name">Đã Duyệt: @Model.Detail.APPROVED Bởi: @Model.Detail.APPROVEDBY</p>
+                        <p style="font-size: 130.50%">Ngày Đặt: @Model.Detail.SUBMITEDDATE.Value.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                        <p style="font-size: 130.50%">Ngày In: @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                    </div>
+                </div>
+                <div class="note__body--table">
+                    <div class="wrap-height-table table-responsive">
+                        <table class="table-pnk display"
+                               id="table-phieu-xuat-kho"
+                               style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th style="width:1%;">STT</th>
+                                    <th style="width:1%;">Vị trí</th>
+                                    <th style="width:12% ">Mã hàng</th>
+                                    <th style="width:30%;">Tên hàng</th>
+                                    <th style="width:3%;">ĐVT</th>
+                                    <th style="width:3%;">SL</th>
+                                    <th style="width:8%;">Đơn giá</th>
+                                    <th style="width:12%;">Thành tiền</th>
+                                    <th style="width: 20%; min-width: 20%; max-width: 30%;">Ghi chú</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int STT = 0;
+                                    int TongSL = 0;
+                                    double TongTT = 0;
+                                    var cul = new System.Globalization.CultureInfo("vi-VN");
+                                    foreach (var item in Model.DSMH)
+                                    {
+                                        var sl = (int)item.SOLUONG;
+                                        var dongia = (int)item.DONGIA;
+                                        var thanhtien = (double)item.THANHTIEN;
+                                        TongSL += sl;
+                                        TongTT += thanhtien;
+                                        <tr>
+                                            <td style="text-align:left;">@(++STT)</td>
+                                            <td>@item.ViTri</td>
+                                            <td style="text-align: left;">@item.MHCODE</td>
+                                            <td style="text-align: left;">@item.MHTEN</td>
+                                            <td>@item.DONVI</td>
+                                            <td>@String.Format(cul, "{0:N0}", sl)</td>
+                                            <td style="text-align:right;">@String.Format(cul, "{0:N0}", dongia)</td>
+                                            <td style="text-align:right;">@String.Format(cul, "{0:N0}", thanhtien)</td>
+                                            <td style="white-space:normal; text-align:left;">@item.GHICHU</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th style="font-size: 120%;" colspan="5">Tổng cộng</th>
+                                    <th style="font-size: 140%; text-align:right">@String.Format(cul, "{0:N0}", TongSL)</th>
+                                    <th style="font-size: 140%; text-align:right" colspan="2">@String.Format(cul, "{0:N0}", TongTT)</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script type="text/javascript" src="/App_Themes/js/moment.js"></script>
+    <script src="~/App_Themes/js/jquery.js"></script>
+    <script src="~/App_Themes/js/qrcode.js"></script>
+    <script src="~/PageScript/MatHang/jquery-barcode.js"></script>
+
+    <script>
+        $(document).ready(async function () {
+            var qrcode = new QRCode("qrcode", {
+                width: 77,
+                height: 77,
+            });
+            var elText = $('#mdcode');
+
+            qrcode.makeCode(elText.val())
+            window.print()
+        })
+    </script>
+</body>
+</html>

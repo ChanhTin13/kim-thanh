@@ -1,0 +1,577 @@
+﻿@{
+    ViewBag.Title = "Cate";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+<link href="~/App_Themes/select2/css/select2.min.css" rel="stylesheet" />
+<style>
+    .select2-container--default {
+        width: 58.333333% !important
+    }
+
+    #them-vi-tri .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    #sua-vi-tri .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    input[readonly] {
+        background: #ccc
+    }
+
+    #tb-import-vitri input {
+        height: 30px;
+        border-radius: 5px;
+        width: 100%;
+        padding: 5px;
+    }
+</style>
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="wrap-table__button">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="list-button text-left">
+                        <a href="javascript:;" class="btn btn-add inline" data-toggle="modal"
+                           data-target="#them-loai">
+                            <img src="../App_Themes/assets/images/btn-add.png" alt=""
+                                 class="inline">
+                            <span class="inline">Thêm</span>
+                        </a>
+                        <a href="javascript:;" class="btn btn-fix btn-edit-loai inline" data-toggle="modal" id="btn-edit-loai">
+
+                            <img src="../App_Themes/assets/images/btn-fix.png" alt=""
+                                 class="inline"><span class="inline">Sửa</span>
+                        </a>
+                        @*<a href="javascript:;" class="btn btn-del vi-tri-btn-delete inline">
+                                <img src="../App_Themes/assets/images/btn-del.png" alt=""
+                                     class="inline"><span class="inline">Xóa</span>
+                            </a>
+                            <a href="javascript:;" class="btn btn-import vi-tri-refresh inline">
+                                <img src="../App_Themes/assets/images/btn-import.png" alt=""
+                                     class="inline"><span class="inline">Nạp</span>
+                            </a>
+                            <a href="javascript:;" class="btn btn-export vi-tri-btn-export inline">
+                                <img src="../App_Themes/assets/images/btn-export.png" alt=""
+                                     class="inline"><span class="inline">Xuất</span>
+                            </a>*@
+                        @*<a href="javascript:;" class="btn btn-export vi-tri-btn-import inline">
+                                <img src="../App_Themes/assets/images/btn-import-2.png" alt=""
+                                     class="inline"><span class="inline">Nhập</span>
+                            </a>*@
+                        @*<a href="#" class="btn btn-export
+                                            inline" id="import-vitrimathang">
+                                <img src="/App_Themes/assets/images/btn-import-2.png"
+                                     alt="" class="inline"><span class="inline">Nhập</span>
+                            </a>*@
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div hidden class="box-choose-time" id="date-vitri">
+                        <p class="mr-2">Từ</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_From" data-date-format="mm/dd/yyyy">
+                        <p class="mr-2">Đến</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_To" data-date-format="mm/dd/yyyy">
+
+                        <button class="btn btn-trans" id="btn-search-vitri">
+                            <img src="../App_Themes/assets/images/loading.png" alt="" class="inline">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__body">
+            <div class="wrap-height-table">
+                <table class="table display table-striped" style="width: 100%;"
+                       id="table-cate-mathang">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Mã loại</th>
+                            <th>Tên loại</th>
+                            <th>Level</th>
+                            <th>Nguồn</th>
+                            <th>Người tạo</th>
+                            <th>Ngày tạo</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="modal fade default-popup popup-them-so-du-quy" data-keyboard="true" data-backdrop="static" id="them-loai"
+     tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                    Catelogy mặt hàng
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="default-form">
+                                <div class="form-group" id="hiddenselect">
+                                    <label for="">Thể loại cha</label>
+                                    <select id="sl_loai_cha" class="col-7 p-0 select-2">
+                                    </select>
+                                    <input type="hidden" name="txt_id_loai" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Mã loại</label>
+                                    <input name="txt_ma_loai" class="col-7 p-0" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Tên loại</label>
+                                    <input name="txt_ten_loai" class="col-7 p-0" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn-add-loai">Lưu</button>
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section myScripts{
+    <script src="~/App_Themes/select2/js/select2.full.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('#sl_loai_cha').select2({
+                ajax: {
+                    url: "/MatHang/LoadDataSelect2CateMathang",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            start: (params.page || 0) * 50,
+                            length: 50,
+                            page: params.page,
+                        }
+                        // Query parameters will be ?search=[term]&type=public
+                        return query;
+                    },
+                    processResults: function (data, params) {
+                        var select2Data = $.map(data.data, function (obj) {
+                            obj.id = obj.CateID;
+                            obj.text = obj.CateCode + " - " + obj.CateName;
+                            return obj;
+                        });
+                        params.page = params.page || 0;
+                        return {
+                            results: select2Data,
+                            pagination: {
+                                more: ((params.page + 1) * 50) < data.recordsTotal
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: "Chọn thể loại cha",
+                //minimumInputLength: 10,
+                //allowClear: true,
+                templateResult: formatRepo,
+                dropdownParent: $('#them-loai')
+            });
+            function formatRepo(repo) {
+                if (repo.loading) {
+                    return repo.text;
+                }
+                var $container = $(
+                    "<div class='select2-result-repository clearfix'>" + repo.text +
+                    "</div>"
+                );
+                return $container;
+            }
+            $('input[name="chooseDate_From"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            $('input[name="chooseDate_To"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            let fdate = moment(new Date()).format('DD/MM/yyyy');
+            let tdate = moment(new Date()).format('DD/MM/yyyy');
+            let tblCatefilterValues = {};
+            $('#table-cate-mathang thead tr').clone(true).appendTo('#table-cate-mathang thead');
+            $('#table-cate-mathang thead tr:eq(1) th').each(function (i) {
+                var title = $(this).text();
+                if (i == 1 || i == 2 || i == 4) {
+                    $(this).html('<input type="text" placeholder="Search ' + title.trim() + '" data-search-cate-mathang="' + i + '"/>');
+                }
+                else {
+                    return $(this).html('');
+                }
+                $('input', this).on('keyup change', delay(function () {
+                    table_cate
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                }, 1000));
+            });
+            var table_cate = $('#table-cate-mathang').DataTable({
+                serverSide: true,
+                bFilter: false,
+                bInfo: false,
+                "order": [[6, "desc"]],
+                ajax: function (data, callback, settings) {
+                    tblCatefilterValues.draw = data.draw;
+                    tblCatefilterValues.search = data.search["value"];
+                    tblCatefilterValues.fdate = fdate;
+                    tblCatefilterValues.tdate = tdate;
+                    tblCatefilterValues.start = data.start;
+                    tblCatefilterValues.length = data.length;
+                    tblCatefilterValues.order = data.order[0].column;
+                    tblCatefilterValues.dir = data.order[0].dir;
+
+                    tblCatefilterValues.searchMaLoai = $('input[data-search-cate-mathang=1]').val();
+                    tblCatefilterValues.searchTenLoai = $('input[data-search-cate-mathang=2]').val();
+                    tblCatefilterValues.searchNguon = $('input[data-search-cate-mathang=4]').val();
+                    //tblCatefilterValues.search4 = $('input[data-search-vitri-mathang=4]').val();
+                    //tblCatefilterValues.search5 = $('input[data-search-vitri-mathang=5]').val();
+                    //tblCatefilterValues.search6 = $('input[data-search-vitri-mathang=6]').val();
+
+                    $.ajax({
+                        url: '/MatHang/LoadDataCateMathang',
+                        method: 'GET',
+                        data: tblCatefilterValues,
+                        success: function (msg) {
+                            console.log(msg.data);
+                            if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                return false;
+                            } else if (msg.status == 3) {
+                                if (tblCatefilterValues.draw != 1) {
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'error_outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                    return false;
+                                }
+                            }
+                        },
+                    }).done(callback, () => {
+
+                    });
+                },
+                columns: [
+                    { "data": null },
+                    { "data": "CateCode" },
+                    { "data": "CateName" },
+                    { "data": "Level" },
+                    { "data": "Nguon" },
+                    { "data": "NguoiTao" },
+                    {
+                        "data": "NgayTao",
+                        render: function (data, row, type) {
+                            return moment(data).format('DD/MM/yyyy HH:mm:SS')
+                        }
+                    },
+                ],
+                fnCreatedRow: function (nRow, data, iDataIndex) {
+                    $(nRow).attr('data-id', data.CateID);
+
+                },
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                    return nRow;
+                },
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 15
+                },
+                // scrollY: '300px',
+                scrollResize: true,
+                scrollY: 100,
+                scrollCollapse: true,
+                bInfo: false,
+                paging: true,
+                searching: true,
+                pageLength: 5,
+                lengthChange: false,
+                orderCellsTop: true
+            });
+
+            //$(table_cate.table().container()).on('keyup change', 'thead input', delay(function (e) {
+            //    table_cate.draw();
+            //}, 1000));
+
+            //Search ngày -> ngày
+            $('#btn-search-vitri').click(function () {
+                fdate = $('#date-vitri input[name="chooseDate_From"]').val();
+                tdate = $('#date-vitri input[name="chooseDate_To"]').val();
+                table_cate.columns.adjust().draw();
+            });
+
+            //Click
+            $(document).on('click', '#table-cate-mathang tbody tr', function () {
+                $(this).addClass('selected');
+                $('#table-cate-mathang tbody tr').not(this).removeClass('selected');
+            });
+
+            //Double Click
+            $(document).on('dblclick', '#table-cate-mathang tbody tr', async function () {
+                $(this).addClass('selected');
+                $('#table-cate-mathang tbody tr').not(this).removeClass('selected');
+                let id = $(this).attr('data-id');
+                DetailCateMatHang(id);
+            });
+
+            function DetailCateMatHang(id) {
+                $.ajax({
+                    async: false,
+                    type: 'GET',
+                    url: '/Mathang/LoadDataDetailCateMathang?CateID=' + id + '',
+                    dataType: 'json',
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            if (msg.data.length <= 0) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: 'Không tìm thấy sản phẩm',
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                })
+                            } else {
+                                $('#hiddenselect').hide();
+                                let data = msg.data[0][0];
+                                $('input[name="txt_id_loai"]').val(data.CateID);
+                                $('input[name="txt_ma_loai"]').val(data.CateCode);
+                                $('input[name="txt_ten_loai"]').val(data.CateName);
+                                console.log(data.ParentID);
+                                //$('#sl_loai_cha').val(data.ParentID).trigger('change.select2');
+                                $('#them-loai').modal();
+                            }
+                        } else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            })
+                        } else {
+                            if (msg.draw != 1) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                                return false;
+                            }
+                        }
+                    },
+                    error: function (error) {
+                        console.log('e');
+                    }
+                });
+            }
+
+            //Insert and Update )
+            $('#btn-add-loai').click(function () {
+                let CateCode = $('input[name="txt_ma_loai"]').val();
+                let CateName = $('input[name="txt_ten_loai"]').val();
+                let ParentID = $('#sl_loai_cha').select2('data');
+                let CateID = $('input[name="txt_id_loai"]').val();
+                if (ParentID.length == 0) {
+                    ParentID = null;
+                }
+                else {
+                    ParentID = ParentID[0].id
+                }
+                if (CateCode == '' || CateName == '') {
+                    toast.create({
+                        title: 'Notification!',
+                        text: 'Vui lòng không để trống mã và tên loại',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    })
+                    return false;
+                }
+                //let data = {};
+                //data.CateName = CateName
+                //data.CateCode = CateCode
+                //data.CateID = CateID
+                //data.ParentID = ParentID
+                $.ajax({
+                    type: 'POST',
+                    url: '/MatHang/InsertOrUpdateCateMatHang',
+                    data:
+                        JSON.stringify(
+                            {
+                            CateName: CateName,
+                            CateCode: CateCode,
+                            CateID: CateID,
+                            ParentID: ParentID
+                            }
+                        )
+                    ,
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            table_cate.draw();
+                            $('#them-loai').modal('hide');
+                            toast.create({
+                                title: 'Notification!',
+                                text: 'Thành công',
+                                icon: 'check',
+                                classBackground: 'noti-success',
+                                timeout: 3000
+                            })
+                            //LoadDataadd();
+                        } else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            })
+                        } else {
+                            if (msg.draw != 1) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                                return false;
+                            }
+                        }
+                    },
+                    error: function (error) {
+                        console.log('e');
+                    }
+                });
+            });
+
+            //Update
+            $('.btn-edit-loai').click(function () {
+                let id = $('#table-cate-mathang tbody tr.selected').attr('data-id');
+                if (id == undefined) {
+                    toast.create({
+                        title: 'Notification!',
+                        text: 'Vui lòng chọn vị trí',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    });
+                    return false;
+                }
+                DetailCateMatHang(id);
+            });
+
+            //Reset
+            $('.vi-tri-refresh').click(function () {
+                table_cate.draw();
+            });
+
+
+            $('#them-loai').on('hidden.bs.modal', function () {
+                $('#hiddenselect').show();
+                $('input[name="txt_ma_loai"]').val('');
+                $('input[name="txt_ten_loai"]').val('');
+                $('#sl_loai_cha').val('').trigger('change.select2');
+                $('input[name="txt_id_loai"]').val('');
+            });
+
+            //Chạy lần đâu load Cate
+            //var first = 1;
+            //FirstLoadDataAdd();
+            //function FirstLoadDataAdd() {
+            //    if (first == 1) {
+            //        first = 2;
+            //        LoadDataadd()
+            //    }
+            //}
+            //async function LoadDataadd() {
+            //    LoadDataCateMatHang().then(async (e) =>
+            //    {
+            //        $('#sl_loai_cha').empty()
+            //        $.map(e.data, function (obj) {
+            //            var newOption = new Option(obj.CateCode + " - " + obj.CateName, obj.CateID);
+            //            $('#sl_loai_cha').append(newOption);
+            //        });
+            //        $('#sl_loai_cha').val('').trigger('change')
+            //    })
+            //}
+        });
+        //function LoadDataCateMatHang() {
+        //    return $.ajax({
+        //        async: false,
+        //        type: 'GET',
+        //        url: '/Mathang/LoadDataCateMathang',
+        //        dataType: 'json',
+        //        success: function (msg) {
+        //            if (msg.status == 1) {
+        //                console.log(msg.data);
+        //                return msg.data;
+        //            } else {
+        //                location.reload();
+        //            }
+        //        },
+        //        error: function (error) {
+        //            console.log('e');
+        //        }
+        //    });
+        //}
+        serialize = function (obj) {
+            var str = [];
+            for (var p in obj)
+                if (obj.hasOwnProperty(p)) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+            return str.join("&");
+        }
+        function delay(fn, ms) {
+            let timer = 0
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(fn.bind(this, ...args), ms || 0)
+            }
+        }
+    </script>
+}

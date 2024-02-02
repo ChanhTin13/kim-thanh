@@ -1,0 +1,166 @@
+﻿
+
+@{
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+<style>
+    .select2-container--default {
+        width: 300px !important
+    }
+    .select2-results__options {
+        font-size: 13px !important;
+    }
+
+    .select2-search__field {
+        font-size: 13px !important;
+    }
+</style>
+<link href="~/App_Themes/select2/css/select2.min.css" rel="stylesheet" />
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="wrap-table__header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box-choose-time" id="date-vitri">
+                        <p class="mr-2">Từ</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_From" data-date-format="mm/dd/yyyy">
+                        <p class="mr-2">Đến</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_To" data-date-format="mm/dd/yyyy">
+                        @*<div class="list-button">
+                            <a href="#" class="btn btn-export
+                            inline" id="btn-search-phienkiemhang">
+                                <img src="/App_Themes/assets/images/btn-search.png" alt="" class="inline"><span class="inline">Tìm kiếm</span>
+                            </a>
+                        </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__button">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box-choose-time" id="date-vitri">
+                        <p class="mr-2">Mã phiên nhập hàng</p>
+                        @*<input class="mr-2" autofocus name="txt_maphiennhap">*@
+                        <select id="sl-maphienhap" name="sl-maphienhap" style="width: 15% !important" class="mr-2">
+                        </select>
+                        <p class="ml-2">Ghi chú</p>
+                        <input class="mr-3" name="txt_ghichu">
+                        <div class="list-button">
+                            <a href="#" class="btn btn-export
+                            inline" id="btn-create-phienkiemhang">
+                                <img src="/App_Themes/assets/images/btn-search.png" alt="" class="inline"><span class="inline">Tạo phiên kiểm</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section myScripts{
+    <script>
+        $(document).ready(function () {
+            $('input[name="chooseDate_From"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            $('input[name="chooseDate_To"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            let fdate = moment(new Date()).format('DD/MM/yyyy');
+            let tdate = moment(new Date()).format('DD/MM/yyyy');
+
+            //#region Select2 mặt hàng
+            $("#sl-maphienhap").select2({
+                ajax: {
+                    url: "/KiemHang/LoadPhienNhapKhoChuaKhoa",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            start: (params.page || 0) * 50,
+                            length: 50,
+                            fromDate: $('input[name="chooseDate_From"]').val(),
+                            toDate: $('input[name="chooseDate_To"]').val(),
+                            page: params.page
+                        }
+                        // Query parameters will be ?search=[term]&type=public
+                        return query;
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 0;
+                        return {
+                            results: data.items,
+                            pagination: {
+                                more: ((params.page + 1) * 50) < data.total_count
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: 'Nhập mã phiên',
+                //minimumInputLength: 1,
+                templateResult: formatRepo,
+            });
+
+            function formatRepo(repo) {
+                if (repo.loading) {
+                    return repo.text;
+                }
+                var $container = $(
+                    "<div class='select2-result-repository clearfix'>" + repo.text + " " + repo.nhaCungCap + " " + repo.ngayTao +
+                    "</div>"
+                );
+                return $container;
+            }
+            //#endregion
+            $('#btn-create-phienkiemhang').click(function () {
+                InsertPhienKiemHang();
+            })
+            function InsertPhienKiemHang() {
+                let maphiennhap = $("#sl-maphienhap");
+                let ghichu = $('input[name="txt_ghichu"]').val()
+                if (maphiennhap.val() == null) {
+                    alert('Vui lòng nhập mã phiên nhập');
+                    return;
+                }
+                let data = {};
+                data.MAPHIENNHAP = maphiennhap.select2('data')[0].text;
+                data.GHICHU = ghichu;
+                $.ajax({
+                    method: "POST",
+                    url: "/KiemHang/InsertPhienKiemHang",
+                    data: data,
+                    //contentType: false,
+                    //processData: false,
+                    //contentType: "application/json; charset=utf-8",
+                    //dataType: "json",
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            console.log(msg);
+                            let link = '/KiemHang/TaoCTPhienKiemHang?phienNhapKhoID=' + msg.data[0] + '&phienKiemHangID=' + msg.data[1] + '&maPhienNhap=' + msg.data[2]
+                            window.open(link);
+                        }
+                        else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                        }
+                        else if (msg.status == 3) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            location.reload();
+                        }
+                    }
+                })
+            }
+        });
+    </script>
+}

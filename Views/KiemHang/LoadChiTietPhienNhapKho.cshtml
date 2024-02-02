@@ -1,0 +1,312 @@
+﻿
+@{
+    ViewBag.Title = "LoadChiTiet";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+
+<main class="wrapper">
+    <div class="popup-them-order">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="list-button text-left">
+                        <!-- Button In -->
+                        <a href="#" class="btn btn-print
+                        inline">
+                            <img src="../App_Themes/assets/images/btn-print.png" alt=""
+                                 class="inline"><span class="inline">In</span>
+                        </a>
+                        <!-- Button xuất -->
+                        <a href="#" class="btn btn-export
+                        inline">
+                            <img src="../App_Themes/assets/images/btn-export.png"
+                                 alt="" class="inline"><span class="inline">Xuất</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid mt-3">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="box-border h-100">
+                        <div class="default-form">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="">Mã NCC</label>
+
+                                        <input name="txt-id" value="@ViewBag.ID" type="hidden" />
+                                        <input type="text"
+                                               class="col-7 p-0" name="txt-ma-ncc">
+                                    </div>
+                                    @*<div class="form-group">
+                                            <label for="">Tel</label>
+                                            <input type="text"
+                                                   class="col-7 p-0">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Người đại diện</label>
+                                            <input type="text"
+                                                   class="col-7 p-0">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">KHCS</label>
+                                            <input type="text"
+                                                   class="col-7 p-0">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Mã NV</label>
+                                            <input type="text"
+                                                   class="col-7 p-0">
+                                        </div>*@
+                                </div>
+                                <div class="col-md-6 pl-0 pr-5">
+                                    <div class="form-group">
+                                        <label for="">Tên NCC</label>
+                                        <input type="text"
+                                               class="col-9
+                                        p-0" name="txt-ten-ncc">
+                                    </div>
+                                    @*<div class="form-group">
+                                            <label for="">Mob</label>
+                                            <input type="text"
+                                                   class="col-9
+                                            p-0">
+                                            <span class="search-icon
+                                            color-white
+                                            absolute right-30"
+                                                  id="button-danh-sach-nv"
+                                                  data-toggle="modal"
+                                                  data-target="#danh-sach-khach-hang">
+                                                <i class="fas
+                                                fa-search"></i>
+                                            </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">MST</label>
+                                            <input type="text"
+                                                   class="col-9
+                                            p-0">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Mob/Tel</label>
+                                            <input type="text"
+                                                   class="col-9
+                                            p-0">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Tên NV</label>
+                                            <input type="text"
+                                                   class="col-9
+                                            p-0">
+                                            <span class="search-icon
+                                            color-white
+                                            absolute right-30"
+                                                  id="button-danh-sach-nv"
+                                                  data-toggle="modal"
+                                                  data-target="#danh-sach-nv">...</span>
+                                        </div>*@
+                                </div>
+                                @*<div class="col-md-12 pr-5">
+                                        <div class="form-group">
+                                            <label for="">Địa chỉ</label>
+                                            <input type="text"
+                                                   class="input-dc">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for=""><b>Lý do xuất</b></label>
+                                            <select name="" id="" class="col-7
+                                            p-0">
+                                                <option value="">0</option>
+                                                <option value="">1</option>
+                                                <option value="">2</option>
+                                            </select>
+                                        </div>
+                                    </div>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="box-border h-100">
+                        <form action="" class="default-form">
+                            <div class="form-group">
+                                <label for="">Phiếu</label>
+                                <input type="text" class="col-7
+                                p-0" name="txt-phieu" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Ngày lập phiếu</label>
+                                <input type="text"
+                                       class="choose-date datetimepicker date-only
+                                col-7 p-0" name="txt-ngay-lap-phieu">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid mt-3">
+            <div class="wrap-box-border bg-white position-relative mt-3">
+                <p class="title-special">Chi tiết phiên nhập hàng</p>
+                <div class="box-border p-2" style="border: none;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="wrap-height-table-2">
+                                <table class="display table table-striped"
+                                       style="width: 100%;"
+                                       id="table-chi-tiet-phieu">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên hàng</th>
+                                            <th>Số lượng nhập</th>
+                                            <th>Số lượng xuất</th>
+                                            <th>Mã thùng</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4 row-last">
+                <div class="col-md-6">
+                    <div class="final">
+                        <p class="mr-2">Ghi chú</p>
+                        <textarea class="mr-4" name="txt-ghi-chu" id="txt-ghi-chu"
+                                  cols="30" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <img style="margin-left:86%;" width="100" height="100" id="linkqrcode" alt="" src="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section myScripts{
+    <script src="~/App_Themes/select2/js/select2.full.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var objmathang = [];
+            var table_ctphiennhapkho = $('#table-chi-tiet-phieu').DataTable({
+                serverSide: false,
+                data: objmathang,
+                bFilter: false,
+                bInfo: false,
+                "order": [[1, "desc"]],
+                columns: [
+                    { "data": null },
+                    { "data": "MHCODE" },
+                    { "data": "MHTEN" },
+                    { "data": "SOLUONGNHAP" },
+                    { "data": "SOLUONGXUAT" },
+                    { "data": "MATHUNG" },
+                ],
+                columnDefs: [
+                    {
+                        "targets": [0],
+                        "orderable": false
+                    },
+                ],
+                fnCreatedRow: function (nRow, data, iDataIndex) {
+                    $(nRow).attr('data-id', data.ID);
+                },
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                    return nRow;
+                },
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 15
+                },
+                // scrollY: '300px',
+                scrollResize: true,
+                scrollY: 100,
+                scrollCollapse: true,
+                bInfo: false,
+                paging: true,
+                searching: true,
+                pageLength: 5,
+                lengthChange: false,
+            });
+            //#endregion
+            var IDChiTietPhieu = $('input[name="txt-id"]').val();
+            if (IDChiTietPhieu != null && IDChiTietPhieu != '') {
+                ChiTietPhieuNhapKho(IDChiTietPhieu);
+            }
+            function ChiTietPhieuNhapKho(hd) {
+                $.ajax({
+                    type: "POST",
+                    url: "/KiemHang/LoadDataChiTietPhienNhapKho",
+                    data: '{id: "' + hd + '"}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.rs == true) {
+                            console.log(msg.data);
+                            console.log(msg.listData);
+                            $('input[name="txt-id"]').val(msg.data.ID);
+                            $('input[name="txt-phieu"]').val(msg.data.MAPHIENNHAP);
+                            $('input[name="txt-ngay-lap-phieu"]').val(msg.data.NGAYTAO);
+                            $('input[name="txt-ma-ncc"]').val(msg.data.KHCODE);
+                            $('input[name="txt-ten-ncc"]').val(msg.data.KHTEN);
+                            $('textarea[name="txt-ghi-chu"]').val(msg.data.GHICHU);
+                            console.log(msg.data.LINKQRCODE);
+                            $('#linkqrcode').attr('src', msg.data.LINKQRCODE);
+                            objmathang = msg.listData;
+                            table_ctphiennhapkho.clear();
+                            table_ctphiennhapkho.rows.add(objmathang);
+                            table_ctphiennhapkho.columns.adjust().draw();
+                        }
+                        else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                        }
+                        else if (msg.status == 3) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            location.reload();
+                        }
+                    }
+                })
+            }
+        });
+        serialize = function (obj) {
+            var str = [];
+            for (var p in obj)
+                if (obj.hasOwnProperty(p)) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+            return str.join("&");
+        }
+        function delay(fn, ms) {
+            let timer = 0
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(fn.bind(this, ...args), ms || 0)
+            }
+        }
+    </script>
+}
+
+

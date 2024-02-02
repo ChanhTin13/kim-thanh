@@ -1,0 +1,78 @@
+﻿@using KimThanh.Controllers
+@{
+
+    if (Session["SHOWROOMID"] != null && Session["UID"] != null && Session["TASK"] == null)
+    {
+        <div class="modal fade active default-popup" id="popup-thong-bao-task" data-backdrop="static" data-keyboard="true" tabindex="-1"
+             role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title title-popup" id="exampleModalLongTitle" style="font-weight: bold">
+                            Danh sách công việc gần đến hạn
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body position-relative" style="padding-bottom:1.3rem; max-height: calc(100vh - 210px); overflow-y:auto;">
+                        <div class="container-fluid" style="max-width:90%">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="wrap-form-login">
+                                        <div class="needs-validation">
+                                            <div class="form-group" id="congviec">
+                                            </div>
+                                            <div class="action-login mt-4">
+                                                <div class="row">
+                                                    <div class="col-md-12 text-center">
+                                                        <button type="button" class="btn btn-primary" id="btn-select">
+                                                            Di chuyển tới trang công việc
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                ThongBaoTask();
+                $('#btn-select').click(function () {
+                    var link = window.location.origin + "/CongViec/LoadCongViecDuocGiao";
+                    window.location.href = link;
+                })
+            });
+            function ThongBaoTask() {
+                $.ajax({
+                    type: "GET",
+                    url: "/CongViec/ThongBaoCongViecGanDenHan",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            console.log(msg.data);
+                            var i = 1;
+                            for (var key in msg.data) {
+                                $('#congviec').append('<p>'+ i++ +'. '+ msg.data[key].tenCongViec + '</p>');
+                            }
+                            $('#popup-thong-bao-task').modal()
+                        }
+                         else {
+                            location.reload();
+                        }
+                    },
+                    error: function (xmlhttprequest, textstatus, errorthrow) {
+                        console.log("load fails");
+                    }
+                });
+            }
+        </script>
+    }
+}

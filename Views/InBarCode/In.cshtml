@@ -1,0 +1,987 @@
+﻿@using KimThanh.Database
+@using KimThanh.Models
+@{
+    ViewBag.Title = "In";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+    List<sp_LoadCAList_Result> lca = QuanLyCA.ListCaLamViec();
+    List<sp_LoadLYDOList_Result> llydo = LyDo.LoadLyDo().Where(n => n.LDTID == "N").ToList();
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+<link href="~/App_Themes/css/print.css" rel="stylesheet" media="print" />
+<link href="~/App_Themes/printBarCode/print.css" rel="stylesheet" />
+<style>
+    .table-in-ma-vach .box-table {
+        width: 100%;
+        height: 370px;
+    }
+
+    .pull-left {
+        display: flex
+    }
+
+    .print-section {
+        display: none;
+    }
+
+    .wrap-barcode {
+        width: 100%;
+        display: flex;
+        flex-flow: column;
+    }
+
+    .wrap-height-table-2 {
+        height: 400px !important;
+    }
+
+    .wrap-barcode object {
+        width: 100%;
+        height: 50px;
+    }
+
+    #phieu-nhap-kho .dataTables_scrollBody {
+        min-height: 300px
+    }
+
+    #phieu-nhap-kho.dataTables_scrollHeadInner {
+        width: 100% !important;
+    }
+
+        #phieu-nhap-kho .dataTables_scrollHeadInner table, thead {
+            width: 100% !important;
+        }
+
+    .box-border.disabled input, .box-border.disabled select {
+        background: #ccc;
+        pointer-events: none;
+    }
+
+    tfoot tr td {
+        padding: 0px 5px 0px 0px !important;
+    }
+
+        tfoot tr td.disabled {
+            background: #e8e857ab;
+        }
+</style>
+<main class="wrapper">
+    <div class="container-fluid wrap-table-2">
+        <div class="table-in-ma-vach">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="box-dia-chi box-info">
+                        <p class="title-head">Danh mục nhóm hàng</p>
+                        <div class="content mt-2" id="jstree">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="wrap-top">
+                        <p class="title-head" id="title">Nhóm hàng</p>
+                        <div class="box-table">
+                            <table class="table display" id="in-table-nhom-hang" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Mã hàng</th>
+                                        <th>Tên hàng</th>
+                                        <th>Alias</th>
+                                        <th>Chọn</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="wrap-under">
+                        <!-- Button -->
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="box-button justify-content-start">
+                                    <div class="btn-group dropup">
+                                        <button type="button" class="btn btn-default
+                                        mr-1
+                                        btn-nk  "
+                                                data-toggle="modal"
+                                                data-target="#phieu-nhap-kho">
+                                            <i class="fas fa-arrow-alt-circle-right"></i>
+                                            Nhập
+                                            từ
+                                            phiếu nhập kho
+                                        </button>
+                                        @*<div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#"
+                                                   data-toggle="modal"
+                                                   data-target="#phieu-nhap-kho">
+                                                    Nhập
+                                                    mã hàng từ phiếu nhập kho
+                                                </a>
+                                                <a class="dropdown-item" href="#"
+                                                   data-toggle="modal"
+                                                   data-target="#phieu-nhap-kho">
+                                                    Nhập
+                                                    imei từ phiếu nhập kho
+                                                </a>
+                                            </div>*@
+                                    </div>
+                                    <button type="button" class="btn btn-default
+                                    btn-nk mr-1" data-toggle="modal"
+                                            data-target="#phieu-chuyen-kho">
+                                        <i class="fas fa-arrow-alt-circle-right"></i>Nhập
+                                        từ
+                                        phiếu chuyển kho
+                                    </button>
+                                    <button type="button" class="btn btn-default
+                                    mr-1
+                                    btn-nk" data-toggle="modal"
+                                            data-target="#tim-kiem-mat-hang">
+                                        <i class="fas fa-arrow-alt-circle-right"></i>Nhập
+                                        Barcode mở rộng
+                                    </button>
+                                    <button type="button" class="btn btn-default in-reset
+                                    mr-1
+                                    btn-nk">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="box-button">
+                                    <label for="">Số lượng bản in</label>
+                                    <input type="number" name="in-number" value="1" class="ml-3">
+                                    <button class="btn btn-default btn-up-down ml-5 btn-move-down">
+                                        <i class="fal fa-angle-down"></i>
+                                    </button>
+                                    <button class="btn btn-default btn-up-down
+                                    ml-1">
+                                        <i class="fal
+                                        fa-angle-up"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Table mặt hàng dc chọn -->
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <p class="title-head">Mặt hàng được chọn</p>
+                                <div class="wrap-height-table-2">
+                                    <table class="table table-bordered display"
+                                           id="table-mat-hang" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Mã hàng</th>
+                                                <th>Tên hàng</th>
+                                                <th>Alias</th>
+                                                <th>Số lượng</th>
+                                                <th>ĐVT</th>
+                                                <th>Giá bán lẻ</th>
+                                                <th>Lô/Barcode</th>
+                                                <th>Ghi chú</th>
+                                                <th>IMEI</th>
+                                                <th>Bảo hành text</th>
+                                                <th>Xuất xứ</th>
+                                                <th>Chọn</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                        <tfoot style="text-align:right">
+                                            <tr>
+                                                <td colspan="2">
+                                                </td>
+                                                <td colspan="2" class="disabled">
+                                                </td>
+                                                <td>
+                                                </td>
+                                                <td colspan="8" class="disabled">
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Thiết lập mẫu in-->
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <div class="box-border">
+                                    <p class="box-border__title bg-gray">
+                                        Thiết lập
+                                        mẫu in
+                                    </p>
+                                    <!-- In header -->
+                                    <div class="row-mau">
+                                        <div class="col-left">
+                                            <div class="form-check-inline">
+                                                <label class="form-check-label">
+                                                    <input type="checkbox" m
+                                                           class="form-check-input
+                                                    inline" checked
+                                                           name="in-header">
+                                                    <span class="ml-1 inline">
+                                                        In
+                                                        Header
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-right">
+                                            <div class="form-check-inline">
+                                                <input name="in-header-custom" type="text" class="header">
+                                            </div>
+                                            <div class="form-check-inline">
+                                                <label class="form-check-label">
+                                                    <input type="checkbox" name="in-header-auto" class="form-check-input inline" checked>
+                                                    <span class="ml-1 inline">
+                                                        Header
+                                                        là
+                                                        tên
+                                                        hàng
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div class="form-check-inline">
+                                                <label class="form-check-label">
+                                                    <span class="ml-1 inline">
+                                                        Độ dài
+                                                        tối
+                                                        đa của
+                                                        Tên hàng
+                                                    </span>
+                                                    <input type="number" name="in-header-max-length" value="40"
+                                                           class="inline">
+                                                </label>
+                                            </div>
+                                            <p class="inline">(= 0 ->Không giới hạn)</p>
+                                        </div>
+                                    </div>
+                                    <!-- In Footer -->
+                                    <div class="row-mau">
+                                        <div class="col-left">
+                                            <div class="form-check-inline">
+                                                <label class="form-check-label">
+                                                    <input type="checkbox"
+                                                           class="form-check-input
+                                                            inline" checked
+                                                           name="in-footer">
+                                                    <span class="ml-1 inline">
+                                                        In
+                                                        Footer
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-right">
+                                            <div class="form-check-inline">
+
+                                                <label class="form-check-label">
+                                                    <input type="checkbox" checked
+                                                           class="form-check-input
+                                                    inline"
+                                                           name="in-footer-price">
+                                                    <span class="ml-1 inline">
+                                                        Giá
+                                                        bán lẻ
+                                                    </span>
+                                                    <input name="in-footer-first" value="Giá: " type="text">
+                                                </label>
+                                            </div>
+                                            <div class="form-check-inline">
+                                                <label class="form-check-label">
+                                                    <span class="ml-1 inline">
+                                                        Loại
+                                                        tiền
+                                                    </span>
+                                                    <input type="text" value="đ" name="in-footer-last"
+                                                           class="inline">
+                                                </label>
+                                            </div>
+                                            @*<div class="form-check-inline">
+                                                    <label class="form-check-label">
+                                                        <input type="radio" name="in-footer-gia-theo" value="1"
+                                                               class="form-check-input inline">
+                                                        <span class="ml-1 inline">
+                                                            Giá
+                                                            trong
+                                                            cấu hình mặt hàng
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-check-inline">
+                                                    <label class="form-check-label">
+                                                        <input type="radio"
+                                                               class="form-check-input
+                                                        inline"
+                                                               name="in-footer-gia-theo" value="2">
+                                                        <span class="ml-1 inline">
+                                                            Trong
+                                                            quản
+                                                            lí giá
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-check-inline ml-5">
+                                                    <label class="form-check-label">
+                                                        <input type="radio"
+                                                               class="form-check-input inline" name="in-footer-gia-theo" value="3">
+                                                        <span class="ml-1 inline">
+                                                            Giá
+                                                            theo
+                                                            nhóm khách hàng
+                                                        </span>
+                                                    </label>
+                                                </div>*@
+                                        </div>
+                                    </div>
+                                    <!---->
+                                    <div class="row-mau tru-mg
+                                    justify-content-start
+                                    mt-3">
+                                        <div class="col-3">
+                                            <div class="box-border">
+                                                <p class="box-border__title
+                                                bg-gray title-sap-xep">
+                                                    Sắp
+                                                    xếp theo mã hàng khi in
+                                                </p>
+                                                <div class="form-check-inline">
+                                                    <label class="form-check-label
+                                                    check-az">
+                                                        <input type="radio"
+                                                               class="form-check-input" name="in-sort" checked
+                                                               value="1"><span>A - Z</span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-check-inline ml-5
+                                                check-az">
+                                                    <label class="form-check-label">
+                                                        <input type="radio"
+                                                               class="form-check-input" name="in-sort"
+                                                               value="2"><span>Z - A</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-3" style=" display: flex; flex-flow: column; justify-content: space-between;">
+                                            <div class="box-barcode">
+                                                <label for="">Loại barcode</label>
+                                                <select name="in-type-barcode" id="in-type-barcode">
+                                                    <option selected value="code128">Code 128</option>
+                                                    <option value="code39">Code 39</option>
+                                                    <option value="ean13">EAN 13</option>
+                                                    <option value="code93">Code 93</option>
+                                                    <option value="ean8">EAN 8</option>
+                                                </select>
+                                            </div>
+                                            <div class="box-barcode">
+                                                <label for="">In barcode theo</label>
+                                                <select name="in-barcode-by" id="in-barcode-by">
+                                                    <option value="1">Mã hàng</option>
+                                                    <option value="2">Alias</option>
+                                                    <option value="3">Số lô + mã hàng</option>
+                                                    <option value="4">Imei</option>
+                                                    <option value="5">Số lô/Barcode</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        @*<div class="col-9">
+                                                <div class="box-border">
+                                                    <p class="box-border__title
+                                                    bg-gray">Size</p>
+                                                    <div class="form-check-inline">
+                                                        <label class="form-check-label">
+                                                            <span>Số cột/trang</span>
+                                                            <input type="number"
+                                                                   class="form-check-input"
+                                                                   value="">
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check-inline ml-5">
+                                                        <label class="form-check-label">
+                                                            <span>Độ rộng vạch</span>
+                                                            <input type="number"
+                                                                   class="form-check-input"
+                                                                   value="">
+                                                        </label>
+                                                    </div>
+                                                    <p class="inline">
+                                                        (0:tự , động-1:bỏ qua, lấy giá
+                                                        trị
+                                                        user tự định nghĩa a)
+                                                    </p>
+                                                </div>
+                                            </div>*@
+
+                                    </div>
+                                    <!-- Barcode -->
+                                    @*<div class="row-mau">
+
+                                            <div class="col-3">
+                                                    <div class="box-barcode">
+                                                        <label for="">Mẫu in</label>
+                                                        <select name="" id="">
+                                                            <option value="">
+                                                                Mẫu rpt In
+                                                                Barcode
+                                                            </option>
+                                                            <option value="">
+                                                                Mẫu rpt In
+                                                                Barcode 2
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                        </div>*@
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Row button -->
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="list-button text-left">
+                                    <a href="#" class="btn btn-export
+                                    inline">
+                                        <img src="/App_Themes/assets/images/btn-export.png"
+                                             alt="" class="inline"><span class="inline">Nhập</span>
+                                    </a>
+                                    <a href="#" class="btn btn-export
+                                    inline">
+                                        <img src="/App_Themes/assets/images/btn-export.png"
+                                             alt="" class="inline"><span class="inline">Tạo mẫu nhập liệu</span>
+                                    </a>
+                                    <a href="#" class="btn btn-export
+                                    inline">
+                                        <img src="/App_Themes/assets/images/btn-export.png"
+                                             alt="" class="inline"><span class="inline">Xuất</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="list-button text-right">
+                                    <a href="javascript:;" class="btn btn-print btn-in-all
+                                    inline">
+                                        <img src="/App_Themes/assets/images/btn-print.png"
+                                             alt="" class="inline"><span class="inline">In</span>
+                                    </a>
+                                    <a href="#" class="btn btn-print
+                                    inline">
+                                        <img src="/App_Themes/assets/images/btn-print.png"
+                                             alt="" class="inline"><span class="inline">In tem kệ</span>
+                                    </a>
+                                    <a href="#" class="btn btn-out inline">
+                                        <img src="/App_Themes/assets/images/btn-out.png"
+                                             alt="" class="inline"><span class="inline">Thoát</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Phiếu nhập kho -->
+    <div class="modal fade default-popup popup-phieu-nhap-kho" id="phieu-nhap-kho"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="width:80%;max-width:100%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Tìm
+                        phiếu nhập kho
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="box-border mt-3">
+                            <p class="box-border__title bg-gray">
+                                Thông tin
+                                tìm kiếm
+                            </p>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <form action="" class="form-nhap-kho
+                                    default-form">
+                                        <div class="row-form">
+                                            <div class="form-group">
+                                                <label for="">Số phiếu</label>
+                                                <input name="in-soPhieu" type="text">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Mã NCC</label>
+                                                <input name="in-maNCC" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Tên NCC</label>
+                                            <input name="in-tenNCC" type="text">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Mã hàng</label>
+                                            <input name="in-maHang" type="text">
+                                            <span class="search-icon absolute"
+                                                  id="button-danh-sach-nv"
+                                                  data-toggle="modal"
+                                                  data-target="#tim-kiem-mat-hang">
+                                                <i class="fas fa-search"></i>
+                                            </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">IMEI</label>
+                                            <input name="in-imei" type="text">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="box-border right disabled">
+                                        <div class="form-check box-border__title
+                                        bg-gray">
+                                            <label class="form-check-label">
+                                                <input type="checkbox"
+                                                       class="form-check-input"
+                                                       name="in-filter-time">
+                                                <span class="ml-2" style="user-select: none;cursor:pointer">
+                                                    Thời gian lập
+                                                    phiếu
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="box-choose-time">
+                                            <p class="mr-2">Từ</p>
+                                            <input class="datetimepicker date-only mr-2" value="@DateTime.Now.ToString("dd/MM/yyyy")"
+                                                   name="in-dateFrom">
+                                            <p class="mr-2">Đến</p>
+                                            <input class="datetimepicker date-only" value="@DateTime.Now.ToString("dd/MM/yyyy")"
+                                                   name="in-dateTo"
+                                                   data-date-format="mm/dd/yyyy">
+                                            @*<select name="" id="" class="mr-2">
+                                                    <option value="">Hôm nay</option>
+                                                    <option value="">Hôm qua</option>
+                                                    <option value="">Tuần nay</option>
+                                                    <option value="">Tuần trước</option>
+                                                    <option value="">Tháng này</option>
+                                                    <option value="">Tháng trước</option>
+                                                    <option value="">Year 2020</option>
+                                                </select>*@
+                                        </div>
+                                        <select class="w-100 mt-2" name="in-caid" id="in-caid">
+                                            <option value="" selected>All</option>
+                                            @foreach (var item in lca)
+                                            {
+                                                <option value="@item.CAID.ToString()">@item.TEN</option>
+                                            }
+
+                                        </select>
+                                    </div>
+                                    <div class="box-lydo">
+                                        <label for="">Lý do nhập</label>
+                                        <select name="in-ldnid" id="in-ldnid">
+                                            <option value="" selected>All</option>
+                                            @foreach (var item in llydo)
+                                            {
+                                                <option value="@item.ID">@item.TEN</option>
+                                            }
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-fluid">
+                        <table class="table display table-striped"
+                               id="in-ds-nhap-kho"
+                               style="width: 100% !important;">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Số phiếu</th>
+                                    <th>Ngày HĐ</th>
+                                    <th>Mã NCC</th>
+                                    <th>Tên NCC</th>
+                                    <th>Nhân viên</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Lý do</th>
+                                    <th>Người lập</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="list-button">
+                        <a href="javascript:;" class="btn btn-search-phieu-nhap-kho
+                        inline">
+                            <img src="/App_Themes/assets/images/btn-search.png"
+                                 alt="" class="inline"><span class="inline">Tìm</span>
+                        </a>
+                        <a href="javascript:;" class="btn btn-export
+                        inline">
+                            <img src="/App_Themes/assets/images/btn-export.png"
+                                 alt="" class="inline"><span class="inline">Xuất</span>
+                        </a>
+                        <a href="javascript:;" class="btn btn-out inline"
+                           data-dismiss="modal">
+                            <img src="/App_Themes/assets/images/btn-out.png"
+                                 alt="" class="inline"><span class="inline">Thoát</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Popup tìm kiếm mặt hàng -->
+    <div class="modal fade default-popup popup-tim-kiem-mat-hang"
+         id="tim-kiem-mat-hang"
+         tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup">Tìm kiếm mặt hàng</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table display table-striped"
+                                       style="width: 100%;"
+                                       id="table-tim-kiem-mat-hang">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên hàng</th>
+                                            <th>Alias</th>
+                                            <th>Mô tả</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>test</td>
+                                            <td>test</td>
+                                            <td>test</td>
+                                            <td>test</td>
+                                            <td><input type="checkbox"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Chọn</button>
+                    <button type="button" class="btn btn-primary">
+                        Chọn và thoát
+                    </button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Thoát
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phiếu nhập kho -->
+    <div class="modal fade default-popup popup-phieu-nhap-kho" id="phieu-chuyen-kho"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Tìm
+                        phiếu nhập kho
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="box-border mt-3">
+                            <p class="box-border__title bg-gray">
+                                Thông tin
+                                tìm kiếm
+                            </p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <form action="" class="form-nhap-kho
+                                    default-form">
+
+                                        <div class="form-group">
+                                            <label for="">Số phiếu</label>
+                                            <input type="text">
+                                        </div>
+                                        <div class="form-group group-ma">
+                                            <label for="">Mã hàng</label>
+                                            <input type="text">
+                                            <span class="search-icon absolute"
+                                                  id="button-danh-sach-nv"
+                                                  data-toggle="modal"
+                                                  data-target="#tim-kiem-mat-hang">
+                                                <i class="fas fa-search"></i>
+                                            </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">IMEI</label>
+                                            <input type="text">
+                                        </div>
+
+                                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="box-border right">
+                                        <div class="form-check box-border__title
+                                        bg-gray">
+                                            <label class="form-check-label">
+                                                <input type="checkbox"
+                                                       class="form-check-input"
+                                                       value="">
+                                                <span class="ml-2">Ngày chuyển</span>
+                                            </label>
+                                        </div>
+                                        <div class="box-choose-time">
+                                            <p class="mr-2">Từ</p>
+                                            <input class="datepicker mr-2"
+                                                   id="chooseDate_To" value="@DateTime.Now.ToString("dd/MM/yyyy")"
+                                                   data-date-format="mm/dd/yyyy">
+                                            <p class="mr-2">Đến</p>
+                                            <input class="datepicker mr-2"
+                                                   id="chooseDate_Form" value="@DateTime.Now.ToString("dd/MM/yyyy")"
+                                                   data-date-format="mm/dd/yyyy">
+                                            <select name="" id="" class="mr-2">
+                                                <option value="">Hôm nay</option>
+                                                <option value="">Hôm qua</option>
+                                                <option value="">Tuần nay</option>
+                                                <option value="">Tuần trước</option>
+                                                <option value="">Tháng này</option>
+                                                <option value="">Tháng trước</option>
+                                                <option value="">Year 2020</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-fluid">
+                        <table class="table display table-striped"
+                               id="table-form-nhap-kho"
+                               style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>PCKCODE</th>
+                                    <th>NGAY</th>
+                                    <th>User ID</th>
+                                    <th>Duyệt</th>
+                                    <th>Người duyệt</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="list-button">
+                        <button href="#" class="btn btn-search
+                        inline">
+                            <img src="/App_Themes/assets/images/btn-search.png"
+                                 alt="" class="inline"><span class="inline">Tìm</span>
+                        </button>
+                        <button href="#" class="btn btn-out inline"
+                                data-dismiss="modal">
+                            <img src="/App_Themes/assets/images/btn-out.png"
+                                 alt="" class="inline"><span class="inline">Thoát</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Popup tìm kiếm mặt hàng -->
+    <div class="modal fade default-popup popup-tim-kiem-mat-hang"
+         id="tim-kiem-mat-hang"
+         tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup">Tìm kiếm mặt hàng</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table display table-striped"
+                                       style="width: 100%;"
+                                       id="table-tim-kiem-mat-hang">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên hàng</th>
+                                            <th>Alias</th>
+                                            <th>Mô tả</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>test</td>
+                                            <td>test</td>
+                                            <td>test</td>
+                                            <td>test</td>
+                                            <td><input type="checkbox"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Chọn</button>
+                    <button type="button" class="btn btn-primary">
+                        Chọn và thoát
+                    </button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Thoát
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup tìm kiếm mặt hàng -->
+    <div class="modal fade default-popup popup-tim-kiem-mat-hang"
+         id="tim-kiem-mat-hang"
+         tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup">Tìm kiếm mặt hàng</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table display table-striped"
+                                       style="width: 100%;"
+                                       id="table-tim-kiem-mat-hang">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên hàng</th>
+                                            <th>Alias</th>
+                                            <th>Mô tả</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>test</td>
+                                            <td>test</td>
+                                            <td>test</td>
+                                            <td>test</td>
+                                            <td><input type="checkbox"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Chọn</button>
+                    <button type="button" class="btn btn-primary">
+                        Chọn và thoát
+                    </button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Thoát
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<div class="print-section a4 show" id="print-hoadon">
+    <div class="container">
+        <div class="print-content ">
+            <div id="export-storage " class="print-panel ">
+                <div class="export-content " style="display: flex; width: 100%; flex-wrap: wrap;">
+                    <div class="print-bill" style="padding-bottom:0px;margin-bottom:0px;">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section myScripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <script src="~/PageScript/MatHang/jquery-barcode.js"></script>
+    <script src="~/PageScript/InBarCode/inBarCode.js"></script>
+    <script src="~/PageScript/PhieuNhap/phieuNhap.js"></script>
+    <script>
+
+        $('.nav-item.cau-hinh .dropdown-menu').css("display", "block");
+
+        $('.nav-item.cau-hinh').addClass('active');
+        $('.nav-item').not('.cau-hinh').removeClass('active');
+        $('.dropdown-item.in-barcode').addClass('active');
+        $('.dropdown-item').not('.in-barcode').removeClass('active');
+
+    </script>
+    <script>
+
+        $('input[name="in-filter-time"]').click(function () {
+            if ($(this).prop('checked') == true) {
+                $(this).closest('.box-border').removeClass('disabled');
+            } else {
+                $(this).closest('.box-border').addClass('disabled');
+            }
+        });
+    </script>
+}

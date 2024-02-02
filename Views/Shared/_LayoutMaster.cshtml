@@ -1,0 +1,2484 @@
+﻿@using KimThanh.Database;
+@using KimThanh.Models;
+@{
+    tblUSER aclog = new tblUSER();
+    if (Session["UID"] != null)
+    {
+        aclog = QuanLyUser.getbyId(Session["UID"].ToString());
+    }
+    var color = "";
+    var colorHead = "";
+    if (Session["SHOWROOMID"] != null)
+    {
+        var sr = Session["SHOWROOMID"].ToString();
+        if (Session["SHOWROOMID"].ToString() == "0942FD0D-FB55-42A6-BADB-25814B3FC85F".ToLower())
+        {
+            color = "rgb(255, 95, 85)";
+            colorHead = "#dc3545";
+        }
+        else if (Session["SHOWROOMID"].ToString() == "83516967-A0A1-41C2-B47C-13FCBE3A8574".ToLower())
+        {
+            color = "rgb(63, 176, 105)";
+            colorHead = "#28a745";
+        }
+    }
+    var showroom = ShowRoom.getListByUserId(aclog.USERID);
+
+    string link = Request.RawUrl;
+
+    #region HeThong
+    string hethong = "";
+    string qluser = "";
+    string nhatkynd = "";
+    #endregion
+
+    #region CauHinh
+    string cauhinh = "";
+
+
+    string chinhanh = "";
+    string khohang = "";
+    string nhomhang = "";
+    string inBarcode = "";
+    string nganhang = "";
+    string lydo = "";
+    string diachi = "";
+    string mauphieuxuathang = "";
+
+    #endregion
+
+    #region DanhMuc
+    string danhmuc = "";
+
+    string nhanvien = "";
+    string khachhang = "";
+    string nhacungcap = "";
+    string mathang = "";
+    string mucgia = "";
+    string mathangexcel = "";
+    string vitri = "";
+    string tonkhomin = "";
+    string cate = "";
+    string tag = "";
+    string type = "";
+    string danhmucweb = "";
+    #endregion
+
+    #region MuaHang
+    string muahang = "";
+    string listmuahang = "";
+    string phieunhapkho = "";
+    string hangmuatralai = "";
+
+    string bctk = "";
+    string tonkho = "";
+    #endregion
+
+
+    #region Banhang
+    string banhang = "";
+    string listBanHang = "";
+    string duyetdon = "";
+    string hoadonbanhang = "";
+    string banhangtra = "";
+    string baocaobanhang = "";
+    string phieughichu = "";
+    string dapunghang = "";
+    string luanchuyenhang = "";
+    #endregion
+    string chuyenkho = "";
+    string nhapxuatkhonb = "";
+    string baocaochuyenkho = "";
+
+    string quy = "";
+    string baocao = "";
+    string thongketonghop = "";
+    string tienich = "";
+
+    string phieuthu = "";
+    string phieuchi = "";
+
+    #region kiem hang
+    string kiemhang = "";
+    string phiennhapkho = "";
+    string phienkiemhang = "";
+    string taophienkiemhang = "";
+    #endregion
+
+    #region Cong viec
+    //string congviec = "";
+    //string congviecdagiao = "";
+    //string congviecduocgiao = "";
+    #endregion
+
+    #region Luong
+    //string Luong = "";
+    //string DonUngLuong = "";
+    //string DonUngLuongNV = "";
+    //string DonNghiPhep = "";
+    //string DonNghiPhepNV = "";
+    //string DanhSachLuong = "";
+    #endregion
+
+    #region Cho xu ly
+    string ChoXuLy = "";
+    #endregion
+
+    #region Chuẩn bị hàng
+    string CBHChoXuLy = "";
+    #endregion
+
+    if (!string.IsNullOrEmpty(link))
+    {
+        if (link.ToLower().Contains("quanlyuser"))
+        {
+            hethong = qluser = "active";
+        }
+        else if (link.ToLower().Contains("nhatkynguoidung"))
+        {
+            hethong = nhatkynd = "active";
+        }
+        else if (link.ToLower().Contains("/nhanvien"))
+        {
+            danhmuc = nhanvien = "active";
+        }
+        else if (link.ToLower() == "/khachhang")
+        {
+            danhmuc = khachhang = "active";
+        }
+        else if (link.ToLower() == "/khachhang/nhacungcap")
+        {
+            danhmuc = nhacungcap = "active";
+        }
+        else if (link.ToLower().Equals("/chinhanh"))
+        {
+            cauhinh = chinhanh = "active";
+        }
+        else if (link.ToLower().Contains("khohang"))
+        {
+            cauhinh = khohang = "active";
+        }
+        else if (link.ToLower().Contains("nhomhang"))
+        {
+            cauhinh = nhomhang = "active";
+        }
+        else if (link.ToLower() == "/mathang")
+        {
+            danhmuc = mathang = "active";
+        }
+        else if (link.ToLower() == "/cauhinhchung/mucgia")
+        {
+            danhmuc = mucgia = "active";
+        }
+        else if (link.ToLower() == "/mathang/mathangexcel")
+        {
+            danhmuc = mathangexcel = "active";
+        }
+        else if (link.ToLower().Contains("vitrimathang"))
+        {
+            danhmuc = vitri = "active";
+        }
+        else if (link.ToLower().Equals("/tonkhomin/tonkhominchinhanh"))
+        {
+            danhmuc = tonkhomin = "active";
+        }
+        else if (link.ToLower().Equals("/mathang/catelogymathang"))
+        {
+            danhmuc = cate = "active";
+        }
+        else if (link.ToLower().Equals("/mathang/tagmathang"))
+        {
+            danhmuc = tag = "active";
+        }
+        else if (link.ToLower().Equals("/mathang/typemathang"))
+        {
+            danhmuc = type = "active";
+        }
+        else if (link.ToLower().Equals("/mathang/danhmucweb"))
+        {
+            danhmuc = danhmuc = "active";
+        }
+        else if (link.ToLower().Contains("inbarcode"))
+        {
+            cauhinh = inBarcode = "active";
+        }
+        else if (link.ToLower().Contains("nganhang"))
+        {
+            cauhinh = nganhang = "active";
+        }
+        else if (link.ToLower().Contains("lydo"))
+        {
+            cauhinh = lydo = "active";
+        }
+        else if (link.ToLower().Contains("diachi"))
+        {
+            cauhinh = diachi = "active";
+        }
+        else if (link.ToLower().Contains("mauphieuxuathang"))
+        {
+            cauhinh = mauphieuxuathang = "active";
+        }
+        else if (link.ToLower().Contains("phieughichu"))
+        {
+            banhang = phieughichu = "active";
+        }
+        else if (link.ToLower() == "/muahang/listdonmuahang")
+        {
+            muahang = listmuahang = "active";
+        }
+        else if (link.ToLower().Contains("phieunhapkho"))
+        {
+            muahang = phieunhapkho = "active";
+        }
+        else if (link.ToLower().Contains("hangmuatralai"))
+        {
+            muahang = hangmuatralai = "active";
+        }
+        else if (link.ToLower().Contains("sokhobctk") || link.ToLower().Contains("tonkhobctk") || link.ToLower().Contains("baocaomuahangbctk") || link.ToLower().Contains("hethangbctk") || link.ToLower().Contains("theodoihangtonbctk") || link.ToLower().Contains("thekhochitietbctk"))
+        {
+            muahang = bctk = "active";
+        }
+
+        else if (link.ToLower() == "/banhang/listbanhang")
+        {
+            banhang = listBanHang = "active";
+        }
+        else if (link.ToLower().Contains("duyetdon"))
+        {
+            banhang = duyetdon = "active";
+        }
+        else if (link.ToLower() == "/banhang/hoadonbanhang")
+        {
+            banhang = hoadonbanhang = "active";
+        }
+        else if (link.StartsWith("/BanHang/HoaDonBanHang"))
+        {
+            banhang = hoadonbanhang = "active";
+        }
+        else if (link.ToLower() == "/banhang/banhangtra")
+        {
+            banhang = banhangtra = "active";
+        }
+        else if (link.StartsWith("/BanHang/BanHangTra"))
+        {
+            banhang = banhangtra = "active";
+        }
+        else if (link.StartsWith("/DapUngHang/KhaNangDapUng"))
+        {
+            banhang = dapunghang = "active";
+        }
+        else if (link.StartsWith("/TonKhoMin/LuanChuyenHang"))
+        {
+            banhang = luanchuyenhang = "active";
+        }
+        else if (link.ToLower() == "/banhang/baocaobanhang" || link.ToLower() == "/banhang/baocaolsbh" || link.ToLower() == "/banhang/loadbanmhbaocao")
+        {
+            banhang = baocaobanhang = "active";
+        }
+        else if (link.ToLower().Contains("phieuthu"))
+        {
+            quy = phieuthu = "active";
+        }
+        else if (link.ToLower().Contains("phieuchi"))
+        {
+            quy = phieuchi = "active";
+        }
+        else if (link.StartsWith("/chuyenkho"))
+        {
+            chuyenkho = nhapxuatkhonb = "active";
+        }
+        else if (link.ToLower() == "/chuyenkho")
+        {
+            chuyenkho = nhapxuatkhonb = "active";
+        }
+        else if (link.ToLower() == "/chuyenkho/baocao")
+        {
+            chuyenkho = baocaochuyenkho = "active";
+        }
+        else if (link.ToLower().Contains("thongketonghop"))
+        {
+            baocao = thongketonghop = "active";
+        }
+        else if (link.ToLower().Contains("/kiemhang/danhsachphiennhapkho"))
+        {
+            kiemhang = phiennhapkho = "active";
+        }
+        else if (link.StartsWith("/KiemHang/LoadChiTietPhienNhapKho"))
+        {
+            kiemhang = phiennhapkho = "active";
+        }
+        else if (link.ToLower().Contains("/kiemhang/danhsachphienkiemhang"))
+        {
+            kiemhang = phienkiemhang = "active";
+        }
+        else if (link.StartsWith("/KiemHang/LoadChiTietPhienKiemHang"))
+        {
+            kiemhang = phienkiemhang = "active";
+        }
+        else if(link.ToLower().Equals("/kiemhang/taophienkiemhang"))
+        {
+            kiemhang = taophienkiemhang = "active";
+        }
+        else if(link.StartsWith("/KiemHang/TaoCTPhienKiemHang"))
+        {
+            kiemhang = taophienkiemhang = "active";
+        }
+
+        //else if (link.ToLower().Contains("/congviec/loadcongviecduocgiao"))
+        //{
+        //    congviec = congviecduocgiao = "active";
+        //}
+        //else if (link.ToLower().Contains("/congviec/loadcongviecdagiao"))
+        //{
+        //    congviec = congviecdagiao = "active";
+        //}
+        //else if (link.ToLower().Contains("/luong/luongnhanvien"))
+        //{
+        //    Luong = DanhSachLuong = "active";
+        //}
+        //else if (link.ToLower().Equals("/luong/donxinnghiphep"))
+        //{
+        //    Luong = DonNghiPhep = "active";
+        //}
+        //else if (link.ToLower().Equals("/luong/donxinnghiphepnhanvien"))
+        //{
+        //    Luong = DonNghiPhepNV = "active";
+        //}
+        //else if (link.ToLower().Equals("/luong/donxinungluong"))
+        //{
+        //    Luong = DonUngLuong = "active";
+        //}
+        //else if (link.ToLower().Equals("/luong/donxinungluongnhanvien"))
+        //{
+        //    Luong = DonUngLuongNV = "active";
+        //}
+        else if (link.ToLower().Equals("/choxulybanhang/choxuly"))
+        {
+            banhang = ChoXuLy = "active";
+        }
+        else if (link.ToLower().Equals("/choxulybanhang/luuphieu"))
+        {
+            banhang = ChoXuLy = "active";
+        }
+        else if (link.ToLower().Equals("/choxulybanhang/thanhtoanphieu"))
+        {
+            banhang = ChoXuLy = "active";
+        }
+        else if (link.ToLower().Equals("/choxulybanhang/huyphieu"))
+        {
+            banhang = ChoXuLy = "active";
+        }
+        else if (link.ToLower().Equals("/choxulybanhang/cholayhang"))
+        {
+            banhang = ChoXuLy = "active";
+        }
+        else if (link.ToLower().Equals("/chuanbihang/choxuly"))
+        {
+            banhang = CBHChoXuLy = "active";
+        }
+        else if (link.ToLower().Equals("/chuanbihang/hoanthanh"))
+        {
+            banhang = CBHChoXuLy = "active";
+        }
+        else if (link.ToLower().Equals("/chuanbihang/huy"))
+        {
+            banhang = CBHChoXuLy = "active";
+        }
+    }
+
+
+}
+<!doctype html>
+<html lang="vi">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,
+      shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"
+          href="/App_Themes/css/datatables.min.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/css/fonts/Averta/font.css">
+    <link rel="stylesheet" type="text/css"
+          href="/App_Themes/css/fontawesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/App_Themes/css/bootstrap.min.css">
+    <link href="https://cdn.datatables.net/responsive/2.2.6/css/responsive.dataTables.min.css" />
+    <link rel="stylesheet" href="/App_Themes/css/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="/App_Themes/css/style.css">
+    <link href="/App_Themes/css/csscustom.css" rel="stylesheet" />
+    <link href="~/App_Themes/select2/css/select2.min.css" rel="stylesheet" />
+    <title>Kim Thành</title>
+    <style>
+        .noti-success {
+            background-color: #51b451 !important;
+        }
+
+        .noti-warning {
+            background-color: #efa740 !important;
+        }
+
+        .noti-error {
+            background-color: #ef2621 !important;
+        }
+
+        .cooltoast-text {
+            color: #fff;
+        }
+
+        .cooltoast-icon {
+            color: #fff;
+        }
+
+        .loader {
+            display: flex;
+            justify-content: center;
+            top: 0;
+            left: 0px;
+            position: fixed;
+            opacity: 0.8;
+            z-index: 10000000;
+            height: 100%;
+            width: 100%;
+            margin: auto;
+        }
+
+        .strip-holder {
+            justify-content: center;
+            flex-flow: column;
+            display: flex;
+            text-align: center;
+        }
+
+        div.dts div.dataTables_scrollBody {
+            background: none !important;
+        }
+
+        .noselect {
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Old versions of Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+        }
+
+        .nav-item.active .dropdown-menu {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="loader noselect" id="AjaxLoader" style="display:none">
+        <div class="strip-holder">
+            <img src="~/App_Themes/assets/Spinner-1s-204px.gif" style="width:120px;" />
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg fix-navbar" style="background-color: @color">
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <ul class="navbar-nav m-auto mt-2 mt-lg-0">
+                <li class="nav-item he-thong @hethong">
+                    <a class="nav-link dropdown" href="javascript:;" data-sub="sub-1">
+                        Hệ
+                        thống <span class="sr-only">(current)</span>
+                    </a>
+                    <!-- Sub menu 1 -->
+                    <div class="dropdown-menu" id="sub-1">
+                        <div class="submenu-group right">
+                            <a class="dropdown-item quan-ly-user @qluser" href="@Url.Action("QuanLyUser","HeThong")">
+                                <img src="~/App_Themes/assets/icon/1.1-QLuser.png" class="submenu-icon" alt="">
+                                Quản lí <br> user
+                            </a>
+
+                            <a class="dropdown-item" href="#" data-toggle="modal"
+                               data-target="#form-doi-mat-khau">
+                                <img src="~/App_Themes/assets/icon/1.2-Doimatkhau.png" class="submenu-icon"
+                                     alt="">đổi <br>
+                                mật khẩu
+                            </a>
+                            <a class="dropdown-item @nhatkynd" href="@Url.Action("Index","NhatKyNguoiDung")">
+                                <img src="~/App_Themes/assets/icon/1.3-NKNguoiDung.png"
+                                     class="submenu-icon"
+                                     alt="">nhật
+                                ký <br> người dùng
+                            </a>
+                        </div>
+                        <a class="dropdown-item sao-luu-phuc-hoi" href="javascript:;">
+                            <img src="~/App_Themes/assets/icon/1.4-SLPH-Dulieu.png" class="submenu-icon"
+                                 alt="">sao
+                            lưu <br> phục hồi dữ liệu
+                        </a>
+                        <div class="submenu-group left">
+                            @*<a class="dropdown-item" href="#" data-toggle="modal"
+                                   data-target="#thoat-chuong-trinh">
+                                    <img src="/App_Themes/assets/images/chuyen-chi-nhanh.png" class="submenu-icon"
+                                         alt="">chuyển <br> chi nhánh
+                                </a>*@
+                            <a class="dropdown-item pt-13" href="#" data-toggle="modal"
+                               data-target="#thoat-chuong-trinh">
+                                <img src="~/App_Themes/assets/icon/1.5-DangXuat.png" class="submenu-icon"
+                                     alt="">Đăng xuất
+                            </a>
+                            @*<a class="dropdown-item pt-13" href="#" data-toggle="modal"
+                                   data-target="#thoat-chuong-trinh">
+                                    <img src="/App_Themes/assets/images/close-menu.png" class="submenu-icon"
+                                         alt="">Đóng
+                                </a>*@
+                        </div>
+                        <div class="submenu-des">Hệ thống</div>
+                    </div>
+                </li>
+                <li class="nav-item cau-hinh @cauhinh">
+                    <a class="nav-link dropdown" href="javascript:;" data-sub="sub-2">Cấu hình</a>
+                    <!-- Sub menu 2 -->
+                    <div class="dropdown-menu" id="sub-2">
+                        @*<a class="dropdown-item nhan-vien @nhanvien" href="@Url.Action("Index","NhanVien")">
+                                <img src="/App_Themes/assets/images/nhan-vien.png" class="submenu-icon"
+                                     alt="">
+                                nhân <br> viên
+                            </a>
+                            <a class="dropdown-item khach-hang @khachhang" href="@Url.Action("Index","KhachHang")">
+                                <img src="/App_Themes/assets/images/khach-hang-than-thiet.png" class="submenu-icon"
+                                     alt="">khách <br> hàng
+                            </a>
+                            <a class="dropdown-item khach-hang @nhacungcap" href="@Url.Action("NhaCungCap","KhachHang")">
+                                <img src="/App_Themes/assets/images/khach-hang-va-ncc.png" class="submenu-icon"
+                                     alt="">nhà <br> cung cấp
+                            </a>*@
+                        <a class="dropdown-item chi-nhanh @chinhanh" href="@Url.Action("Index","ChiNhanh")">
+                            <img src="~/App_Themes/assets/icon/2.1-Chinhanh.png" class="submenu-icon"
+                                 alt="">chi <br>
+                            nhánh
+                        </a>
+                        <a class="dropdown-item kho-hang @khohang" href="@Url.Action("Index","KhoHang")">
+                            <img src="~/App_Themes/assets/icon/2.2-khohang.png" class="submenu-icon"
+                                 alt="">kho <br>
+                            hàng
+                        </a>
+                        <a class="dropdown-item nhom-hang @nhomhang" href="@Url.Action("Index","NhomHang")">
+                            <img src="~/App_Themes/assets/icon/2.3-Nhomhang.png" class="submenu-icon"
+                                 alt="">nhóm <br>
+                            hàng
+                        </a>
+                        @*<a class="dropdown-item mat-hang @mathang" href="@Url.Action("Index","MatHang")">
+                                <img src="/App_Themes/assets/images/mat-hang.png" class="submenu-icon"
+                                     alt="">mặt <br>
+                                hàng
+                            </a>
+                            <a class="dropdown-item" href="@Url.Action("ViTri","ViTriMatHang")">
+                                <img src="/App_Themes/assets/images/vitri-mathang.png" class="submenu-icon"
+                                     alt="">Vị trí <br> mặt hàng<br>
+                            </a>*@
+                        @*<div class="submenu-group center">
+                                <a class="dropdown-item chi-nhanh @chinhanh" href="@Url.Action("Index","ChiNhanh")">
+                                    <img src="/App_Themes/assets/images/chi-nhanh.png" class="submenu-icon"
+                                         alt="">chi <br>
+                                    nhánh
+                                </a>
+                                <a class="dropdown-item kho-hang @khohang" href="@Url.Action("Index","KhoHang")">
+                                    <img src="/App_Themes/assets/images/kho-hang.png" class="submenu-icon"
+                                         alt="">kho <br>
+                                    hàng
+                                </a>
+                                <a class="dropdown-item nhom-hang @nhomhang" href="@Url.Action("Index","NhomHang")">
+                                    <img src="/App_Themes/assets/images/nhom-hang.png" class="submenu-icon"
+                                         alt="">nhóm <br>
+                                    hàng
+                                </a>
+                                <a class="dropdown-item mat-hang @mathang" href="@Url.Action("Index","MatHang")">
+                                        <img src="/App_Themes/assets/images/mat-hang.png" class="submenu-icon"
+                                             alt="">mặt <br>
+                                        hàng
+                                    </a>
+                                    <a class="dropdown-item" href="@Url.Action("ViTri","ViTriMatHang")">
+                                        <img src="/App_Themes/assets/images/vitri-mathang.png" class="submenu-icon"
+                                             alt="">Vị trí <br> mặt hàng<br>
+                                    </a>
+                                <a class="dropdown-item" href="@Url.Action("NotFound","Home")">
+                                    <img src="/App_Themes/assets/images/phieu-ghi-chu.png" class="submenu-icon"
+                                         alt="">Phiếu <br> ghi chú<br>
+                                </a>
+                            </div>*@
+                        <div class="submenu-group right">
+                            @*<a class="dropdown-item table-mat-hang-excel @mathangexcel" href="@Url.Action("MatHangExcel","MatHang")">
+                                            <img src="/App_Themes/assets/images/mat-hang-excel.png"
+                                                 class="submenu-icon"
+                                                 alt="">
+                                            Nhập mặt hàng <br> từ excel
+                                        </a>
+                                        <a class="dropdown-item in-barcode @inBarcode" href="@Url.Action("In","InBarCode")">
+                                    <img src="/App_Themes/assets/images/in-ma-vach.png" class="submenu-icon"
+                                         alt="">
+                                    In <br> mã vạch
+                                </a>*@
+                        </div>
+                        <div class="submenu-group right">
+                            @*<a class="dropdown-item ngan-hang @nganhang" href="@Url.Action("Index","NganHang")">
+                                    <img src="/App_Themes/assets/images/ngan-hang.png" class="submenu-icon"
+                                         alt="">
+                                    Ngân <br> hàng
+                                </a>*@
+                            <!-- <a class="dropdown-item" href="tien-te.html">
+                              <img src="/App_Themes/assets/images/tien-te.png" class="submenu-icon"
+                                alt="">
+                              tiền <br> tệ
+                            </a> -->
+                        </div>
+                        <a class="dropdown-item ly-do @lydo" href="@Url.Action("Index","LyDo")">
+                            <img src="~/App_Themes/assets/icon/2.4-Lydo.png" class="submenu-icon"
+                                 alt="">
+                            lý <br> do
+                        </a>
+                        <a class="dropdown-item dia-chi @diachi" href="@Url.Action("Index","DiaChi")">
+                            <img src="~/App_Themes/assets/icon/2.5-Diachi.png" class="submenu-icon"
+                                 alt="">
+                            địa <br> chỉ
+                        </a>
+                        <a class="dropdown-item @mauphieuxuathang" href="@Url.Action("MauPhieuXuatHang","CauHinhChung")">
+                            <img src="~/App_Themes/assets/icon/8.1-NXK-noibo.png" class="submenu-icon"
+                                 alt="">
+                           Thông <br> Tin
+                        </a>
+                        @*<div class="submenu-group-all">
+                            <a class="dropdown-item" href="ca-lam-viec.html">
+                              <img src="/App_Themes/assets/images/ca-lam-viec.png" class="submenu-icon"
+                                alt="">
+                              ca <br> làm việc
+                            </a>
+                                <a class="dropdown-item" href="#" data-toggle="modal"
+                                   data-target="#tuy-chon">
+                                    <img src="/App_Themes/assets/images/tuy-chon.png" class="submenu-icon"
+                                         alt="">
+                                    tùy <br> chọn
+                                </a>
+                            </div>*@
+
+                        <div class="submenu-des">Lập cấu hình danh mục chuẩn</div>
+                    </div>
+                </li>
+                <li class="nav-item danh-muc @danhmuc">
+                    <a class="nav-link dropdown" href="javascript:;" data-sub="sub-3">Danh mục</a>
+                    <!-- Sub menu 2 -->
+                    <div class="dropdown-menu" id="sub-3">
+                        <a class="dropdown-item nhan-vien @nhanvien" href="@Url.Action("Index","NhanVien")">
+                            <img src="~/App_Themes/assets/icon/3.1-Nhanvien.png" class="submenu-icon"
+                                 alt="">
+                            nhân <br> viên
+                        </a>
+                        <div class="submenu-group center">
+                            <a class="dropdown-item khach-hang @khachhang" href="@Url.Action("Index","KhachHang")">
+                                <img src="~/App_Themes/assets/icon/3.2-Khachhang.png" class="submenu-icon"
+                                     alt="">khách <br> hàng
+                            </a>
+                            <a class="dropdown-item khach-hang @nhacungcap" href="@Url.Action("NhaCungCap","KhachHang")">
+                                <img src="~/App_Themes/assets/icon/3.3-Nhacungcap.png" class="submenu-icon"
+                                     alt="">nhà <br> cung cấp
+                            </a>
+                        </div>
+                        <div class="submenu-group all">
+                            <a class="dropdown-item ton-kho-min @cate" href="@Url.Action("catelogymathang","mathang")">
+                                <img src="~/App_Themes/assets/icon/4.1-Cv-da-giao.png" class="submenu-icon"
+                                     alt="">Loại <br> mặt hàng<br>
+                            </a>
+                        </div>
+                        <div class="submenu-group all">
+                            <a class="dropdown-item ton-kho-min @type" href="@Url.Action("typemathang","mathang")">
+                                <img src="~/App_Themes/assets/icon/10.1-TKBCT.Hop.png" class="submenu-icon"
+                                     alt="">Kiểu <br> mặt hàng<br>
+                            </a>
+                        </div>
+                        <div class="submenu-group all">
+                            <a class="dropdown-item ton-kho-min @tag" href="@Url.Action("tagmathang","mathang")">
+                                <img src="~/App_Themes/assets/icon/8.2-Bao-cao.png" class="submenu-icon"
+                                     alt="">Tag <br> mặt hàng<br>
+                            </a>
+                        </div>
+                        <div class="submenu-group all">
+                            <a class="dropdown-item ton-kho-min @danhmucweb" href="@Url.Action("danhmucweb","mathang")">
+                                <img src="~/App_Themes/assets/icon/noname-27.png" class="submenu-icon"
+                                     alt="">Danh mục <br> webstite<br>
+                            </a>
+                        </div>
+                        <div class="submenu-group right">
+                            <a class="dropdown-item mat-hang @mathang" href="@Url.Action("Index","MatHang")">
+                                <img src="~/App_Themes/assets/icon/3.4-Mathang.png" class="submenu-icon"
+                                     alt="">mặt <br>
+                                hàng
+                            </a>
+                            <a class="dropdown-item muc-gia @mucgia" href="@Url.Action("MucGia","CauHinhChung")">
+                                <img src="~/App_Themes/assets/icon/9.2-Songanhang.png" class="submenu-icon"
+                                     alt="">Mức <br>
+                                Giá
+                            </a>
+                            @*<a class="dropdown-item table-mat-hang-excel @mathangexcel" href="@Url.Action("MatHangExcel","MatHang")">
+                <img src="/App_Themes/assets/images/mat-hang-excel.png"
+                     class="submenu-icon"
+                     alt="">
+                Nhập mặt hàng <br> từ excel
+            </a>*@
+                        </div>
+                        <div class="submenu-group all">
+                            <a class="dropdown-item vi-tri @vitri" href="@Url.Action("ViTri","ViTriMatHang")">
+                                <img src="~/App_Themes/assets/icon/3.5-Vi-tri-mat-hang.png" class="submenu-icon"
+                                     alt="">Vị trí <br> mặt hàng<br>
+                            </a>
+                        </div>
+                        <div class="submenu-group all">
+                            <a class="dropdown-item ton-kho-min @tonkhomin" href="@Url.Action("TonKhoMinChiNhanh","TonKhoMin")">
+                                <img src="~/App_Themes/assets/icon/noname-13.png" class="submenu-icon"
+                                     alt="">Tồn kho <br> min<br>
+                            </a>
+                        </div>
+                        <div class="submenu-des">Danh mục</div>
+                    </div>
+                </li>
+                <!--<li class="nav-item congivec congviec">
+                    <a class="nav-link dropdown" data-sub="sub-11" href="javascript:;">Công việc</a>-->
+                <!-- Sub menu 3 -->
+                <!--<div class="dropdown-menu" id="sub-11">
+                        <a class="dropdown-item don-mua-hang congviecdagiao" href="Url.Action("LoadCongViecDaGiao","CongViec")">
+                            <img src="~/App_Themes/assets/icon/4.1-Cv-da-giao.png" class="submenu-icon"
+                                 alt="">
+                            Công việc <br> đã giao
+                        </a>
+                        <a class="dropdown-item don-mua-hang congviecduocgiao" href="Url.Action("LoadCongViecDuocGiao","CongViec")">
+                            <img src="/App_Themes/assets/images/don-mua-hang.png" class="submenu-icon"
+                                 alt="">
+                            Công việc <br> được giao
+                        </a>
+                        <div class="submenu-des">Quản lí công việc</div>
+                    </div>
+                </li>
+                <li class="nav-item luong Luong">
+                    <a class="nav-link dropdown" data-sub="sub-12" href="javascript:;">Lương</a>-->
+                <!-- Sub menu 3 -->
+                <!--<div class="dropdown-menu" id="sub-12">
+                        <a class="dropdown-item don-mua-hang DanhSachLuong" href="Url.Action("LuongNhanVien","Luong")">
+                            <img src="~/App_Themes/assets/images/so-du-ngan-hang.png" class="submenu-icon"
+                                 alt="">
+                            Danh sách lương <br> nhân viên
+                        </a>
+                        <a class="dropdown-item don-mua-hang DonUngLuong" href="Url.Action("DonXinUngLuong","Luong")">
+                            <img src="~/App_Themes/assets/images/quan-li-gia-von.png" class="submenu-icon"
+                                 alt="">
+                            Duyệt <br> đơn ứng lương
+                        </a>
+                        <a class="dropdown-item don-mua-hang DonUngLuongNV" href="Url.Action("DonXinUngLuongNhanvien","Luong")">
+                            <img src="/App_Themes/assets/images/don-mua-hang.png" class="submenu-icon"
+                                 alt="">
+                            Đơn <br> ứng lương nhân viên
+                        </a>
+                        <a class="dropdown-item don-mua-hang DonNghiPhep" href="Url.Action("DonXinNghiPhep","Luong")">
+                            <img src="~/App_Themes/assets/images/quan-li-gia-von.png" class="submenu-icon"
+                                 alt="">
+                            Duyệt <br> đơn nghỉ phép
+                        </a>
+                        <a class="dropdown-item don-mua-hang DonNghiPhepNV" href="Url.Action("DonXinNghiPhepNhanVien","Luong")">
+                            <img src="/App_Themes/assets/images/don-mua-hang.png" class="submenu-icon"
+                                 alt="">
+                            Đơn <br> nghỉ phép nhân viên
+                        </a>
+                        <div class="submenu-des">Quản lí lương nhân viên</div>
+                    </div>
+                </li>-->
+                <li class="nav-item mua-hang @muahang">
+                    <a class="nav-link dropdown" data-sub="sub-4" href="javascript:;">Mua hàng</a>
+                    <!-- Sub menu 3 -->
+                    <div class="dropdown-menu" id="sub-4">
+                        <a class="dropdown-item don-mua-hang @listmuahang" href="@Url.Action("ListDonMuaHang","MuaHang")">
+                            <img src="~/App_Themes/assets/icon/5.1-Donmuahang.png" class="submenu-icon"
+                                 alt="">
+                            Đơn <br> mua hàng
+                        </a>
+                        <div class="submenu-group center">
+                            <a class="dropdown-item  @phieunhapkho" href="@Url.Action("Index","PhieuNhapkho")">
+                                <img src="~/App_Themes/assets/icon/5.2-phieunhapkho.png" class="submenu-icon"
+                                     alt="">Phiếu <br> nhập kho
+                            </a>
+                            <a class="dropdown-item @hangmuatralai" href="@Url.Action("Index","HangMuaTraLai")">
+                                <img src="~/App_Themes/assets/icon/5.3-hangmuatralai.png" class="submenu-icon"
+                                     alt="">Hàng mua <br> trả lại
+                            </a>
+                        </div>
+                        <div class="submenu-group-all">
+                            <!-- <a class="dropdown-item" href="tra-tien-ncc.html"><img
+                            src="/App_Themes/assets/images/tra-tien-ncc.png" class="submenu-icon"
+                            alt="">Trả tiền <br> nhà cung cấp</a> -->
+                            <!-- <a class="dropdown-item" href="ql-gia-von.html"><img
+                            src="/App_Themes/assets/images/quan-li-gia-von.png" class="submenu-icon"
+                            alt="">Quản lí <br> giá vốn</a> -->
+                            <div class="submenu-bctk d-inline position-relative">
+                                <a class="dropdown-item have-menu-child pt-13  @bctk" href="#"
+                                   data-menu="bctk1">
+                                    <img src="~/App_Themes/assets/icon/5.4-Bao-cao.png" class="submenu-icon"
+                                         alt=""><span>BC_TK</span>
+                                </a>
+                                <ul class="menu-child" id="bctk1">
+                                    <li>
+                                        <a href="@Url.Action("Index","SoKhoBCTK")">
+                                            <span class="title">Sổ Kho</span>
+                                            <span class="des">Xem/in xuất Nhập, Điều chuyển, Tồn hàng hóa</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index","TonkhoBCTK")">
+                                            <span class="title">Tồn kho</span>
+                                            <span class="des">Xem/in hàng hóa tồn kho</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index","HetHangBCTK")" class="border-bt">
+                                            <span class="title">Hết hàng</span>
+                                            <span class="des">Xem/in đã bán hết, ngày bán hết</span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="@Url.Action("Index","TheoDoiHangTonBCTK")">
+                                            <span class="title">Theo dõi hàng tồn</span>
+                                            <span class="des">
+                                                Xem/in hàng tồn kho theo các khoảng thời gian nhập kho
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index","TheKhoChiTietBCTK")">
+                                            <span class="title">Thẻ kho chi tiết</span>
+                                            <span class="des">
+                                                Xem/in thẻ kho chi tiết của từng mặt hàng trong từng kho
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index","BaoCaoMuaHangBCTK")">
+                                            <span class="title">Báo cáo mua hàng</span>
+                                            <span class="des">
+                                                Xem/in chi tiết báo cáo mua hàng trong
+                                                ngày hoặc theo khoảng thời gian
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <!-- <li>
+                                      <a href="chi-tiet-serial.html">
+                                        <span class="title">Quản lí Seria,Imei</span>
+                                        <span class="des">Xem/In Serial/Imei chưa bán, đã bán, ngày
+                                          nhập, ngày bán</span>
+                                      </a>
+                                    </li> -->
+                                    <!-- <li>
+                                      <a href="quan-li-han-the.html">
+                                        <span class="title">Quản lí hạn thẻ</span>
+                                        <span class="des">Xem/in các mốc thời gian hết hạn thẻ bảo
+                                          hành Serial/Imei, số lượng tồn tại từng mốc</span>
+                                      </a>
+                                    </li> -->
+                                    @* <li>
+                                          <a href="theo-doi-hang-ton.html">
+                                            <span class="title">Theo dõi hàng tồn</span>
+                                            <span class="des">Xem/in hàng tồn theo các khoảng thời gian
+                                              nhập kho</span>
+                                          </a>
+                                        </li> *@
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="submenu-des">Quản lí mua hàng</div>
+                    </div>
+                </li>
+                <li class="nav-item ban-hang @banhang">
+                    <a class="nav-link dropdown" data-sub="sub-5" href="javascript:;">Bán hàng</a>
+                    <!-- Sub menu 4 -->
+                    <div class="dropdown-menu" id="sub-5">
+                        <a class="dropdown-item @listBanHang" href="@Url.Action("ListBanHang","BanHang")">
+                            <img src="~/App_Themes/assets/icon/6.1-Dondathang.png" class="submenu-icon"
+                                 alt="">
+                            đơn <br> đặt hàng
+                        </a>
+                        <div class="submenu-group center">
+                            @*<a class="dropdown-item" href="@Url.Action("NotFound","Home")">
+            <img src="/App_Themes/assets/images/hoa-don-ban-buon-menu.png"
+                 class="submenu-icon"
+                 alt="">Hóa đơn <br> bán buôn
+        </a>*@
+                            <a class="dropdown-item @hoadonbanhang" href="@Url.Action("HoaDonBanHang","BanHang")">
+                                <img src="~/App_Themes/assets/icon/6.2-HDBanhang.png"
+                                     class="submenu-icon"
+                                     alt="">Hóa đơn <br> bán hàng
+                            </a>
+                            <a class="dropdown-item don-mua-hang @ChoXuLy" href="@Url.Action("choxuly","choxulybanhang")">
+                                <img src="~/App_Themes/assets/icon/6.3-Choxuly.png" class="submenu-icon"
+                                     alt="">
+                                Chờ Xử <br> Lý
+                            </a>
+                            <a class="dropdown-item @phieughichu" href="@Url.Action("Index","PhieuGhiChu")">
+                                <img src="~/App_Themes/assets/icon/6.4-Phieughichu.png" class="submenu-icon"
+                                     alt="">Phiếu <br> ghi chú<br>
+                            </a>
+                            <a class="dropdown-item don-mua-hang @CBHChoXuLy" href="@Url.Action("Choxuly","chuanbihang")">
+                                <img src="~/App_Themes/assets/icon/noname-10.png" class="submenu-icon"
+                                     alt="">
+                                Chuẩn bị <br> Hàng
+                            </a>
+                            <a class="dropdown-item don-mua-hang @luanchuyenhang" href="@Url.Action("LuanChuyenHang","TonKhoMin")">
+                                <img src="~/App_Themes/assets/icon/noname-34.png" class="submenu-icon"
+                                     alt="">
+                                Luân Chuyển <br> Hàng
+                            </a>
+                            <a class="dropdown-item @banhangtra" href="@Url.Action("BanHangTra","BanHang")">
+                                <img src="~/App_Themes/assets/icon/6.5-Hang-ban-tra-lai.png"
+                                     class="submenu-icon"
+                                     alt="">Hàng bán <br> trả lại
+                            </a>
+                        </div>
+                        <div class="submenu-group-all">
+                            @*<a class="dropdown-item" href="@Url.Action("NotFound","Home")">
+                                    <img src="/App_Themes/assets/images/thu-tien-khach-hang.png"
+                                         class="submenu-icon"
+                                         alt="">Thu tiền <br> khách hàng
+                                </a>*@
+                            <a class="dropdown-item @dapunghang" href="@Url.Action("KhaNangDapUng","DapUngHang")">
+                                <img src="~/App_Themes/assets/icon/6.6-KNDapung.png" class="submenu-icon"
+                                     alt="">Khả năng <br> đáp ứng
+                            </a>
+                            <a class="dropdown-item @duyetdon" href="@Url.Action("ChuanBiXong","DuyetDon")">
+                                <img src="~/App_Themes/assets/icon/6.7-Thoigianchuanbihang.png" class="submenu-icon"
+                                     alt="">Thời gian <br> chuẩn bị hàng
+                            </a>
+                            <!-- <a class="dropdown-item" href="quan-li-khuyen-mai.html"><img
+                            src="/App_Themes/assets/images/quan-li-khuyen-mai.png"
+                            class="submenu-icon"
+                            alt="">Quản lí <br> khuyến mãi</a> -->
+                            <!-- <a class="dropdown-item" href="quan-li-doanh-so.html"><img
+                            src="/App_Themes/assets/images/quan-li-doanh-so.png" class="submenu-icon"
+                            alt="">Quản lí <br> doanh số</a> -->
+                            <div class="submenu-bctk d-inline position-relative">
+                                <a class="dropdown-item have-menu-child pt-13 @baocaobanhang" href="#"
+                                   data-menu="bctk1">
+                                    <img src="~/App_Themes/assets/icon/6.8-Bao-cao.png" class="submenu-icon"
+                                         alt=""><span>BC_TK</span>
+                                </a>
+                                <ul class="menu-child menu-child-bh" id="bctk1">
+                                    <li>
+                                        <a href="@Url.Action("BaoCaoBanHang","BanHang")">
+                                            <span class="title">Báo cáo bán hàng</span>
+                                            <span class="des">
+                                                Xem/in chi tiết báo cáo bán hàng trong
+                                                ngày hoặc theo khoảng thời gian
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <!-- <li>
+                                      <a href="tong-hop-ban-hang.html">
+                                        <span class="title">Tổng hợp bán hàng</span>
+                                        <span class="des">Xem/in báo cáo bán hàng/hàng bán trả lại/
+                                          thanh toán và công nợ</span>
+                                      </a>
+                                    </li>
+                                    <li>
+                                      <a href="thu-chi-chot-ca.html" class="border-bt">
+                                        <span class="title">Thu - Chi/Chốt ca</span>
+                                        <span class="des">Xem/in tất cả các khoảng thu, chi(Trả tiền
+                                          nhà cung cấp, thu tiền khách hàng,...)</span>
+                                      </a>
+                                    </li> -->
+                                    <!-- <li>
+                                      <a href="so-cskh.html">
+                                        <span class="title">Sổ CSKH</span>
+                                        <span class="des">Xem/In sổ chăm sóc khách hàng theo từng
+                                          nhân viên xuất bán..
+                                          nhập, ngày bán</span>
+                                      </a>
+                                    </li> -->
+                                    <!-- <li>
+                                      <a href="doanh-thu-theo-nhom.html">
+                                        <span class="title">Doanh thu theo nhóm hàng</span>
+                                        <span class="des">Xem/In doanh thu theo nhóm hàng cấp 1, có
+                                          tính % trên tổng doanh thu</span>
+                                      </a>
+                                    </li>
+                                    <li>
+                                      <a href="tang-truong-doanh-so.html">
+                                        <span class="title">Tăng trưởng doanh số</span>
+                                        <span class="des">Xem/in tổng hợp so sánh doanh số của các
+                                          tháng trong năm</span>
+                                      </a>
+                                    </li> -->
+                                    <li>
+                                        <a href="@Url.Action("LoadBanMHBAOCAO","BanHang")">
+                                            <span class="title">Lợi nhuận</span>
+                                            <span class="des">
+                                                Xem/in lợi nhuận theo các khoảng thời
+                                                gian, chi nhánh bán hàng...
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <!-- <li>
+                                      <a href="cong-no-phai-thu-tra.html">
+                                        <span class="title">Công nợ phải thu, phải trả</span>
+                                        <span class="des">Xem/in khách hàng nợ, nợ nhà cung cấp</span>
+                                      </a>
+                                    </li>
+                                    <li>
+                                      <a href="cong-no-qua-han.html">
+                                        <span class="title">Công nợ đến + quá hạn</span>
+                                        <span class="des">Xem/in công nợ khách hàng, nhà cung cấp
+                                          đến hoặc quá hạn theo từng hóa đơn..</span>
+                                      </a>
+                                    </li>
+                                    <li>
+                                      <a href="doi-chieu-cong-no.html">
+                                        <span class="title">Đối chiếu công nợ</span>
+                                        <span class="des">Đối chiếu xuất, nhập, thu, chi, công nợ
+                                          đầu kỳ, tốn cuối kỳ,...</span>
+                                      </a>
+                                    </li> -->
+                                    <li>
+                                        <a href="@Url.Action("BaoCaoLSBH","BanHang")">
+                                            <span class="title">Lịch sử mua bán</span>
+                                            <span class="des">
+                                                Xem/In lịch sử mua, bán, thu, chi của từng
+                                                khách hàng theo khoảng thời gian..
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="submenu-des">Quản lí bán hàng</div>
+                    </div>
+                </li>
+                <li class="nav-item phiennhapkho @kiemhang">
+                    <a class="nav-link dropdown" data-sub="sub-10" href="javascript:;">Kiểm hàng</a>
+                    <!-- Sub menu 3 -->
+                    <div class="dropdown-menu" id="sub-10">
+                        <a class="dropdown-item don-mua-hang @phiennhapkho" href="@Url.Action("danhsachphiennhapkho","kiemhang")">
+                            <img src="~/App_Themes/assets/icon/7.1-Im-phien-NH-Doi-ten-tu-Im-phien-nhap-kho.png" class="submenu-icon"
+                                 alt="">
+                            Import <br> phiên nhập hàng
+                        </a>
+                        <a class="dropdown-item don-mua-hang @phienkiemhang" href="@Url.Action("danhsachphienkiemhang","kiemhang")">
+                            <img height="24" src="~/App_Themes/assets/icon/7.2-Phien-kiem-hang-Doi-ten-tu-Phien-K.Kho.png" class="submenu-icon"
+                                 alt="">
+                            Phiên <br> kiểm hàng
+                        </a>
+                        <a class="dropdown-item don-mua-hang @taophienkiemhang" href="@Url.Action("taophienkiemhang","kiemhang")">
+                            <img height="24" src="~/App_Themes/assets/icon/noname-8.png" class="submenu-icon"
+                                 alt="">
+                            Tạo phiên <br> kiểm hàng
+                        </a>
+                        <div class="submenu-des">Quản lí kiểm hàng</div>
+                    </div>
+                </li>
+                <li class="nav-item chuyen-kho @chuyenkho">
+                    <a class="nav-link dropdown" href="javascript:;" data-sub="sub-6">Chuyển kho</a>
+                    <!-- Chuyển kho -->
+                    <div class="dropdown-menu" id="sub-6">
+                        <div class="submenu-group-all">
+                            <a class="dropdown-item @*chuyen-kho*@ @nhapxuatkhonb" href="@Url.Action("Index","ChuyenKho")">
+                                <img src="~/App_Themes/assets/icon/8.1-NXK-noibo.png"
+                                     class="submenu-icon"
+                                     alt="">
+                                nhập-xuất <br> kho nội bộ
+                            </a>
+                            <div class="submenu-bctk d-inline position-relative">
+                                <a class="dropdown-item have-menu-child pt-13 @baocaochuyenkho" href="#"
+                                   data-menu="pck1">
+                                    <img src="~/App_Themes/assets/icon/8.2-Bao-cao.png"
+                                         class="submenu-icon" alt=""><span>BC_TK</span>
+                                </a>
+                                <ul class="menu-child" id="pck1">
+                                    <li>
+                                        <a href="@Url.Action("BaoCao","ChuyenKho")">
+                                            <span class="title">Báo cáo chuyển kho nội bộ</span>
+                                            <span class="des">Báo cáo chuyển kho nội bộ</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="submenu-des">Xuất nhập kho nội bộ</div>
+                    </div>
+                </li>
+                <!-- <li class="nav-item">
+                  <a class="nav-link dropdown" data-sub="sub-7" href="#">KHTT</a>
+                  <div class="dropdown-menu" id="sub-7">
+                    <div class="submenu-group-all">
+                      <a class="dropdown-item" href="khach-hang-than-thiet.html">
+                        <img src="/App_Themes/assets/images/khach-hang-than-thiet.png"
+                          class="submenu-icon"
+                          alt="">
+                        Khách hàng <br> thân thiết
+                      </a>
+                      <a class="dropdown-item" href="quan-li-in-khtt.html">
+                        <img src="/App_Themes/assets/images/quan-li-in-va-cap-the.png"
+                          class="submenu-icon"
+                          alt="">
+                        QL in và <br> cấp thẻ khtt
+                      </a>
+                    </div>
+                    <div class="submenu-des">Quản lí thông tin khách hàng thân thiết</div>
+                  </div>
+                </li> -->
+                <li class="nav-item quy-ngan-hang @quy">
+                    <a class="nav-link dropdown" data-sub="sub-8" href="javascript:;">Quỹ - Ngân Hàng</a>
+                    <!-- Quỹ - ngân hàng -->
+                    <div class="dropdown-menu" id="sub-8">
+                        <div class="submenu-group-all">
+                            <a class="dropdown-item pt-13" href="" data-toggle="modal"
+                               data-target="#so-quy">
+                                <img src="~/App_Themes/assets/icon/9.1-Soquy.png" class="submenu-icon"
+                                     alt="">
+                                Sổ_Quỹ
+                            </a>
+                            <a class="dropdown-item" href="#" data-toggle="modal"
+                               data-target="#so-ngan-hang">
+                                <img src="~/App_Themes/assets/icon/9.2-Songanhang.png" class="submenu-icon"
+                                     alt="">
+                                sổ <br> Ngân Hàng
+                            </a>
+                        </div>
+
+                        <div class="submenu-group center">
+                            <a class="dropdown-item @phieuchi" href="@Url.Action("Index","PhieuChi")">
+                                <img src="~/App_Themes/assets/icon/9.3-Phieuchi.png" class="submenu-icon"
+                                     alt="">
+                                Phiếu <br> chi
+                            </a>
+                            <a class="dropdown-item phieu-thu @phieuthu" href="@Url.Action("Index","PhieuThu")">
+                                <img src="~/App_Themes/assets/icon/9.4-phieuthu.png" class="submenu-icon"
+                                     alt="">
+                                Phiếu <br> thu
+                            </a>
+                        </div>
+                        <div class="submenu-group-all">
+                            <a class="dropdown-item" href="#" data-toggle="modal"
+                               data-target="#so-du-quy">
+                                <img src="~/App_Themes/assets/icon/9.5-soduquy.png" class="submenu-icon"
+                                     alt="">
+                                Sổ dư <br> quỹ
+                            </a>
+                            <a class="dropdown-item" href="#" data-toggle="modal"
+                               data-target="#so-du-ngan-hang">
+                                <img src="~/App_Themes/assets/icon/9.6-sodunh.png"
+                                     class="submenu-icon"
+                                     alt="">
+                                sổ dư <br> Ngân Hàng
+                            </a>
+                        </div>
+                        <div class="submenu-des">Sổ quỹ tiền mặt</div>
+                    </div>
+                </li>
+                <li class="nav-item @baocao">
+                    <a class="nav-link dropdown" data-sub="sub-9" href="javascript:;">Báo cáo</a>
+                    <!-- Báo cáo -->
+                    <div class="dropdown-menu" id="sub-9">
+                        <div class="submenu-group-all">
+                            <a class="dropdown-item @thongketonghop" href="@Url.Action("Index","ThongKeTongHop")">
+                                <img src="~/App_Themes/assets/icon/10.1-TKBCT.Hop.png"
+                                     class="submenu-icon"
+                                     alt="">
+                                Thống kê báo cáo <br> tổng hợp
+                            </a>
+                        </div>
+                        <div class="submenu-des">Tổng hợp thống kê, báo cáo</div>
+                    </div>
+                </li>
+                <!-- <li class="nav-item">
+                  <a class="nav-link dropdown" data-sub="sub-10" href="#">Cửa sổ</a>
+                  <div class="dropdown-menu" id="sub-10">
+                    <div class="submenu-group-all">
+                      <a class="dropdown-item pt-25" href="#">Biểu tượng</a>
+                      <a class="dropdown-item pt-25" href="#">Thác nước</a>
+                      <a class="dropdown-item pt-25" href="#">Tiêu đề dọc</a>
+                      <a class="dropdown-item pt-25" href="#">Tiêu đề ngang</a>
+                      <a class="dropdown-item pt-25" href="#">Đóng tất cả các cửa sổ</a>
+                      <a class="dropdown-item pt-25" href="#">Hiển thị theo TAbs</a>
+                    </div>
+                    <div class="submenu-des">Cửa sổ hiển thị</div>
+                  </div>
+                </li> -->
+                <!--<li class="nav-item">
+                <a class="nav-link dropdown" data-sub="sub-11" href="javascript:;">Tiện ích</a>-->
+                <!-- Báo cáo -->
+                <!--<div class="dropdown-menu" id="sub-11">
+                        <div class="submenu-group right">
+                            <a class="dropdown-item" href="#">
+                                <img src="/App_Themes/assets/images/gui-tin.png" class="submenu-icon"
+                                     alt="">
+                                Gửi tin <br> và màn hình cho Mona
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <img src="/App_Themes/assets/images/ghi-ra-man-hinh.png"
+                                     class="submenu-icon"
+                                     alt="">
+                                ghi màn hình <br> ra file
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <img src="/App_Themes/assets/images/may-in.png" class="submenu-icon"
+                                     alt="">
+                                in màn hình <br> ra máy in
+                            </a>
+                        </div>
+                        <div class="submenu-group-all">
+                            <a class="dropdown-item" href="#">
+                                <img src="/App_Themes/assets/images/gui-tap-tin.png" class="submenu-icon"
+                                     alt="">
+                                gửi file log <br> cho Mona
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <img src="/App_Themes/assets/images/close-menu.png" class="submenu-icon"
+                                     alt="">
+                                Xóa <br> Layout Files
+                            </a>
+                        </div>
+                        <div class="submenu-des">Tiện ích</div>
+                    </div>
+                </li>-->
+                <!-- <li class="nav-item">
+                  <a class="nav-link dropdown" data-sub="sub-12" href="#">Trợ giúp</a>
+                  <div class="dropdown-menu" id="sub-12">
+                    <div class="submenu-group right">
+                      <a class="dropdown-item" href="#">
+                        <img src="/App_Themes/assets/images/tro-giup.png" class="submenu-icon"
+                          alt="">
+                        Nội dung <br> trợ giúp
+                      </a>
+                      <a class="dropdown-item" href="#">
+                        <img src="/App_Themes/assets/images/tro-giup-online.png"
+                          class="submenu-icon"
+                          alt="">
+                        Trợ giúp <br> online
+                      </a>
+                      <a class="dropdown-item" href="#">
+                        <img src="/App_Themes/assets/images/thong-tin.png" class="submenu-icon"
+                          alt="">
+                        thông tin <br> bản quyền
+                      </a>
+                    </div>
+                    <div class="submenu-group-all">
+                      <a class="dropdown-item" href="#">
+                        <img src="/App_Themes/assets/images/gui-email-menu.png"
+                          class="submenu-icon"
+                          alt="">
+                        Gửi <br> email
+                      </a>
+                      <a class="dropdown-item pt-13" href="#">
+                        <img src="/App_Themes/assets/images/teamview.png" class="submenu-icon"
+                          alt="">
+                        TeamViewer
+                      </a>
+                      <a class="dropdown-item pt-13" href="#">
+                        <img src="/App_Themes/assets/images/liveupload.png" class="submenu-icon"
+                          alt="">
+                        Liveupdate
+                      </a>
+                    </div>
+                    <div class="submenu-des">Trợ giúp</div>
+                  </div>
+                </li> -->
+                <!-- <li class="nav-item">
+                  <a class="nav-link dropdown" data-sub="sub-13" href="#">Add-Ins</a>
+                  <div class="dropdown-menu" id="sub-13">
+                    <a class="dropdown-item pt-13" href="#">
+                      <img src="/App_Themes/assets/images/cross-check.png" class="submenu-icon"
+                        alt="">
+                      Cross_Check
+                    </a>
+                    <div class="submenu-group left">
+                      <a class="dropdown-item" href="import-ton-dau-phai-thu.html">
+                        <img src="/App_Themes/assets/images/ton-dau-phai-thu.png"
+                          class="submenu-icon"
+                          alt="">
+                        Import Tồn đầu <br>
+                        Công nợ phải thu
+                      </a>
+                      <a class="dropdown-item" href="import-ton-dau-phai-tra.html">
+                        <img src="/App_Themes/assets/images/ton-dau-phai-tra.png"
+                          class="submenu-icon"
+                          alt="">
+                        Import Tồn đầu <br>
+                        Công nợ phải trả
+                      </a>
+                    </div>
+                    <div class="submenu-des">Add-Ins</div>
+                  </div>
+                </li> -->
+            </ul>
+        </div>
+    </nav>
+    <!-- <div class="wrap-bottom"></div> -->
+    <!--Sổ ngân hàng-->
+    <div class="modal fade default-popup popup-so-ngan-hang" id="so-ngan-hang"
+         tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Quỹ
+                        và ngân hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab"
+                               data-toggle="tab" href="#xem-1" role="tab"
+                               aria-controls="home" aria-selected="true">
+                                Xem theo
+                                chi nhánh
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab"
+                               href="#xem-2" role="tab" aria-controls="profile"
+                               aria-selected="false">Xem theo từng tài khoản</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="xem-1"
+                             role="tabpanel" aria-labelledby="home-tab">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="box-border mt-3">
+                                            <div class="form-check mb-2">
+                                                <label class="form-check-label">
+                                                    <input type="radio"
+                                                           class="form-check-input"
+                                                           value="0" name="SoNganHang-Time" checked><span class="ml-2">
+                                                        Tháng
+                                                        hiện hành
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input type="radio"
+                                                           class="form-check-input"
+                                                           value="1" name="SoNganHang-Time"><span class="ml-2">
+                                                        Khoảng
+                                                        thời gian
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div class="box-choose-time col-6 p-0 mt-3 ml-0">
+                                                <p class="mr-2">Từ</p>
+                                                <input class="mr-2 col-4 p-0 datetimepicker date-only" name="fdate" data-date-format="mm/dd/yyyy" disabled>
+                                                <p class="mr-2">Đến</p>
+                                                <input class="mr-2 col-4 p-0 datetimepicker date-only" name="tdate" data-date-format="mm/dd/yyyy" disabled>
+                                                @*<select name="" id="" class="mr-2">
+                                                        <option value="">Hôm nay</option>
+                                                        <option value="">Hôm sau</option>
+                                                        <option value="">Hôm bữa</option>
+                                                    </select>*@
+                                            </div>
+                                            <div class="wrap-height-table-quy mt-3" style="min-height: 322.2px;">
+                                                <table class="table display"
+                                                       id="table-snh" style="width:
+                                                100%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Tên chi nhánh</th>
+                                                            <th>
+                                                                <span>Chọn </span><input type="checkbox" name="checkALL">
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-md-6">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input type="checkbox"
+                                                                   class="form-check-input"
+                                                                   value=""
+                                                                   name="checkALL"><span class="ml-2">
+                                                                Chọn
+                                                                tất
+                                                                cả các chi nhánh
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 text-right">
+                                                    <button class="btn btn-success"
+                                                            data-toggle="modal"
+                                                            data-target="#so-du-ngan-hang">
+                                                        Khai
+                                                        báo
+                                                        số dư quỹ
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="xem-2" role="tabpanel"
+                             aria-labelledby="profile-tab">
+                            <div class="box-choose-time col-6 p-0 mt-3 ml-0">
+                                <p class="mr-2">Từ</p>
+                                <input class="mr-2 col-4 p-0 datetimepicker date-only" name="fdate" data-date-format="mm/dd/yyyy">
+                                <p class="mr-2">Đến</p>
+                                <input class="mr-2 col-4 p-0 datetimepicker date-only" name="tdate" data-date-format="mm/dd/yyyy">
+                                @*<select name="" id="" class="mr-2">
+                                        <option value="">Hôm nay</option>
+                                        <option value="">Hôm sau</option>
+                                        <option value="">Hôm bữa</option>
+                                    </select>*@
+                            </div>
+                            <div class="wrap-height-table" style="min-height: 502.2px;">
+                                <table class="table display" style="width: 100%;"
+                                       id="table-taikhoan">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Mã ngân hàng</th>
+                                            <th>Tên ngân hàng</th>
+                                            <th>Chủ TK</th>
+                                            <th>Số TK</th>
+                                            <th>Ghi chú</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn-xem-qnh">Đồng ý</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Hủy
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Số dư ngân hàng-->
+    <div class="modal fade default-popup popup-so-du-quy" id="so-du-ngan-hang"
+         tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Khởi
+                        tạo/ điều chỉnh số dư ngân hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="wrap-height-table" style="min-height:502.2px">
+                                    <table class="table display" style="width: 100%;" id="table-so-du-ngan-hang">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Chi nhánh</th>
+                                                <th>Ngân hàng</th>
+                                                <th>Tồn hiện hành (VND)</th>
+                                                <th>Ngày vào sổ</th>
+                                                <th>Ngày sửa</th>
+                                                <th>Ngày tác động</th>
+                                                <th>Ghi chú</th>
+                                                <th>Theo dõi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn-insert-sdnh">Thêm</button>
+                    <button type="button" class="btn btn-primary" id="btn-update-sdnh">Sửa</button>
+                    @*<button type="button" class="btn btn-primary">Hiệu chỉnh</button>*@
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Thêm/Sửa Số dư ngân hàng-->
+    <div class="modal fade default-popup popup-them-so-du-quy"
+         id="them-so-du-ngan-hang"
+         tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Sổ ngân
+                        hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form action="" class="default-form">
+                                    <input type="hidden" name="QID">
+                                    <div class="form-group">
+                                        <label for="">Chi nhánh công ty</label>
+                                        <select name="slSRID" class="col-7 p-0" disabled></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Ngân hàng</label>
+                                        <select name="slNHID" class="col-7 p-0"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Ngày vào sổ(Số dư ngày)</label>
+                                        <input type="text" class="choose-date col-7 p-0 datepicker datetimepicker date-only" name="dateCreate">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Số dư</label>
+                                        <input type="text" class="col-7 p-0" name="fcTienMat" data-type="currency">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Số dư(VND)</label>
+                                        <input type="text" class="col-7 p-0" name="tienMat" data-type="currency">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Ghi chú</label>
+                                        <input type="text" class="col-7 p-0" name="ghiChu">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for=""></label>
+                                        <div class="form-check col-7 p-0">
+                                            <label class="form-check-label" style="margin-left: 13px;">
+                                                <input type="checkbox" class="form-check-input" value="" name="ckVisible">
+                                                <span class="ml-2">Theo dõi</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn-save-sdnh">Lưu</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Sổ quỹ-->
+    <div class="modal fade default-popup popup-so-quy" id="so-quy" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Tổng
+                        hợp quỹ
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box-border mt-3">
+                                    <p class="box-border__title">
+                                        Tiêu chí
+                                    </p>
+                                    <div class="form-check mb-2">
+                                        <label class="form-check-label">
+                                            <input type="radio" name="SoQuy-Time" class="form-check-input" value="0" checked>
+                                            <span class="ml-2">Tháng hiện hành</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="radio" name="SoQuy-Time" class="form-check-input" value="1">
+                                            <span class="ml-2">Khoảng thời gian</span>
+                                        </label>
+                                    </div>
+                                    <div class="box-choose-time mt-3">
+                                        <p class="mr-2">Từ</p>
+                                        <input class="mr-2 col-4 p-0 datetimepicker date-only" name="fdate" data-date-format="mm/dd/yyyy" disabled>
+                                        <p class="mr-2">Đến</p>
+                                        <input class="mr-2 col-4 p-0 datetimepicker date-only" name="tdate" data-date-format="mm/dd/yyyy" disabled>
+                                        @*<select name="" id="" class="mr-2">
+                                                <option value="">Hôm nay</option>
+                                                <option value="">Hôm sau</option>
+                                                <option value="">Hôm bữa</option>
+                                            </select>*@
+                                    </div>
+                                    <div class="form-check mt-2">
+                                        <label class="form-check-label">
+                                            <input type="checkbox" class="form-check-input" value="" name="justVND">
+                                            <span class="ml-2" style="text-decoration: underline;">Chỉ xem sổ quỹ (VND)</span>
+                                        </label>
+                                    </div>
+                                    <div class="wrap-height-table-quy" style="min-height: 322.2px;">
+                                        <table class="table display"
+                                               id="table-tonghopquy" style="width:
+                                        100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tên chi nhánh</th>
+                                                    <th>
+                                                        <span>Chọn </span><input type="checkbox" name="checkALL">
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input type="checkbox" class="form-check-input" value="" name="checkALL"><span class="ml-2">
+                                                        Chọn tất cả các chi nhánh
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 text-right">
+                                            <button class="btn btn-success" data-toggle="modal" data-target="#so-du-quy">
+                                                Khai báo số dư quỹ
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="mr-auto">
+                        <button type="button" class="btn btn-primary" id="xemnhanh_sdq">Xem nhanh số dư quỹ</button>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="xemchitiet_sdq" data-dismiss="modal">Xem chi tiết quỹ</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Hủy
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Số dư quỹ-->
+    <div class="modal fade default-popup popup-so-du-quy" id="so-du-quy"
+         tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Khởi
+                        tạo/ điều chỉnh số dư quỹ
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="wrap-height-table" style="min-height:502.2px">
+                                    <table class="table display" style="width:
+                                        100%;" id="table-so-du-quy">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Chi nhánh</th>
+                                                <th>Tồn hiện hành (VND)</th>
+                                                <th>Ngày vào sổ</th>
+                                                <th>Ngày sửa</th>
+                                                <th>Ngày tác động</th>
+                                                <th>Ghi chú</th>
+                                                <th>Theo dõi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn-insert-sdq">Thêm</button>
+                    @*<button type="button" class="btn btn-primary" id="btn-update-sdq">Sửa</button>*@
+                    @*<button type="button" class="btn btn-primary">Hiệu chỉnh</button>*@
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Xem nhanh sổ dư quỹ-->
+    <div class="modal fade default-popup popup-danh-sach-khach-hang" id="xem-nhanh-so-du-quy" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Xem chi tiết
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="wrap-height-table" style="min-height: 502.2px;">
+                                    <table class="table display nowrap table-striped row-border" id="table-xem-nhanh-so-du-quy" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Tên chi nhánh</th>
+                                                <th>Số dư cuối kỳ (VND)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn-xuat-xem-nhanh-sdq" class="btn btn-primary">Xuất</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Thêm/Sửa Số dư ngân quỹ-->
+    <div class="modal fade default-popup popup-them-so-du-quy" id="them-so-du-quy"
+         tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Sổ
+                        quỹ
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form action="" class="default-form">
+                                    <input type="hidden" name="QID">
+                                    <div class="form-group">
+                                        <label for="">Chi nhánh công ty</label>
+                                        <select name="slSRID" class="col-7 p-0" disabled></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Ngày vào sổ(Số dư ngày)</label>
+                                        <input type="text" class="choose-date col-7 p-0 datepicker datetimepicker date-only" name="dateCreate">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Số dư</label>
+                                        <input type="text" class="col-7 p-0" name="fcTienMat" data-type="currency">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Số dư(VND)</label>
+                                        <input type="text" class="col-7 p-0" name="tienMat" data-type="currency">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Ghi chú</label>
+                                        <input type="text" class="col-7 p-0" name="ghiChu">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for=""></label>
+                                        <div class="form-check col-7 p-0">
+                                            <label class="form-check-label" style="margin-left: 13px;">
+                                                <input type="checkbox" class="form-check-input" value="" name="ckVisible">
+                                                <span class="ml-2">Theo dõi</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn-save-sdq">Lưu</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade form-small form-doi-mat-khau default-popup"
+         id="form-doi-mat-khau" tabindex="-1" role="dialog"
+         aria-labelledby="form-add-group-user" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLabel">
+                        Đổi
+                        mật khẩu
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">
+                            Tên
+                            truy cập:
+                        </label>
+                        @{
+                            string username = "";
+                            if (aclog != null)
+                            {
+                                username = aclog.USERID;
+                            }
+                        }
+                        <input type="text" required name="username" id="username" value="@username" disabled="disabled" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">
+                            Mật
+                            khẩu cũ:
+                        </label>
+                        <input type="password" required name="old-password" id="old-password" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">
+                            Mật
+                            khẩu mới:
+                        </label>
+                        <input type="password" required name="new-password" id="new-password" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">
+                            Nhắc
+                            mật
+                            khẩu mới:
+                        </label>
+                        <input type="password" required name="comfirm-password" id="comfirm-password" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn-change-password" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Thoát
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade default-popup popup-thoat-chuong-trinh"
+         id="thoat-chuong-trinh" tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        <i class="fas
+                        fa-question-circle"></i>Question
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc muốn thoát không?</p>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" href="@Url.Action("SignOut", "Login", new { area = "" })">Có</a>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Không
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Tùy chọn -->
+    <div class="modal fade default-popup" id="tuy-chon" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Cấu
+                        hình
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body bg-white">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" id="home-tab"
+                               data-toggle="tab" href="#home"
+                               role="tab" aria-controls="home"
+                               aria-selected="true">Cài đặt chung</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab"
+                               data-toggle="tab" href="#profile"
+                               role="tab" aria-controls="profile"
+                               aria-selected="false">Báo cáo</a>
+                        </li>
+                        @*<li class="nav-item">
+                                <a class="nav-link" id="contact-tab"
+                                   data-toggle="tab" href="#contact"
+                                   role="tab" aria-controls="contact"
+                                   aria-selected="false">Cài đặt khác</a>
+                            </li>*@
+                        <li class="nav-item">
+                            <a class="nav-link" id="toan-he-thong-tab"
+                               data-toggle="tab" href="#toan-he-thong"
+                               role="tab" aria-controls="contact"
+                               aria-selected="false">Cài đặt toàn hệ thống</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home"
+                             role="tabpanel" aria-labelledby="home-tab">
+                            <form action="" class="default-form form-tuy-chon mt-4">
+                                <div class="form-group">
+                                    <label for="">Tên công ty</label>
+                                    <input type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Logo công ty</label>
+                                    <input type="text">
+                                </div>
+                                <div class="form-row mt-5">
+                                    <div class="col-left col">
+                                        <div class="box-shape"></div>
+                                    </div>
+                                    <div class="col-right col">
+                                        <div class="form-group">
+                                            <label for="">Địa chỉ</label>
+                                            <input type="text">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Điện thoại</label>
+                                            <input type="text">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Fax</label>
+                                            <input type="text">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Mã vùng</label>
+                                            <input type="text">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Quốc gia</label>
+                                            <input type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="profile"
+                             role="tabpanel"
+                             aria-labelledby="profile-tab">
+                            <div class="box-border mt-5">
+                                <p class="box-border__title">Tùy chọn cho báo cáo</p>
+                                <form action="" class="form-bao-cao">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="checkbox"
+                                                   class="form-check-input" value=""><span>
+                                                In
+                                                tên
+                                                công ty
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="checkbox"
+                                                   class="form-check-input" value=""><span>
+                                                In
+                                                địa
+                                                chỉ
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="checkbox"
+                                                   class="form-check-input" value=""><span>
+                                                In
+                                                điện thoại công ty
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="checkbox"
+                                                   class="form-check-input" value=""><span>
+                                                In
+                                                fax
+                                                công ty
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="checkbox"
+                                                   class="form-check-input" value=""><span>
+                                                In
+                                                số
+                                                tiền bằng chữ
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="checkbox"
+                                                   class="form-check-input" value=""><span>
+                                                In
+                                                logo công ty
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div class="form-row">
+                                        <input type="file" value="Máy in">
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="">Ngôn ngữ BC</label>
+                                        <select name="" id="" class="ml-3">
+                                            <option value="">Tiếng Việt</option>
+                                            <option value="">Tiếng Anh</option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        @*<div class="tab-pane fade" id="contact"
+                                 role="tabpanel"
+                                 aria-labelledby="contact-tab">
+                                <div class="box-border mt-5">
+                                    <p class="box-border__title">
+                                        Lựa chọn chức năng cảnh
+                                        báo
+                                    </p>
+                                    <div class="form-bao-cao">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="checkbox"
+                                                       class="form-check-input" value=""><span>
+                                                    Cảnh
+                                                    báo mua nợ quá hạn
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="checkbox"
+                                                       class="form-check-input" value=""><span>
+                                                    Cảnh
+                                                    báo bán nợ quá hạn
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="checkbox"
+                                                       class="form-check-input" value=""><span>
+                                                    Cảnh
+                                                    báo hết hàng
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input type="checkbox"
+                                                       class="form-check-input" value=""><span>
+                                                    Cho
+                                                    phép copy giá trị trên cell của grid
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
+                        <div class="tab-pane fade" id="toan-he-thong"
+                             role="tabpanel"
+                             aria-labelledby="toan-he-thong-tab">
+                            <div class="box-border mt-5">
+                                <p class="box-border__title">
+                                    Lựa chọn chức năng cảnh
+                                    báo
+                                </p>
+                                <div class="form-bao-cao default-form">
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="checkbox"
+                                                   class="form-check-input" value=""><span>
+                                                Chiết
+                                                khấu thẳng
+                                                vào giá khi khuyến mãi
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="checkbox"
+                                                   class="form-check-input" value=""><span>
+                                                Cho
+                                                phép sửa số phiếu/ số chứng từ
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="checkbox"
+                                                   class="form-check-input" value=""><span>
+                                                Hiện
+                                                thị cột giá ngoại tệ khi nhập xuất
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="checkbox"
+                                                   class="form-check-input" value=""><span>
+                                                Hiện
+                                                thì Add-in khi bán buôn/lẻ
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input type="checkbox"
+                                                   class="form-check-input" value=""><span>
+                                                Tự
+                                                động điền số tiền khách đưa
+                                                khi thu tiền bán lẻ
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="" class="mr-3 col-5">
+                                            Khóa dữ
+                                            liệu đến
+                                            ngày
+                                        </label>
+                                        <input type="text" class="choose-date
+                                        col-6">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="" class="mr-3 col-5">
+                                            Chỉ được
+                                            xem báo
+                                            cáo từ ngày
+                                            ngày
+                                        </label>
+                                        <input type="text" class="choose-date
+                                        col-6">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @RenderBody()
+    <footer class="footer" style="background-color:@color">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4 vertical-content">
+                    <div class="footer-info">
+                        <ul class="footer-info__list">
+                            @{
+                                string khoname = "";
+                                if (Session["SHOWROOMID"] != null)
+                                {
+                                    SHOWROOM sr = ShowRoom.getbySRID(Guid.Parse(Session["SHOWROOMID"].ToString()));
+                                    if (sr != null)
+                                    {
+                                        khoname = sr.TEN;
+                                    }
+                                }
+                            }
+                            <li class="">
+                                Logged in: <span class="name text-uppercase font-weight-bold text">@username</span>
+                            </li>
+                            <li>
+                                Current branch: <span class="name text-uppercase font-weight-bold text">@khoname</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                @*<div class="col-md-6">
+                        <div class="row">
+                            <div class="footer-search">
+                                <div class="inline">
+                                    <button type="submit" class="inline"><img src="/App_Themes/assets/images/search.png" alt=""></button>
+                                    <input type="text" class="inline" placeholder="Search Help...">
+                                </div>
+                            </div>
+                            <div class="footer-teamviewer">
+                                <span class="inline"><img class="icon" src="/App_Themes/assets/images/teamview-icon.png" alt=""></span>
+                                <span class="inline">TeamViewer</span>
+                            </div>
+                            <div class="footer-time ml-4">
+                                <p class="inline">
+                                    Last updated:
+                                    <span class="date">22/10/2018</span>
+                                    <span class="time">10:27:38 SA</span>
+                                </p>
+                            </div>
+                            <div class="footer-language ml-5">
+                                <div class="box-select inline">
+                                    <span class="icon"><i class="fal fa-angle-down"></i></span>
+                                    <select name="" id="">
+                                        <option value="Vi">Vi</option>
+                                        <option value="En">En</option>
+                                    </select>
+                                </div>
+                                <a href="#" class="btn-language color-white inline">
+                                    <span>Language</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>*@
+            </div>
+        </div>
+    </footer>
+
+    <script type="text/javascript" src="/App_Themes/js/moment.js"></script>
+    <script type="text/javascript" src="/App_Themes/js/jquery-3.2.1.slim.min.js"></script>
+    <script type="text/javascript" src="/App_Themes/js/popper.min.js"></script>
+    <script type="text/javascript" src="/App_Themes/js/datatables.min.js"></script>
+
+    <script type="text/javascript" src="/App_Themes/js/buttons.print.min.js"></script>
+    <script type="text/javascript" src="/App_Themes/js/dataTables.buttons.min.js"></script>
+
+
+    <script type="text/javascript" src="/App_Themes/js/jszip.min.js"></script>
+    <script type="text/javascript" src="/App_Themes/js/buttons.html5.min.js"></script>
+    <!-- <script
+        src="https://cdn.datatables.net/plug-ins/1.10.21/features/scrollResize/dataTables.scrollResize.min.js"></script> -->
+    <script src="https://cdn.datatables.net/responsive/2.2.6/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="/App_Themes/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/App_Themes/js/jquery.datetimepicker.full.js"></script>
+    <script type="text/javascript" src="/App_Themes/js/main.js"></script>
+    <script src="/App_Themes/js/dev.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            if ('@TempData["AlertMessage"]' != '') {
+                toast.create({
+                    title: 'Notification!',
+                    text: '@TempData["AlertMessage"]',
+                    icon: '@TempData["Icon"]',
+                    classBackground: '@TempData["Class"]',
+                    timeout: 3000
+                })
+            } $('[data-toggle="tooltip"]').tooltip();
+            $(document).ajaxStart(function () {
+                $("#AjaxLoader").show();
+            });
+            $(document).ajaxStop(function () {
+                $("#AjaxLoader").hide();
+            });
+
+        });
+
+    </script>
+    <script>
+        $('#btn-change-password').click(function () {
+            let oldpd = $('input[name="old-password"]').val();
+            let newpd = $('input[name="new-password"]').val();
+            let comfirmpd = $('input[name="comfirm-password"]').val();
+            let $currentForm = $('#form-doi-mat-khau');
+            let inputs = $currentForm.find('*:required');
+            for (let i = 0; i < inputs.length; i++) {
+                if (inputs[i].value === "") {
+                    $currentForm.addClass('was-validated');
+                    return false;
+                    break;
+                }
+            }
+            $.ajax({
+                type: "POST",
+                url: "/Login/ChangePassword",
+                data: '{OldPd: "' + oldpd + '", NewPd: "' + newpd + '",ComfirmPd: "' + comfirmpd + '"  }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.status == 1) {
+                        $('input[name="old-password"]').val("");
+                        $('input[name="new-password"]').val("");
+                        $('input[name="comfirm-password"]').val("");
+                        $('#form-doi-mat-khau').modal('hide');
+                        toast.create({
+                            title: 'Thông Báo!',
+                            text: msg.message,
+                            icon: 'check',
+                            classBackground: 'noti-success',
+                            timeout: 3000
+                        });
+                    } else {
+                        toast.create({
+                            title: 'Thông Báo!',
+                            text: msg.message,
+                            icon: 'error_outline',
+                            classBackground: 'noti-error',
+                            timeout: 3000
+                        })
+                    }
+                },
+                error: function (error) {
+                    console.log('e');
+                }
+
+            })
+        });
+        $('.sao-luu-phuc-hoi').click(function () {
+            $.ajax({
+                type: "GET",
+                url: "/Login/BackupData",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+
+                    if (msg.status == 1) {
+                        toast.create({
+                            title: 'Thông Báo!',
+                            text: msg.message,
+                            icon: 'check',
+                            classBackground: 'noti-success',
+                            timeout: 3000
+                        });
+                    } else {
+                        toast.create({
+                            title: 'Thông Báo!',
+                            text: msg.message,
+                            icon: 'error_outline',
+                            classBackground: 'noti-error',
+                            timeout: 3000
+                        })
+                    }
+                },
+                error: function (error) {
+                    console.log('e');
+                }
+
+            })
+        });
+    </script>
+    @Html.Partial("_LoginModal")
+    @Html.Partial("_ShowRoomModal")
+    @*@Html.Partial("_ThongBaoTask")*@
+    @if (IsSectionDefined("myScripts"))
+    {
+        @RenderSection("myScripts", required: false)
+    }
+    <script src="~/PageScript/SoDuQuy/soduquy.js"></script>
+    <script src="~/PageScript/SoDuNganHang/sodunganhang.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <script src="~/App_Themes/select2/js/select2.full.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,589 @@
+﻿
+
+
+
+@{
+    ViewBag.Title = "DanhSachDonXinUngLuong";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+<style>
+    .select2 {
+        margin-left: -5%;
+    }
+
+    .dataTables_filter, .dataTables_info {
+        display: none;
+    }
+
+    #sua-vi-tri .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    input[readonly] {
+        background: #ccc
+    }
+
+    .disabled-dia-chi {
+        pointer-events: none;
+        opacity: 0.4;
+    }
+
+    #tb-import-vitri input {
+        height: 30px;
+        border-radius: 5px;
+        width: 100%;
+        padding: 5px;
+    }
+
+    .was-validated input:required:valid, input:required.is-valid {
+        border-color: #15af76;
+        background-image: url('/App_themes/assets/images/btn-tick.png');
+        background-repeat: no-repeat;
+        background-position: right calc(.375em + .23438rem) center;
+    }
+
+    .was-validated input:required:invalid {
+        border-color: #ff0000;
+        background-image: url(/App_themes/assets/images/error-form.png);
+        background-repeat: no-repeat;
+        background-position: right calc(.375em + 0.1rem) center;
+    }
+</style>
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="wrap-table__header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box-choose-time" id="date-vitri">
+                        <p class="mr-2">Từ</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_From" data-date-format="mm/dd/yyyy">
+                        <p class="mr-2">Đến</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_To" data-date-format="mm/dd/yyyy">
+                        <div class="list-button">
+                            <a href="#" class="btn btn-export
+                            inline" id="btn-search-congviec">
+                                <img src="/App_Themes/assets/images/btn-search.png" alt="" class="inline"><span class="inline">Tìm kiếm</span>
+                            </a>
+                            <a href="#" class="btn btn-add inline" id="btn-them-don">
+                                <img src="/App_Themes/assets/images/btn-add.png"
+                                     alt="" class="inline">
+                                <span class="inline">Thêm</span>
+                            </a>
+                            @*<a href="#" class="btn btn-del inline" id="btn-xoa-cong-viec">
+                                    <img src="/App_Themes/assets/images/btn-del.png"
+                                         alt="" class="inline"><span class="inline">Xóa</span>
+                                </a>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__body">
+            <div class="wrap-height-table">
+                <table class="table display table-striped" style="width: 100%;"
+                       id="table-danh-sach-don-xin-ung-luong">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nhân viên</th>
+                            <th>Tiền ứng trước</th>
+                            <th>Ghi chú</th>
+                            <th>Ngày tạo</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày duyệt</th>
+                            <th>Người duyệt</th>
+                            <th>Ngày hủy</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade default-popup popup-them-so-du-quy" id="tao-don-ung-luong" @*data-keyboard="true" data-backdrop="static*@
+         tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                       Tạo đơn xin ứng lương
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="default-form">
+                                    <div class="form-group">
+                                        <label for="">Tiền ứng trước </label>
+                                        <div class="col-9">
+                                            <input class="p-0" type="text" data-type="number" name="tien-ung-truoc-insert" style="width:25%;margin-left:-5%">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Ghi chú: </label>
+                                        <input name="ghi-chu-insert" class="col-9 p-0" required />
+                                    </div>
+                                    <div id="html-chu-y">
+                                        <b>Chý ý: </b>Đơn đã duyệt, từ chối hoặc bị hủy không được thay đổi
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="tao-ung-luong">Tạo</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade default-popup popup-them-so-du-quy" id="cap-nhat-don-ung-luong" @*data-keyboard="true" data-backdrop="static*@
+         tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Đơn xin ứng lương
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="default-form">
+                                    <div class="form-group">
+                                        <label>Tên nhân viên</label>
+                                        <input class="p-0 col-9" name="ten-nhan-vien">
+                                        <input name="id-don-xin-ung-luong" type="hidden" />
+                                        <input name="trangthai" type="hidden" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Tiền ứng trước </label>
+                                        <div class="col-9">
+                                            <input class="p-0" name="tien-ung-truoc" style="width:25%;margin-left:-5%">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Ghi chú: </label>
+                                        <input name="ghi-chu" class="col-9 p-0" required />
+                                    </div>
+                                    <div id="html-chu-y">
+                                        <b>Chý ý: </b>Đơn đã duyệt, từ chối hoặc bị hủy không được thay đổi
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="sua-ung-luong">Sửa đơn</button>
+                    <button type="button" class="btn btn-danger" id="duyet-ung-luong">Hủy đơn</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section myScripts{
+    <script>
+        $(document).ready(function () {
+            $('input[name="chooseDate_From"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            $('input[name="chooseDate_To"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            let fdate = moment(new Date()).format('DD/MM/yyyy');
+            let tdate = moment(new Date()).format('DD/MM/yyyy');
+            let tbXinNghi_filterValues = {};
+            $('#table-danh-sach-don-xin-ung-luong thead tr').clone(true).appendTo('#table-danh-sach-don-xin-ung-luong thead');
+            $('#table-danh-sach-don-xin-ung-luong thead tr:eq(1) th').each(function (i) {
+                var title = $(this).text();
+                if (i == 0 || i == 2 || i == 4 || i == 6 || i == 8) {
+                    return $(this).html('');
+                }
+                else if (i == 5) {
+                    $(this).html('<select data-search-ung-luong="' + i + '"><option value ="0">Đang chờ duyệt</option> <option value ="1">Từ chối</option> <option value ="2">Duyệt</option><option value ="3">Hủy</option><option value ="-1">Tất cả</option> </select>');
+                }
+                else {
+                    $(this).html('<input type="text" placeholder="Search ' + title.trim() + '" data-search-ung-luong="' + i + '"/>');
+                }
+                $('input', this).on('keyup change', delay(function () {
+                    $(this.value !== table_danhsachungluong.column(i).search())
+                    {
+                        table_danhsachungluong
+                            .column(i)
+                            .search(this.value)
+                            .draw();
+                    }
+                }, 1000));
+                $('select', this).on('change', function () {
+                    table_danhsachungluong.draw();
+                });
+            });
+            var table_danhsachungluong = $('#table-danh-sach-don-xin-ung-luong').DataTable({
+                serverSide: true,
+                bFilter: false,
+                bInfo: false,
+                "order": [[1, "desc"]],
+                ajax: function (data, callback, settings) {
+                    tbXinNghi_filterValues.draw = data.draw;
+                    tbXinNghi_filterValues.search = data.search["value"];
+                    tbXinNghi_filterValues.FromDate = fdate;
+                    tbXinNghi_filterValues.ToDate = tdate;
+                    tbXinNghi_filterValues.start = data.start;
+                    tbXinNghi_filterValues.length = data.length;
+                    tbXinNghi_filterValues.order = data.order[0].column;
+                    tbXinNghi_filterValues.dir = data.order[0].dir;
+
+                    tbXinNghi_filterValues.searchNhanVien = $('input[data-search-ung-luong=1]').val();
+                    tbXinNghi_filterValues.searchGhiChu = $('input[data-search-ung-luong=3]').val();
+                    tbXinNghi_filterValues.trangThai = $('select[data-search-ung-luong=5]').val();
+                    tbXinNghi_filterValues.searchNguoiDuyet = $('input[data-search-ung-luong=7]').val();
+
+                    $.ajax({
+                        url: '/Luong/LoadDonXinUngLuongNhanVien',
+                        method: 'GET',
+                        data: tbXinNghi_filterValues,
+                        success: function (msg) {
+                            console.log(msg);
+                            console.log(msg.data);
+                            if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                return false;
+                            } else if (msg.status == 3) {
+                                if (tbXinNghi_filterValues.draw != 1) {
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'error_outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                    return false;
+                                }
+                            }
+                        },
+                    }).done(callback, () => {
+
+                    });
+                },
+                columns: [
+                    {
+                        "data": null,
+                    },
+                    { "data": "nhanVienTen" },
+                    { "data": "luongUngTruoc" },
+                    { "data": "ghiChu" },
+                    { "data": "ngayTao" },
+                    {
+                        "data": "trangThai",
+                        "render": function (data) {
+                            if (data == 0) {
+                                return "Đang chờ duyệt";
+                            }
+                            else if (data == 1) {
+                                return "Từ chối";
+                            }
+                            else if (data == 2) {
+                                return "Duyệt";
+                            }
+                            else if (data == 3) {
+                                return "Hủy";
+                            }
+                            else {
+                                return '';
+                            }
+                        }
+                    },
+                    { "data": "ngayDuyet" },
+                    { "data": "nguoiDuyet" },
+                    { "data": "ngayHuy" }
+
+                ],
+                columnDefs: [
+                    {
+                        "targets": [0],
+                        "orderable": false
+                    },
+                ],
+                fnCreatedRow: function (nRow, data, iDataIndex) {
+                    $(nRow).attr('data-id', data.donXinUngLuongID);
+                },
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                    return nRow;
+                },
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 15
+                },
+                // scrollY: '300px',
+                scrollResize: true,
+                scrollY: 100,
+                scrollCollapse: true,
+                paging: true,
+                searching: true,
+                lengthChange: false,
+                orderCellsTop: true
+            });
+            //Search ngày -> ngày
+            $('#btn-search-congviec').click(function () {
+                fdate = $('input[name="chooseDate_From"]').val();
+                tdate = $('input[name="chooseDate_To"]').val();
+                table_danhsachungluong.columns.adjust().draw();
+            });
+
+            $('#btn-them-don').click(function () {
+                $('#tao-don-ung-luong').modal();
+            })
+            //Click
+            $(document).on('click', '#table-danh-sach-don-xin-ung-luong tbody tr', function () {
+                $(this).addClass('selected');
+                $('#table-danh-sach-don-xin-ung-luong tbody tr').not(this).removeClass('selected');
+            });
+
+            //Double Click
+            $(document).on('dblclick', '#table-danh-sach-don-xin-ung-luong tbody tr', async function () {
+                $(this).addClass('selected');
+                $('#table-danh-sach-don-xin-ung-luong tbody tr').not(this).removeClass('selected');
+                let id = $(this).attr('data-id');
+                if (id != undefined && id != '') {
+                    $.ajax({
+                        method: "GET",
+                        url: "/Luong/LoadChiTietDonXinUngLuong?donXinUngLuongID=" + id,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (msg) {
+                            if (msg.status == 1) {
+                                console.log(msg.data);
+                                let data = msg.data[0];
+                                $('input[name="trangthai"]').val(data.trangThai);
+                                $('input[name="id-don-xin-ung-luong"]').val(data.donXinUngLuongID);
+                                $('input[name="ten-nhan-vien"]').val(data.nhanVienTen);
+                                $('input[name="tien-ung-truoc"]').val(data.luongUngTruoc);
+                                $('input[name="ghi-chu"]').val(data.ghiChu);
+                                if (data.trangThai == 0) {
+                                    $('#html-chu-y').hide();
+                                    $('#duyet-ung-luong').removeClass('disabled-dia-chi');
+                                    $('#sua-ung-luong').removeClass('disabled-dia-chi');
+                                }
+                                else {
+                                    $('#html-chu-y').show();
+                                    $('#duyet-ung-luong').addClass('disabled-dia-chi');
+                                    $('#sua-ung-luong').addClass('disabled-dia-chi');
+                                }
+                                $('#cap-nhat-don-ung-luong').modal();
+                            }
+                            else if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                            }
+                            else if (msg.status == 3) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                            }
+                        }
+                    })
+                }
+                else {
+                    toast.create({
+                        title: 'Notification!',
+                        text: 'Không tìm thấy phiên',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    })
+                }
+            });
+            $('#tao-ung-luong').click(function (){
+                let data = new FormData();
+                data.append('luongUngTruoc', $('input[name="tien-ung-truoc-insert"]').val());
+                data.append('ghiChu', $('input[name="ghi-chu-insert"]').val());
+                $.ajax({
+                    type: 'POST',
+                    url: '/Luong/ThemDonXinUngLuong',
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'check',
+                                classBackground: 'noti-success',
+                                timeout: 3000
+                            })
+                            $('#tao-don-ung-luong').modal('hide');
+                            table_danhsachungluong.draw();
+                        }
+                        else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            })
+                        } else if (msg.status == 3) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            location.reload();
+                        }
+                    }
+                })
+            })
+            // hủy đơn ứng lương
+            $('#duyet-ung-luong').click(function () {
+                let data = new FormData();
+                data.append('trangThai', $('input[name="trangthai"]').val());
+                data.append('duyetOrTuChoi', 3);
+                data.append('donXinUngLuongID', $('input[name="id-don-xin-ung-luong"]').val());
+                $.ajax({
+                    type: 'POST',
+                    url: '/Luong/DuyetDonXinUngLuongNhanVien',
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'check',
+                                classBackground: 'noti-success',
+                                timeout: 3000
+                            })
+                            $('#cap-nhat-don-ung-luong').modal('hide');
+                            table_danhsachungluong.draw();
+                        }
+                        else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            })
+                        } else if (msg.status == 3) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            location.reload();
+                        }
+                    }
+                })
+            })
+
+            // sửa đơn ứng lương
+            $('#sua-ung-luong').click(function () {
+                let data = new FormData();
+                data.append('trangThai', $('input[name="trangthai"]').val());
+                data.append('donXinUngLuongID', $('input[name="id-don-xin-ung-luong"]').val());
+                data.append('luongUngTruoc', $('input[name="tien-ung-truoc"]').val());
+                data.append('ghiChu', $('input[name="ghi-chu"]').val());
+                $.ajax({
+                    type: 'POST',
+                    url: '/Luong/SuaDonUngLuongNhanVien',
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'check',
+                                classBackground: 'noti-success',
+                                timeout: 3000
+                            })
+                            $('#cap-nhat-don-ung-luong').modal('hide');
+                            table_danhsachungluong.draw();
+                        }
+                        else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            })
+                        } else if (msg.status == 3) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            location.reload();
+                        }
+                    }
+                })
+            })
+        });
+        serialize = function (obj) {
+            var str = [];
+            for (var p in obj)
+                if (obj.hasOwnProperty(p)) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+            return str.join("&");
+        }
+        function delay(fn, ms) {
+            let timer = 0
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(fn.bind(this, ...args), ms || 0)
+            }
+        }
+    </script>
+}

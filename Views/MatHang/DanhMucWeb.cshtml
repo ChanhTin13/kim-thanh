@@ -1,0 +1,852 @@
+﻿
+
+@{
+    ViewBag.Title = "Tab";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+<link href="~/App_Themes/select2/css/select2.min.css" rel="stylesheet" />
+<style>
+    .select2-container--default {
+        width: 58.333333% !important
+    }
+
+    #them-vi-tri .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    #sua-vi-tri .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    input[readonly] {
+        background: #ccc
+    }
+
+    #tb-import-vitri input {
+        height: 30px;
+        border-radius: 5px;
+        width: 100%;
+        padding: 5px;
+    }
+</style>
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="wrap-table__button">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="list-button text-left">
+                        <a href="javascript:;" class="btn btn-add inline" data-toggle="modal"
+                           data-target="#btn-ganthuoctinh">
+                            <img src="../App_Themes/assets/images/btn-add.png" alt=""
+                                 class="inline">
+                            <span class="inline">Thêm</span>
+                        </a>
+                        <a href="#" class="btn btn-export inline" id="btn-export-mat-hang">
+                            <img src="~/App_Themes/assets/images/btn-export.png" alt="" class="inline">
+                            <span class="inline">Xuất</span>
+                        </a>
+                        @*<a href="javascript:;" class="btn btn-fix inline" data-toggle="modal" id="btn-edit-kieu">
+
+                                <img src="../App_Themes/assets/images/btn-fix.png" alt=""
+                                     class="inline"><span class="inline">Sửa</span>
+                            </a>*@
+                        @*<a href="javascript:;" class="btn btn-del vi-tri-btn-delete inline">
+                                <img src="../App_Themes/assets/images/btn-del.png" alt=""
+                                     class="inline"><span class="inline">Xóa</span>
+                            </a>
+                            <a href="javascript:;" class="btn btn-import vi-tri-refresh inline">
+                                <img src="../App_Themes/assets/images/btn-import.png" alt=""
+                                     class="inline"><span class="inline">Nạp</span>
+                            </a>
+                            <a href="javascript:;" class="btn btn-export vi-tri-btn-export inline">
+                                <img src="../App_Themes/assets/images/btn-export.png" alt=""
+                                     class="inline"><span class="inline">Xuất</span>
+                            </a>*@
+                        @*<a href="javascript:;" class="btn btn-export vi-tri-btn-import inline">
+                                <img src="../App_Themes/assets/images/btn-import-2.png" alt=""
+                                     class="inline"><span class="inline">Nhập</span>
+                            </a>*@
+                        @*<a href="#" class="btn btn-export
+                                            inline" id="import-vitrimathang">
+                                <img src="/App_Themes/assets/images/btn-import-2.png"
+                                     alt="" class="inline"><span class="inline">Nhập</span>
+                            </a>*@
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div hidden class="box-choose-time" id="date-vitri">
+                        <p class="mr-2">Từ</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_From" data-date-format="mm/dd/yyyy">
+                        <p class="mr-2">Đến</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_To" data-date-format="mm/dd/yyyy">
+
+                        <button class="btn btn-trans" id="btn-search-vitri">
+                            <img src="../App_Themes/assets/images/loading.png" alt="" class="inline">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__body">
+            <div class="wrap-height-table">
+                <table class="table display table-striped" style="width: 100%;"
+                       id="table-danhmuc-mathang">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Mã hàng</th>
+                            <th>Tên hàng</th>
+                            <th>Loại</th>
+                            <th>Kiểu</th>
+                            <th>Tag</th>
+                            <th>Mô tả</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+<!--Phiếu nhập bằng file excel-->
+<div class="modal fade default-popup popup-danh-sach-khach-hang"
+     id="btn-ganthuoctinh" tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                    Gắn các thuộc tính vào mặt hàng
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body import-excel-nhapkho">
+                <div class="container-fluid wrap-table-2 table-mat-hang p-0">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="wrap-height-table-2 bg-white p-2 mt-2 border">
+                                <table class="table display table-striped" id="table-ganthuoctinhmathang" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên hàng</th>
+                                            <th>Mô tả</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-5 pl-0 sidebar-search">
+                            <div class="box-border mt-4">
+                                <p class="box-border__title bg-gray">Import mặt hàng</p>
+                                <p>Tìm excel sheets để nhập</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <input type="file" id="FileUploadBHHD" style="display: none" />
+                                    <select name="" id="" class="col-10 h-100">
+                                        <option value="">Excel 1</option>
+                                        <option value="">Excel 2</option>
+                                        <option value="">Excel 3</option>
+                                    </select>
+                                    <button id="btnFileUploadBHHD" class="btn btn-default ">
+                                        <img src="/App_Themes/assets/images/paste-excel.png"
+                                             alt="">
+                                    </button>
+                                </div>
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="box-border mt-4">
+                                                <p class="box-border__title bg-gray">
+                                                    Chọn mặt hàng
+                                                </p>
+                                                <input type="hidden" name="idDonVi" />
+                                                <div class="form-group">
+                                                    <select id="sl_mathang" class="col-8 p-0 select-2" style="width:50%">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="box-border mt-4">
+                                                <p class="box-border__title bg-gray">
+                                                    Thông tin gắn mặt hàng
+                                                </p>
+                                                <input type="hidden" name="idDonVi" />
+                                                <div class="form-group">
+                                                    <label for="">Loại mặt hàng</label>
+                                                    <select id="sl_loai" class="col-8 p-0 select-2" style="width:50%!important "></select>
+                                                    <input type="checkbox" class="form-check-input mr-2" id="exampleCheck1" style="margin-left:10px" name="loaimathang" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Kiểu mặt hàng</label>
+                                                    <select id="sl_kieu" class="col-8 p-0 select-2" style="width:50%!important "></select>
+                                                    <input type="checkbox" class="form-check-input mr-2" id="exampleCheck2" style="margin-left:10px" name="kieumathang" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Tag mặt hàng</label>
+                                                    <select id="sl_tag" multiple class="col-9 p-0 select-2" style="width:74%!important ">
+                                                    </select>
+                                                    <input type="checkbox" class="form-check-input mr-2" id="exampleCheck3" style="margin-left:10px" name="tagmathang" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="list-button mt-2">
+                                    <a id="btn-create-file-excel" href="#" class="btn btn-search d-block" style="width:40%">
+                                        <img src="/App_Themes/assets/images/btn-export.png" alt=""
+                                             class="inline"><span class="inline">
+                                            Tạo mẫu nhập
+                                            liệu
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="list-button list-button-last mt-3">
+                                <p>Chú ý: Khi import chỉ giới hạn 1000 dự liệu, và kiểm tra có bị trùng không</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-ghi-import-ganthuoctinhmathang" type="button" class="btn btn-primary">Lưu</button>
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section myScripts{
+    <script src="~/App_Themes/select2/js/select2.full.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('input[name="chooseDate_From"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            $('input[name="chooseDate_To"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            let fdate = moment(new Date()).format('DD/MM/yyyy');
+            let tdate = moment(new Date()).format('DD/MM/yyyy');
+            let tblDanhMucMatHangfilterValues = {};
+            $('#table-danhmuc-mathang thead tr').clone(true).appendTo('#table-danhmuc-mathang thead');
+            $('#table-danhmuc-mathang thead tr:eq(1) th').each(function (i) {
+                var title = $(this).text();
+                if (i != 0) {
+                    $(this).html('<input type="text" placeholder="Search ' + title.trim() + '" data-search-danhmuc-mathang="' + i + '"/>');
+                }
+                else {
+                    return $(this).html('');
+                }
+                $('input', this).on('keyup change', delay(function () {
+                    table_danhmucmathang
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                }, 1000));
+            });
+            var table_danhmucmathang = $('#table-danhmuc-mathang').DataTable({
+                serverSide: true,
+                bFilter: false,
+                bInfo: false,
+                "order": [[4, "desc"]],
+                ajax: function (data, callback, settings) {
+                    tblDanhMucMatHangfilterValues.draw = data.draw;
+                    tblDanhMucMatHangfilterValues.search = data.search["value"];
+                    tblDanhMucMatHangfilterValues.fdate = fdate;
+                    tblDanhMucMatHangfilterValues.tdate = tdate;
+                    tblDanhMucMatHangfilterValues.start = data.start;
+                    tblDanhMucMatHangfilterValues.length = data.length;
+                    tblDanhMucMatHangfilterValues.order = data.order[0].column;
+                    tblDanhMucMatHangfilterValues.dir = data.order[0].dir;
+
+                    tblDanhMucMatHangfilterValues.searchMaHang = $('input[data-search-danhmuc-mathang=1]').val();
+                    tblDanhMucMatHangfilterValues.searchTenhang = $('input[data-search-danhmuc-mathang=2]').val();
+                    tblDanhMucMatHangfilterValues.searchCate = $('input[data-search-danhmuc-mathang=3]').val();
+                    tblDanhMucMatHangfilterValues.searchType = $('input[data-search-danhmuc-mathang=4]').val();
+                    tblDanhMucMatHangfilterValues.searchTag = $('input[data-search-danhmuc-mathang=5]').val();
+                    tblDanhMucMatHangfilterValues.searchMoTa = $('input[data-search-danhmuc-mathang=6]').val();
+
+                    $.ajax({
+                        url: '/MatHang/LoadDataDanhMucWebMathang',
+                        method: 'GET',
+                        data: tblDanhMucMatHangfilterValues,
+                        success: function (msg) {
+                            console.log(msg.data);
+                            if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                return false;
+                            } else if (msg.status == 3) {
+                                if (tblDanhMucMatHangfilterValues.draw != 1) {
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'error_outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                    return false;
+                                }
+                            }
+                        },
+                    }).done(callback, () => {
+
+                    });
+                },
+                columns: [
+                    { "data": null },
+                    { "data": "MHCODE" },
+                    { "data": "MHTEN" },
+                    { "data": "CateName" },
+                    { "data": "TypeName" },
+                    { "data": "TagName" },
+                    { "data": "MoTaWeb" },
+                ],
+                fnCreatedRow: function (nRow, data, iDataIndex) {
+                    $(nRow).attr('data-id', data.MHID);
+
+                },
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                    return nRow;
+                },
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 15
+                },
+                // scrollY: '300px',
+                scrollResize: true,
+                scrollY: 100,
+                scrollCollapse: true,
+                bInfo: false,
+                paging: true,
+                searching: true,
+                pageLength: 5,
+                lengthChange: false,
+                orderCellsTop: true
+            });
+
+            //$(table_danhmucmathang.table().container()).on('keyup change', 'thead input', delay(function (e) {
+            //    table_danhmucmathang.draw();
+            //}, 1000));
+
+            //Search ngày -> ngày
+            $('#btn-search-vitri').click(function () {
+                fdate = $('#date-vitri input[name="chooseDate_From"]').val();
+                tdate = $('#date-vitri input[name="chooseDate_To"]').val();
+                table_danhmucmathang.columns.adjust().draw();
+            });
+
+            //Click
+            $(document).on('click', '#table-danhmuc-mathang tbody tr', function () {
+                $(this).addClass('selected');
+                $('#table-danhmuc-mathang tbody tr').not(this).removeClass('selected');
+            });
+
+            $('#sl_loai').select2({
+                ajax: {
+                    url: "/MatHang/LoadDataSelect2CateMathang",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            start: (params.page || 0) * 50,
+                            length: 50,
+                            page: params.page,
+                        }
+                        // Query parameters will be ?search=[term]&type=public
+                        return query;
+                    },
+                    processResults: function (data, params) {
+                        var select2Data = $.map(data.data, function (obj) {
+                            obj.id = obj.CateID;
+                            obj.text = obj.CateCode + " - " + obj.CateName;
+                            return obj;
+                        });
+                        params.page = params.page || 0;
+                        return {
+                            results: select2Data,
+                            pagination: {
+                                more: ((params.page + 1) * 50) < data.recordsTotal
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: "Chọn thể loại cha",
+                //minimumInputLength: 10,
+                //allowClear: true,
+                templateResult: formatRepo,
+                dropdownParent: $('#btn-ganthuoctinh')
+            });
+
+            $('#sl_kieu').select2({
+                ajax: {
+                    url: "/MatHang/LoadDataSelect2TypeMathang",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            start: (params.page || 0) * 50,
+                            length: 50,
+                            page: params.page,
+                        }
+                        // Query parameters will be ?search=[term]&type=public
+                        return query;
+                    },
+                    processResults: function (data, params) {
+                        var select2Data = $.map(data.data, function (obj) {
+                            obj.id = obj.TypeID;
+                            obj.text = obj.Code + " - " + obj.Name;
+                            return obj;
+                        });
+                        params.page = params.page || 0;
+                        return {
+                            results: select2Data,
+                            pagination: {
+                                more: ((params.page + 1) * 50) < data.recordsTotal
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: "Chọn kiểu",
+                //minimumInputLength: 10,
+                //allowClear: true,
+                templateResult: formatRepo,
+                dropdownParent: $('#btn-ganthuoctinh')
+            });
+
+            $('#sl_tag').select2({
+                ajax: {
+                    url: "/MatHang/LoadDataSelect2tagMathang",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            start: (params.page || 0) * 50,
+                            length: 50,
+                            page: params.page,
+                        }
+                        // Query parameters will be ?search=[term]&type=public
+                        return query;
+                    },
+                    processResults: function (data, params) {
+                        var select2Data = $.map(data.data, function (obj) {
+                            obj.id = obj.TagID;
+                            obj.text = obj.Name;
+                            return obj;
+                        });
+                        params.page = params.page || 0;
+                        return {
+                            results: select2Data,
+                            pagination: {
+                                more: ((params.page + 1) * 50) < data.recordsTotal
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: "Chọn tag",
+                //minimumInputLength: 10,
+                //allowClear: true,
+                templateResult: formatRepo,
+                dropdownParent: $('#btn-ganthuoctinh')
+            });
+
+            $("#sl_mathang").select2({
+                ajax: {
+                    url: "/MatHang/LoadMatHangSelect2",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            start: (params.page || 0) * 50,
+                            length: 50,
+                            page: params.page,
+                        }
+                        // Query parameters will be ?search=[term]&type=public
+                        return query;
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 0;
+                        return {
+                            results: data.data,
+                            pagination: {
+                                more: ((params.page + 1) * 50) < data.recordsTotal
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: 'Nhập mã mặt hàng / tên mặt hàng',
+                minimumInputLength: 1,
+                templateSelection: function (data, container) {
+                    $(data.element).attr('data-MHTEN', data.MHTEN);
+                    return data.text;
+                },
+                templateResult: formatRepoMathang,
+                dropdownParent: $('#btn-ganthuoctinh')
+            });
+            function formatRepo(repo) {
+                if (repo.loading) {
+                    return repo.text;
+                }
+                var $container = $(
+                    "<div class='select2-result-repository clearfix'>" + repo.text +
+                    "</div>"
+                );
+                return $container;
+            }
+
+            function formatRepoMathang(repo) {
+                if (repo.loading) {
+                    return repo.text;
+                }
+                var $container = $(
+                    "<div class='select2-result-repository clearfix'>" + repo.text +" || " + repo.MHTEN +
+                    "</div>"
+                );
+                return $container;
+            }
+
+            var objmathang = [];
+            var table_ganthuoctinh = $('#table-ganthuoctinhmathang').DataTable({
+                serverSide: false,
+                data: objmathang,
+                bFilter: false,
+                bInfo: false,
+                "order": [[1, "desc"]],
+                columns: [
+                    { "data": null },
+                    { "data": "MHCODE" },
+                    { "data": "MHTEN" },
+                    {
+                        data: "MoTaWeb",
+                        render: function (data, type, full, meta) {
+                            return '<input type="text" style="width:100%" name="txt_mota" value="' + data + '"/>';
+                        }
+                    },
+                    {
+                        data: null,
+                        "className": "text-center",
+                        defaultContent: '<a type="button" id="xoa-ctphieu" class="btn btn-danger text-white" >Xóa</a>'
+                    },
+                ],
+                columnDefs: [
+                    {
+                        "targets": [0],
+                        "orderable": false
+                    },
+                ],
+                fnCreatedRow: function (nRow, data, iDataIndex) {
+                    $(nRow).attr('data-id', data.MHID);
+                },
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                    return nRow;
+                },
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 15
+                },
+                // scrollY: '300px',
+                scrollResize: true,
+                scrollY: 100,
+                scrollCollapse: true,
+                bInfo: false,
+                paging: true,
+                searching: true,
+                pageLength: 5,
+                lengthChange: false,
+            });
+
+            $("#table-ganthuoctinhmathang").on("change", "tr", async function () {
+                let MoTaWeb = $(this).find('input[name="txt_mota"]').val();
+                let obj = table_ganthuoctinh.row($(this)).data();
+                let i = table_ganthuoctinh.row($(this)).index();
+                if (objmathang[i].MHID == obj.MHID) {
+                    objmathang[i].MoTaWeb = MoTaWeb;
+                    console.log(objmathang);
+                }
+                else {
+                    toast.create({
+                        title: 'Notification!',
+                        text: 'Không tìm thấy mặt hàng vui lòng bấm F5',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    });
+                    return;
+                }
+                //table_ctthunghang.clear();
+                //table_ctthunghang.rows.add(objDanhSachCTThungHang);
+                //table_ctthunghang.columns.adjust().draw();
+                table_ganthuoctinh.row(i).select();
+            });
+
+            $('#sl_mathang').on('change', function (e) {
+                let DataMatHang = $('#sl_mathang').select2('data')[0];
+                let MHTEN = $('#sl_mathang option:selected').attr('data-mhten');
+                var i = objmathang.findIndex(x => x.MHID == DataMatHang.id);
+                var countdata = table_ganthuoctinh.data().count();
+                if (i >= 0) {
+                    alert("Mặt hàng đã chọn")
+                    return;
+                }
+                else if (countdata > 1000) {
+                    alert("Dự liệu phải nhỏ hơn 1000")
+                    return false;
+                }
+                else {
+                    let obj =
+                    {
+                        MHID: DataMatHang.id,
+                        MHCODE: DataMatHang.text,
+                        MHTEN: MHTEN,
+                        MoTaWeb: ''
+                    }
+                    objmathang.push(obj);
+                }
+                console.log(objmathang);
+                table_ganthuoctinh.clear();
+                table_ganthuoctinh.rows.add(objmathang);
+                table_ganthuoctinh.columns.adjust().draw();
+            });
+
+            // Nút Tạo Excel nhập liệu
+            $('#btn-create-file-excel').on('click', function () {
+                var link = `/Mathang/CreateExcelMatHangGanThuocTinh`
+                window.open(link)
+            })
+            $("#btnFileUploadBHHD").click(function () {
+                $("#FileUploadBHHD").click();
+            })
+            $("#FileUploadBHHD").change(function (event) {
+                let input, files;
+                input = event.target;
+                files = input.files;
+                Array.from(files).map((file, index) => {
+                    var formdata = new FormData();
+                    formdata.append('fileupload', file);
+                    $.ajax({
+                        async: false,
+                        type: 'POST',
+                        url: '/MatHang/ImportGanThuocTinhMatHang',
+                        data: formdata,
+                        dataType: 'json',
+                        contentType: false,
+                        processData: false,
+                        success: function (msg) {
+                            if (msg.status == 1) {
+                                if (msg.data.length > 0) {
+
+                                    //objmathang = objmathang.concat(msg.data);
+                                    objmathang = msg.data
+                                    console.log(objmathang);
+                                    table_ganthuoctinh.clear();
+                                    table_ganthuoctinh.rows.add(objmathang);
+                                    table_ganthuoctinh.columns.adjust().draw();
+                                    $("#FileUploadBHHD").val('');
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: 'Thành công',
+                                        icon: 'check',
+                                        classBackground: 'noti-success',
+                                        timeout: 3000
+                                    });
+                                }
+                            }
+                            else if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                $("#FileUploadBHHD").val('');
+                            }
+                        },
+                        error: function (error) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: 'Không thành công, vui lòng kiểm tra file import và thử lại',
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            $("#FileUploadBHHD").val('');
+                        }
+                    });
+                })
+            })
+
+            $("#btn-ghi-import-ganthuoctinhmathang").click(function () {
+                var countdata = table_ganthuoctinh.data().count();
+                let cateID = $('#sl_loai').select2('data');
+                let typeID = $('#sl_kieu').select2('data');
+
+                let ckloaimathang = $("input[name=loaimathang]").prop("checked");
+                let ckkieumathang = $("input[name=kieumathang]").prop("checked");
+                let cktagmathang = $("input[name=tagmathang]").prop("checked");
+                console.log(ckloaimathang);
+                console.log(ckkieumathang);
+                console.log(cktagmathang);
+                let tag = $('#sl_tag').val().join();
+                if (countdata == 0) {
+                    alert("Phải chọn ít nhất 1 mặt hàng")
+                    return;
+                }
+                else if (countdata > 1000) {
+                    alert("Dự liệu phải nhỏ hơn 1000 ")
+                    return false;
+                }
+                else if (cateID.length == 0) {
+                    alert("Chưa chọn loại")
+                    return false;
+                }
+                else if (typeID.length == 0) {
+                    alert("Chưa chọn kiểu")
+                    return false;
+                }
+                else if (tag == '') {
+                    alert("Chưa chọn tag")
+                    return false;
+                }
+
+                $.ajax({
+                    async: false,
+                    type: 'POST',
+                    url: '/MatHang/ImportInsertganThuocTinhMatHang',
+                    data: JSON.stringify
+                        (
+                            {
+                                model: objmathang,
+                                CateID: cateID[0].id,
+                                TypeID: typeID[0].id,
+                                TagID: tag,
+                                ckCate: ckloaimathang,
+                                ckType: ckkieumathang,
+                                ckTag: cktagmathang
+                            }
+                        ),
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            table_danhmucmathang.draw()
+                            toast.create({
+                                title: 'Notification!',
+                                text: 'Thành công',
+                                icon: 'check',
+                                classBackground: 'noti-success',
+                                timeout: 3000
+                            })
+                        } else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            })
+                        } else if (msg.status == 3) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            location.reload();
+                        }
+                    },
+                    error: function (error) {
+                        console.log('e');
+                    }
+                });
+            })
+
+            //Delete xóa một hàng
+            $('#table-ganthuoctinhmathang tbody').on('click', 'a[type="button"]', function () {
+                let index = table_ganthuoctinh.row($(this).closest('tr')).index();
+                objmathang.splice(index, 1);
+                table_ganthuoctinh.clear().columns.adjust().draw();
+                table_ganthuoctinh.rows.add(objmathang);
+                table_ganthuoctinh.columns.adjust().draw();
+            });
+
+            //Excel
+            $('#btn-export-mat-hang').on('click', function () {
+                $.ajax({
+                    async: false,
+                    type: 'GET',
+                    url: '/MatHang/CheckExcelMatHang',
+                    success: function (res) {
+                        if (res.rs) {
+                            link = "/MatHang/ExcelDanhMucWebMathang?" + serialize(tblDanhMucMatHangfilterValues) + ``;
+                            window.open(link);
+                        }
+                        else {
+                            toast.create({
+                                title: 'Notification!',
+                                text: res.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                        }
+                    }
+                });
+            });
+        });
+        serialize = function (obj) {
+            var str = [];
+            for (var p in obj)
+                if (obj.hasOwnProperty(p)) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+            return str.join("&");
+        }
+        function delay(fn, ms) {
+            let timer = 0
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(fn.bind(this, ...args), ms || 0)
+            }
+        }
+    </script>
+}

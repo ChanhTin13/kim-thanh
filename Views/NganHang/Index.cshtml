@@ -1,0 +1,149 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ql-user user-table wrap-table-pq">
+                    <div class="user-table__header">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="list-button text-left">
+                                    <a href="#" class="btn btn-add inline" id="btn-insert">
+                                        <img src="~/App_Themes/assets/images/btn-add.png"
+                                             alt="" class="inline">
+                                        <span class="inline">Thêm</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline" id="btn-update">
+                                        <img src="~/App_Themes/assets/images/btn-fix.png"
+                                             alt="" class="inline"><span class="inline">Sửa</span>
+                                    </a>
+                                    <a href="#" class="btn btn-del inline" id="btn-delete">
+                                        <img src="~/App_Themes/assets/images/btn-del.png"
+                                             alt="" class="inline"><span class="inline">Xóa</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline" id="btn-reset">
+                                        <img src="~/App_Themes/assets/images/btn-import.png"
+                                             alt="" class="inline"><span class="inline">Nạp</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline" id="btn-export">
+                                        <img src="~/App_Themes/assets/images/btn-export.png" alt=""
+                                             class="inline"><span class="inline">Xuất</span>
+                                    </a>
+                                    <a href="#" class="btn btn-close
+                                    inline">
+                                        <img src="~/App_Themes/assets/images/btn-close.png"
+                                             alt="" class="inline"><span class="inline">Đóng</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="wrap-height-table">
+                        <table class="table display nowrap table-striped row-border
+                        order-column" id="table-nganhang" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Mã ngân hàng</th>
+                                    <th>Tên ngân hàng</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Điện thoại</th>
+                                    <th>Chủ TK</th>
+                                    <th>Số TK</th>
+                                    <th>Người liên lạc</th>
+                                    <th>Ghi chú</th>
+                                    <th>TK kế toán</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thêm ngân hàng -->
+    <div class="modal fade default-popup" id="them-ngan-hang" tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Ngân
+                        hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form action="" class="default-form
+                                form-them-ngan-hang">
+                                    <input type="hidden" name="idNganHang" />
+                                    <div class="form-group">
+                                        <label for="">Mã ngân hàng</label>
+                                        <input type="text" name="codeNganHang" required>
+                                    </div><div class="form-group">
+                                        <label for="">Tên ngân hàng</label>
+                                        <input type="text" name="nameNganHang" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Địa chỉ</label>
+                                        <input type="text" name="addressNganHang">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Điện thoại</label>
+                                        <input type="text" name="phoneNganHang" data-type="number">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Số TK</label>
+                                        <input type="text" name="accNumberNganHang" data-type="number">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Chủ TK</label>
+                                        <input type="text" name="accOwnerNganHang">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Người liên lạc</label>
+                                        <input type="text" name="contactNganHang">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Ghi chú</label>
+                                        <textarea name="noteNganHang" id="" cols="30" rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">TK Kế toán</label>
+                                        <input type="text" name="accountKT" disabled>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn-luu">Lưu</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Thoát
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section myScripts{
+    <script src="~/PageScript/NganHang/nganhang.js"></script>
+}

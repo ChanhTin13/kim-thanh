@@ -1,0 +1,738 @@
+﻿
+@{
+    ViewBag.Title = "DanhSachPhienNhapKho";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+<link href="~/App_Themes/select2/css/select2.min.css" rel="stylesheet" />
+<style>
+    .select2-results__options {
+        font-size: 13px !important;
+    }
+    #sua-vi-tri .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    input[readonly] {
+        background: #ccc
+    }
+
+    #tb-import-vitri input {
+        height: 30px;
+        border-radius: 5px;
+        width: 100%;
+        padding: 5px;
+    }
+</style>
+<main class="wrapper">
+    <div class="container-fluid">
+        <!--<div class="wrap-table__button">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="list-button text-left">-->
+        @*<a href="javascript:;" class="btn btn-add inline" data-toggle="modal"
+               data-target="#them-vi-tri">
+                <img src="../App_Themes/assets/images/btn-add.png" alt=""
+                     class="inline">
+                <span class="inline">Thêm</span>
+            </a>
+            <a href="javascript:;" class="btn btn-fix vi-tri-btn-edit inline" data-toggle="modal"
+               data-target="#form-add-group-user">
+                <img src="../App_Themes/assets/images/btn-fix.png" alt=""
+                     class="inline"><span class="inline">Sửa</span>
+            </a>
+            <a href="javascript:;" class="btn btn-del vi-tri-btn-delete inline">
+                <img src="../App_Themes/assets/images/btn-del.png" alt=""
+                     class="inline"><span class="inline">Xóa</span>
+            </a>
+            <a href="javascript:;" class="btn btn-import vi-tri-refresh inline">
+                <img src="../App_Themes/assets/images/btn-import.png" alt=""
+                     class="inline"><span class="inline">Nạp</span>
+            </a>
+            <a href="javascript:;" class="btn btn-export vi-tri-btn-export inline">
+                <img src="../App_Themes/assets/images/btn-export.png" alt=""
+                     class="inline"><span class="inline">Xuất</span>
+            </a>*@
+        @*<a href="javascript:;" class="btn btn-export vi-tri-btn-import inline">
+                <img src="../App_Themes/assets/images/btn-import-2.png" alt=""
+                     class="inline"><span class="inline">Nhập</span>
+            </a>*@
+        <!--<a href="#" class="btn btn-export
+                                        inline" id="import-phiennhapkho">
+                            <img src="/App_Themes/assets/images/btn-import-2.png"
+                                 alt="" class="inline"><span class="inline">Nhập</span>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>-->
+        <div class="wrap-table__header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box-choose-time" id="date-vitri">
+                        <p class="mr-2">Từ</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_From" data-date-format="mm/dd/yyyy">
+                        <p class="mr-2">Đến</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_To" data-date-format="mm/dd/yyyy">
+                        <div class="list-button">
+                            <a href="#" class="btn btn-export
+                            inline" id="btn-search-phiennhapkho">
+                                <img src="/App_Themes/assets/images/btn-search.png" alt="" class="inline"><span class="inline">Tìm kiếm</span>
+                            </a>
+                            <a href="#" class="btn btn-export
+                                        inline" id="import-phiennhapkho">
+                                <img src="/App_Themes/assets/images/btn-import-2.png"
+                                     alt="" class="inline"><span class="inline">Nhập</span>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__body">
+            <div class="wrap-height-table">
+                <table class="table display table-striped" style="width: 100%;"
+                       id="table-phien-nhap-kho">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Mã phiên nhập</th>
+                            <th>Nhà cung cấp</th>
+                            <th>Người tạo</th>
+                            <th>Ghi chú</th>
+                            <th>Ngày tạo</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+@*<div class="modal fade default-popup " data-keyboard="false" data-backdrop="static" id="import-vi-tri"
+         tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Vị trí mặt hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="default-form">
+                                    <div class="form-group">
+                                        <a href="javascript:;" class="btn btn-success btn-import-vitri">Chọn file</a>
+                                        <a href="/Upload/ExcelExample/vi-tri-mat-hang.xlsx" class="btn btn-export inline">
+                                            <img src="../App_Themes/assets/images/paste-excel.png" alt=""
+                                                 class="inline"><span class="inline">File nhập Mẫu</span>
+                                        </a>
+                                        <input type="file" style="display:none" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class=" hidden import-vitri-excel" />
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>*@
+<!-- nhập vị trí mặt hàng file excel-->
+<div class="modal fade default-popup popup-danh-sach-khach-hang"
+     id="btn-nhap-phiennhapkho" tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                    Import phiên nhập kho file Excel
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body import-excel-nhapkho">
+                <div class="container-fluid wrap-table-2 table-mat-hang p-0">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="wrap-height-table-2 bg-white p-2 mt-2 border">
+                                <table class="table display table-striped" id="table-import-phiennhapkho" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên hàng</th>
+                                            <th>Số lượng nhập</th>
+                                            <th>Số lượng xuất</th>
+                                            <th>Mã thùng</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-2 pl-0 sidebar-search">
+                            <div class="box-border mt-4">
+                                <p class="box-border__title bg-gray">Import Excel</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <input type="file" id="FileUploadPhienNhapKho" style="display: none" />
+                                    <select name="" id="" class="col-10 h-100">
+                                    </select>
+                                    <button id="btnFileUploadPhienNhapKho" class="btn btn-default ">
+                                        <img src="/App_Themes/assets/images/paste-excel.png"
+                                             alt="">
+                                    </button>
+                                </div>
+                                <div class="list-button mt-2">
+                                    @*<a id="btn-nap-file-excel" href="#" class="btn   btn-search d-block">
+                                            <img src="/App_Themes/assets/images/loading.png" alt=""
+                                                 class="inline"><span class="inline">
+                                                Nạp lại từ
+                                                Excel
+                                            </span>
+                                        </a>*@
+                                    <a id="btn-create-file-excel" href="#" class="btn btn-search d-block">
+                                        <img src="/App_Themes/assets/images/btn-export.png" alt=""
+                                             class="inline"><span class="inline">
+                                            Tạo mẫu nhập
+                                            liệu
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="list-button list-button-last mt-3" style="width:90%!important">
+                                <select id="sl-ncc" style="width:80%;">
+                                </select>
+                                <div class="list-button mt-3">
+                                    <select id="sl-phiennhap" style="width:100%!important;">
+                                    </select>
+                                </div>
+                                    <p> <u>Ghi chú</u>: <textarea id="ghi-chu-phiennhapkho"></textarea> </p>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-ghi-import-phiennhapkho" type="button" class="btn btn-primary">Lưu</button>
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section myScripts{
+    <script src="~/App_Themes/select2/js/select2.full.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('input[name="chooseDate_From"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            $('input[name="chooseDate_To"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            let fdate = moment(new Date()).format('DD/MM/yyyy');
+            let tdate = moment(new Date()).format('DD/MM/yyyy');
+            let tbPhienNhapKho_filterValues = {};
+            $('#table-phien-nhap-kho thead tr').clone(true).appendTo('#table-phien-nhap-kho thead');
+            $('#table-phien-nhap-kho thead tr:eq(1) th').each(function (i) {
+                var title = $(this).text();
+                if (i == 0 || i == 5) {
+                    return $(this).html('');
+                }
+                else {
+                    $(this).html('<input type="text" placeholder="Search ' + title.trim() + '" data-search-vitri-mathang="' + i + '"/>');
+                }
+                $('input', this).on('keyup change', delay(function () {
+                    table_phiennhapkho
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                }, 1000));
+            });
+            var table_phiennhapkho = $('#table-phien-nhap-kho').DataTable({
+                serverSide: true,
+                bFilter: false,
+                bInfo: false,
+                "order": [[1, "desc"]],
+                ajax: function (data, callback, settings) {
+                    tbPhienNhapKho_filterValues.draw = data.draw;
+                    tbPhienNhapKho_filterValues.search = data.search["value"];
+                    tbPhienNhapKho_filterValues.FromDate = fdate;
+                    tbPhienNhapKho_filterValues.ToDate = tdate;
+                    tbPhienNhapKho_filterValues.start = data.start;
+                    tbPhienNhapKho_filterValues.length = data.length;
+                    tbPhienNhapKho_filterValues.order = data.order[0].column;
+                    tbPhienNhapKho_filterValues.dir = data.order[0].dir;
+
+                    tbPhienNhapKho_filterValues.SearchMaNhapKho = $('input[data-search-vitri-mathang=1]').val();
+                    tbPhienNhapKho_filterValues.SearchNCC = $('input[data-search-vitri-mathang=2]').val();
+                    tbPhienNhapKho_filterValues.SearchNguoiLap = $('input[data-search-vitri-mathang=3]').val();
+                    tbPhienNhapKho_filterValues.SearchGhiChu = $('input[data-search-vitri-mathang=4]').val();
+
+                    $.ajax({
+                        url: '/KiemHang/DataPhienNhapKho',
+                        method: 'GET',
+                        data: tbPhienNhapKho_filterValues,
+                        success: function (msg) {
+                            console.log(msg.data);
+                            if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                return false;
+                            } else if (msg.status == 3) {
+                                if (tbPhienNhapKho_filterValues.draw != 1) {
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'error_outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                    return false;
+                                }
+                            }
+                        },
+                    }).done(callback, () => {
+
+                    });
+                },
+                columns: [
+                    { "data": null },
+                    { "data": "MAPHIENNHAP" },
+                    { "data": "KHTEN" },
+                    { "data": "NGUOITAO" },
+                    { "data": "GHICHU" },
+                    { "data": "NGAYTAO" },
+                ],
+                columnDefs: [
+                    {
+                        "targets": [0],
+                        "orderable": false
+                    },
+                ],
+                fnCreatedRow: function (nRow, data, iDataIndex) {
+                    $(nRow).attr('data-id', data.ID);
+                },
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                    return nRow;
+                },
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 15
+                },
+                // scrollY: '300px',
+                scrollResize: true,
+                scrollY: 100,
+                scrollCollapse: true,
+                bInfo: false,
+                paging: true,
+                searching: false,
+                pageLength: 5,
+                lengthChange: false,
+                orderCellsTop: true
+            });
+
+            //$(table_phiennhapkho.table().container()).on('keyup change', 'thead input', delay(function (e) {
+            //    table_phiennhapkho.draw();
+            //}, 1000));
+
+            //Search ngày -> ngày
+            $('#btn-search-phiennhapkho').click(function () {
+                fdate = $('#date-vitri input[name="chooseDate_From"]').val();
+                tdate = $('#date-vitri input[name="chooseDate_To"]').val();
+                table_phiennhapkho.columns.adjust().draw();
+            });
+
+            //Click
+            $(document).on('click', '#table-phien-nhap-kho tbody tr', function () {
+                $(this).addClass('selected');
+                $('#table-phien-nhap-kho tbody tr').not(this).removeClass('selected');
+            });
+
+            //Double Click
+            $(document).on('dblclick', '#table-phien-nhap-kho tbody tr', async function () {
+                $(this).addClass('selected');
+                $('#table-phien-nhap-kho tbody tr').not(this).removeClass('selected');
+                let id = $(this).attr('data-id');
+                if (id != undefined && id != '') {
+                    let link = '/KiemHang/LoadChiTietPhienNhapKho?id=' + id + '';
+                    window.open(link);
+                }
+                else {
+                    toast.create({
+                        title: 'Notification!',
+                        text: 'Không tìm thấy phiên',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    })
+                }
+            });
+
+            //Save (Insert)
+            $('#btn-ghi-import-phiennhapkho').click(function () {
+                let data = new FormData();
+                let ncc = $('#sl-ncc').val();
+                let phienNhapKhoID = $("#sl-phiennhap").val();
+                if (phienNhapKhoID == null) {
+                    phienNhapKhoID = '';
+                }
+                if (ncc == undefined && ncc == '') {
+                    toast.create({
+                        title: 'Notification!',
+                        text: 'Chưa chọn nhà cung cấp',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    })
+                    return false;
+                }
+                var CountData = tbPhienNhapKhoImport.data().count();
+                if (CountData <= 0) {
+                    toast.create({
+                        title: 'Notification!',
+                        text: 'Phải có ít nhất 1 mặt hàng',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    })
+                    return false;
+                }
+                data.append("GHICHU", $('#ghi-chu-phiennhapkho').val());
+                data.append("IDNCC", $('#sl-ncc').val());
+                data.append("phienNhapKhoID", phienNhapKhoID);
+                data.append("ListMH", JSON.stringify(objmathangimport))
+
+                $.ajax({
+                    async: false,
+                    type: 'POST',
+                    url: '/KiemHang/InsertPhienNhapKho',
+                    data: data,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            objmathangimport = [];
+                            tbPhienNhapKhoImport.clear().draw();
+                            table_phiennhapkho.draw();
+                            $('#btn-nhap-phiennhapkho').modal('hide');
+                            toast.create({
+                                title: 'Notification!',
+                                text: 'Thành công',
+                                icon: 'check',
+                                classBackground: 'noti-success',
+                                timeout: 3000
+                            })
+                        } else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            })
+                        } else {
+                            if (msg.draw != 1) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                                return false;
+                            }
+                        }
+                    },
+                    error: function (error) {
+                        console.log('e');
+                    }
+                });
+            });
+
+
+            //#endregion
+
+            var objmathangimport = [];
+
+            $("#import-phiennhapkho").click(function () {
+                $.ajax({
+                    method: "GET",
+                    url: "/Kiemhang/CheckRoleInPhienNhapKho",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            $('#btn-nhap-phiennhapkho').modal();
+                        }
+                        else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                        }
+                        else if (msg.status == 3) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            location.reload();
+                        }
+                    }
+                })
+            })
+
+            $("#btn-nhap-phiennhapkho").on('shown.bs.modal', function () {
+                let count = tbPhienNhapKhoImport.data().count();
+                if (count <= 0) {
+                    $("#btn-ghi-import-phiennhapkho").prop('disabled', true);
+                }
+                tbPhienNhapKhoImport.columns.adjust().draw();
+                getDataNCC();
+            })
+
+            var setCall = 0;
+            async function getDataNCC() {
+                if (setCall == 0) {
+                    await LoadDataNCC().then((e) => {
+                        setCall++;
+                        // HTML NCC
+                        e.dataNCC.map((value) => {
+                            $('#sl-ncc').append('<option value="' + value.KHID + '">' + value.KHTEN + '</option>');
+                            $('#sl-ncc').select2({ dropdownParent: $("#btn-nhap-phiennhapkho"), width: 'resolve' });
+                        })
+                    }).catch(() => { console.log('error') })
+                }
+            }
+            $('#btn-nhap-phiennhapkho').on('hidden.bs.modal', function (e) {
+                //objmathangimport = [];
+                //tbPhienNhapKhoImport.clear();
+                //tbPhienNhapKhoImport.rows.add(objmathangimport);
+                //tbPhienNhapKhoImport.columns.adjust().draw();
+                $("#FileUploadPhienNhapKho").val('');
+            })
+            // Nút Tạo Excel nhập liệu
+            $('#btn-create-file-excel').on('click', function () {
+                var link = `/KiemHang/TaoMau`
+                window.open(link)
+            })
+
+
+            $("#btnFileUploadPhienNhapKho").click(function () {
+                $("#FileUploadPhienNhapKho").click();
+            })
+            $("#FileUploadPhienNhapKho").change(function (event) {
+                let input, files;
+                input = event.target;
+                files = input.files;
+                Array.from(files).map((file, index) => {
+                    console.log(file);
+                    var formdata = new FormData();
+                    formdata.append('fileupload', file);
+                    $.ajax({
+                        async: false,
+                        type: 'POST',
+                        url: '/KiemHang/ImportPhienNhapKho',
+                        data: formdata,
+                        dataType: 'json',
+                        contentType: false,
+                        processData: false,
+                        success: function (msg) {
+                            console.log(msg.data);
+                            if (msg.status == 1) {
+                                objmathangimport = msg.data;
+                                tbPhienNhapKhoImport.clear();
+                                tbPhienNhapKhoImport.rows.add(objmathangimport);
+                                tbPhienNhapKhoImport.columns.adjust().draw();
+                                $("#btn-ghi-import-phiennhapkho").prop('disabled', false);
+                            }
+                            else if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                $("#FileUploadPhienNhapKho").val('');
+                            }
+                        },
+                        error: function (error) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: 'Không thành công, vui lòng kiểm tra file import và thử lại',
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            $("#FileUploadPhienNhapKho").val('');
+                        }
+                    });
+                })
+            })
+            var objmathangimport = [];
+            var tbPhienNhapKhoImport = $('#table-import-phiennhapkho').DataTable({
+                bFilter: false,
+                bInfo: false,
+                data: objmathangimport,
+                select: true,
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                    return nRow;
+                },
+                columns: [
+                    { data: null },
+                    { data: "MHCODE" },
+                    { data: "MHTEN" },
+                    { data: "SoLuongNhap" },
+                    { data: "SoLuongXuat" },
+                    { data: "MaThung" },
+                ],
+                scrollX: true,
+                scrollResize: true,
+                scrollY: 100,
+                scrollCollapse: true,
+                searching: "true",
+                paging: true,
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 200,
+                },
+                'lengthChange': false,
+                "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api(), data;
+                    var total = data.length;
+                    if (total > 0) {
+                        ////update footer
+                        $(api.column(0).footer()).html(total);
+                    }
+                    else {
+                        $(api.column(0).footer()).html("0");
+                    }
+                }
+            });
+
+            //#region Select2 mặt hàng
+            $("#sl-phiennhap").select2({
+                ajax: {
+                    url: "/KiemHang/LoadPhienNhapKhoChuaKhoa",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            start: (params.page || 0) * 50,
+                            length: 50,
+                            page: params.page
+                        }
+                        // Query parameters will be ?search=[term]&type=public
+                        return query;
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 0;
+                        return {
+                            results: data.items,
+                            pagination: {
+                                more: ((params.page + 1) * 50) < data.total_count
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: 'Nhập mã mặt hàng / tên mặt hàng',
+                //minimumInputLength: 1,
+                templateResult: formatRepo,
+                allowClear: true,
+                dropdownParent: $("#btn-nhap-phiennhapkho")
+            });
+
+            function formatRepo(repo) {
+                if (repo.loading) {
+                    return repo.text;
+                }
+                var $container = $(
+                    "<div class='select2-result-repository clearfix'>" + repo.text + " " +  repo.nhaCungCap +
+                    "</div>"
+                );
+                return $container;
+            }
+            //#endregion
+        });
+        serialize = function (obj) {
+            var str = [];
+            for (var p in obj)
+                if (obj.hasOwnProperty(p)) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+            return str.join("&");
+        }
+        function delay(fn, ms) {
+            let timer = 0
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(fn.bind(this, ...args), ms || 0)
+            }
+        }
+        async function LoadDataNCC() {
+            return $.ajax({
+                async: true,
+                type: 'GET',
+                url: '/BanHang/LoadDataNCC',
+                success: function (res) {
+                    console.log(res);
+                    return res;
+                }
+            });
+        }
+
+
+    </script>
+}

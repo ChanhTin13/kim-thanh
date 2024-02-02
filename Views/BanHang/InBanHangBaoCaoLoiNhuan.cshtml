@@ -1,0 +1,119 @@
+﻿@using KimThanh.Controllers
+@using KimThanh.ModelsView;
+@model List<Mona_sp_LoadTKLoiNhuanDetailByPeriod21XML>
+@{
+    var cul = new System.Globalization.CultureInfo("vi-VN");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>BÁO CÁO BÁN HÀNG NHANH</title>
+    <meta http-equiv="Cache-control" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
+    <meta name="robots" content="noodp,noydir" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="og:site_name" content="" />
+    <meta name="description" content=" " />
+    <meta name="keywords" content="" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="" />
+    <meta property="og:description" content="" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/fonts/Averta/font.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/scss/style.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/fontawesome/css/all.css" />
+    <style>
+        body {
+            font-family: "Times New Roman";
+        }
+        @@media print {
+            thead, tfoot {
+                display: table-row-group;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="wrapper">
+        <div>
+            <div class="note__header">
+                <div class="note__header--time">
+                    <div class="detail">
+                        <h2 class="title">BÁO CÁO LỢI NHUẬN</h2>
+                    </div>
+                </div>
+                <div class="note__header--title">
+                </div>
+            </div>
+            <div class="note__body">
+                <div class="note__body--table">
+                    <div class="wrap-height-table table-responsive">
+                        <table class="table-pnk display"
+                               id="table-in-bao-cao-banhang"
+                               style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã hàng</th>
+                                    <th>Tên hàng</th>
+                                    <th>SL bán</th>
+                                    <th>Doanh thu</th>
+                                    <th>Tổng vốn</th>
+                                    <th>Lợi nhuận</th>
+                                    <th>Lợi nhuận đơn vị</th>
+                                    <th>Tỉ số lợi nhuận trên doanh thu(%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    if (Model != null)
+                                    {
+                                        int STT = 0;
+                                        foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>@(++STT)</td>
+                                                <td>@item.MHCODE</td>
+                                                <td>@item.MHTEN</td>
+                                                <td>@String.Format(cul, "{0:N0}", item.TONGSLBAN)</td>
+                                                <td>@String.Format(cul, "{0:N0}", item.TONGDGBAN)</td>
+                                                <td>@String.Format(cul, "{0:N0}", item.TONGDGMUA)</td>
+                                                <td>@String.Format(cul, "{0:N0}", item.TONGLOINHUAN)</td>
+                                                <td>@String.Format(cul, "{0:N0}", item.LOINHUANDONVI)</td>
+                                                <td>@String.Format(cul, "{0:N0}", item.TILELOINHUAN)</td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="4">@String.Format(cul, "{0:N0}",Math.Round(Model[0].TongTienSLBan))</th>
+                                    <th >@String.Format(cul, "{0:N0}",Math.Round(Model[0].TongTienDGBan))</th>
+                                    <th >@String.Format(cul, "{0:N0}",Math.Round(Model[0].TongTienDGMua))</th>
+                                    <th colspan="3" >@String.Format(cul, "{0:N0}",Math.Round(Model[0].TongTienLoiNhuan))</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script type="text/javascript" src="/App_Themes/js/moment.js"></script>
+    <script src="~/App_Themes/js/jquery.js"></script>
+    @*<script type="text/javascript" src="js/jquery-3.2.1.slim.min.js"></script>
+        <script type="text/javascript" src="js/popper.min.js"></script>
+        <script type="text/javascript" src="../js/bootstrap.min.js"></script>*@
+    <script>
+        $(document).ready(function () {
+            window.print();
+        })
+    </script>
+</body>
+</html>

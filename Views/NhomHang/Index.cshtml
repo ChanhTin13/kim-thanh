@@ -1,0 +1,265 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<style>
+    .disabled-nhom-hang {
+        pointer-events: none;
+        opacity: 0.4;
+    }
+</style>
+
+<main class="wrapper">
+    <div class="container-fluid wrap-table-2 table-nhom-kh">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="list-button bg-gray text-left">
+                    <a href="#" class="btn btn-add inline" id="btn-insert">
+                        <img src="~/App_Themes/assets/images/btn-add.png"
+                             alt="" class="inline">
+                        <span class="inline">Thêm</span>
+                    </a>
+                    <a href="#" class="btn btn-fix inline" id="btn-update">
+                        <img src="~/App_Themes/assets/images/btn-fix.png"
+                             alt="" class="inline"><span class="inline">Sửa</span>
+                    </a>
+                    <a href="#" class="btn btn-fix inline" id="btn-delete">
+                        <img src="~/App_Themes/assets/images/btn-del.png"
+                             alt="" class="inline"><span class="inline">Xóa</span>
+                    </a>
+                    <a href="#" class="btn btn-save inline disabled" id="btn-save">
+                        <img src="~/App_Themes/assets/images/btn-save.png"
+                             alt="" class="inline"><span class="inline">Ghi</span>
+                    </a>
+                    <a href="#" class="btn btn-fix inline" id="btn-reset">
+                        <img src="~/App_Themes/assets/images/btn-import.png"
+                             alt="" class="inline"><span class="inline">Nạp</span>
+                    </a>
+                    <a href="#" class="btn btn-fix inline" id="btn-back">
+                        <img src="~/App_Themes/assets/images/btn-export.png"
+                             alt="" class="inline"><span class="inline">Hoãn</span>
+                    </a>
+                    @*<a href="#" class="btn btn-print inline" id="btn-print">
+            <img src="~/App_Themes/assets/images/btn-print.png"
+                 alt="" class="inline"><span class="inline">In</span>
+        </a>*@
+                    <a href="#" class="btn btn-fix inline" id="btn-export">
+                        <img src="~/App_Themes/assets/images/btn-export.png"
+                             alt="" class="inline"><span class="inline">Xuất</span>
+                    </a>
+                    <a href="#excel-nhomhang" data-toggle="modal" class="btn btn-export inline">
+                        <img src="/App_Themes/assets/images/btn-import-2.png"
+                             alt="" class="inline"><span class="inline">Nhập</span>
+                    </a>
+                    @*<a href="#" class="btn btn-question inline">
+            <img src="~/App_Themes/assets/images/question.png"
+                 alt="" class="inline"><span class="inline">Hỏi</span>
+        </a>
+        <a href="#" class="btn btn-fix inline">
+            <img src="~/App_Themes/assets/images/btn-close.png"
+                 alt="" class="inline"><span class="inline">Đóng</span>
+        </a>*@
+                </div>
+            </div>
+        </div>
+        <div class="table-nhom-kh">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="box-dia-chi box-info">
+                        <p class="title-head">Danh mục nhóm hàng</p>
+                        <div class="content mt-2" id="jstree">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <form action="" id="form-table-nhom-kh"
+                          class="default-form">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Mã nhóm hàng</label>
+                                    <input type="text" name="code" disabled required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Mã ngắn(mã ghép)</label>
+                                    <input type="text" name="matchcode" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Tên nhóm hàng</label>
+                                    <input type="text" name="name" disabled required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Alias</label>
+                                    <input type="text" name="alias" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Mô tả</label>
+                                    <textarea name="describe" id=""
+                                              cols="30" rows="3" disabled></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="">Ghi chú</label>
+                                    <textarea name="note" id=""
+                                              cols="30" rows="3" disabled></textarea>
+                                </div>
+                                <input type="hidden" name="parentID" disabled />
+                                <input type="hidden" name="id" disabled />
+                            </div>
+                        </div>
+                    </form>
+                    <div class="box-title list-button d-flex">
+                        <p class="title-head inline mr-2" id="title">Nhóm hàng</p>
+                        <a href="#" class="btn btn-watch flex inline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="~/App_Themes/assets/images/btn-watch.png"
+                                 alt="" class="inline">Xem
+                        </a>
+                        <div class="dropdown-menu xem-nhom-hang">
+                            <a class="dropdown-item" data-id="1">Xem toàn bộ nhóm cấp 1</a>
+                            <a class="dropdown-item" data-id="2">Xem toàn bộ nhóm cấp 2</a>
+                            <a class="dropdown-item" data-id="3">Xem toàn bộ nhóm cấp 3</a>
+                            <a class="dropdown-item" data-id="4">Xem toàn bộ nhóm cấp 4</a>
+                            <a class="dropdown-item" data-id="5">Xem toàn bộ nhóm cấp 5</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" data-id="0">Xem tất cả</a>
+                        </div>
+                    </div>
+                    <div class="wrap-height-table-2 disabled">
+                        <table class="table display" id="table-nhom-hang" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Mã nhóm hàng</th>
+                                    <th>Mã ngắn (mã ghép)</th>
+                                    <th>ALIAS</th>
+                                    <th>MHLTEN</th>
+                                    <th>Path</th>
+                                    <th>MOTA</th>
+                                    <th>Note</th>
+                                    <th style="min-width: 100px">Ngày tạo</th>
+                                    <th style="min-width: 100px">Cập nhật</th>
+                                    <th>USERID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Nhập excel-->
+    <div class="modal fade default-popup popup-danh-sach-khach-hang" id="excel-nhomhang" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Import nhóm hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid wrap-table-2 table-mat-hang p-0">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="wrap-height-table-2 bg-white p-2 mt-2 border" style="max-height: 250px;">
+                                    <p class="title-special">Danh sách nhóm hàng chưa tồn tại trong hệ thống</p>
+                                    <div class="box-border p-2" style="border: none;">
+                                        <table class="table display table-striped" style="width: 100%;" id="table-nhom-hang-chua-co">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Mã nhóm hàng</th>
+                                                    <th>Mã ngắn (mã ghép)</th>
+                                                    <th>ALIAS</th>
+                                                    <th>MHLTEN</th>
+                                                    <th>Path</th>
+                                                    <th>MOTA</th>
+                                                    <th>Note</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="form-inline" style="margin-top: .5rem !important;">
+                                    <span>Số bản ghi: </span> <span class="ml-5 count-new-nhom-hang">0</span>
+                                    @*<button type="button" class="btn btn-primary" style="margin-left: 15%;" disabled>Ghi thêm mới</button>*@
+                                    <div class="ml-auto">
+                                        <button type="button" class="btn btn-primary btn-save-nhom-hang-excel" value="0" disabled="disabled">Ghi thêm mới</button>
+                                        @*<button type="button" class="btn btn-primary">Export</button>
+                                            <button type="button" class="btn btn-primary">Validate</button>*@
+                                    </div>
+                                </div>
+
+                                <div class="wrap-height-table-2 bg-white p-2 mt-2 border" style="max-height: 250px;">
+                                    <p class="title-special">Danh sách nhóm hàng đã tồn tại trong hệ thống</p>
+                                    <div class="box-border p-2" style="border: none;">
+                                        <table class="table display table-striped" style="width: 100%;" id="table-nhom-hang-da-co">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Mã nhóm hàng</th>
+                                                    <th>Mã ngắn (mã ghép)</th>
+                                                    <th>ALIAS</th>
+                                                    <th>MHLTEN</th>
+                                                    <th>Path</th>
+                                                    <th>MOTA</th>
+                                                    <th>Note</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="form-inline" style="margin-top: .5rem !important;">
+                                    <span>Số bản ghi: </span> <span class="ml-5 count-old-nhom-hang">0</span>
+                                    @*<button type="button" class="btn btn-primary" style="margin-left: 15%;" disabled>Ghi sửa thông tin</button>*@
+                                    <div class="ml-auto">
+                                        <button type="button" class="btn btn-primary btn-save-nhom-hang-excel" value="1" disabled="disabled">Ghi sửa thông tin</button>
+                                        @*<button type="button" class="btn btn-primary">Export</button>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer mt-2">
+                        <div class="w-100">
+                            @*<p>Tìm Excel Sheets để nhập</p>
+                                <select name="slExcel" id=""></select>
+                                <input type=file name="excelMatHang" style="display: none">
+                                <button id="btn-import-mat-hang-excel" class="btn btn-default ">
+                                    <img src="~/App_Themes/assets/images/paste-excel.png" alt=""
+                                         class="inline"><span class="inline">Import</span>
+                                </button>*@
+
+                            <span>Tìm Excel Sheets để nhập</span>
+                            <select name="slExcel-nhomhang" id="" class="w-25"></select>
+                            <input type="file" name="excelNhomHang" style="display: none">
+                            <button id="btn-import-nhom-hang" class="btn btn-default">
+                                <span class="inline">Tìm file export</span>
+                            </button>
+                        </div>
+
+                        <button type="button" id="btn-reset-nhom-hang-excel" class="btn btn-primary">Refrersh</button>
+                        <button type="button" class="btn btn-primary" id="btn-create-nhom-hang-excel">Tạo template</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section myScripts{
+    <script src="~/PageScript/NhomHang/nhomhang.js"></script>
+}

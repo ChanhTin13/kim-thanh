@@ -1,0 +1,798 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<style>
+    /*#popup-history .modal-dialog {
+        overflow-y: initial !important
+    }*/
+
+    /*#popup-history .modal-body {
+        height: 677px;
+    }*/
+    .dataTables_filter, .dataTables_info {
+        display: none;
+    }
+    /*.custom {
+        height:660px!important;
+        max-height:660px;
+    }*/
+</style>
+
+<main class="wrapper">
+    <input type="hidden" name="id" />
+    <div class="wrap-table">
+        <div class="container-fluid">
+            <div class="wrap-table__header">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="box-choose-time">
+                            <p class="mr-2">Xem nhật ký từ</p>
+                            <input class="datepicker datetimepicker date-only mr-2" id="fNKND"
+                                   data-date-format="dd/mm/yyyy">
+                            <p class="mr-2">Đến</p>
+                            <input class="datepicker datetimepicker date-only mr-2" id="tNKND"
+                                   data-date-format="dd/mm/yyyy">
+                            <button class="btn btn-trans btn-search-nhat-ky-nguoi-dung">
+                                <img src="../App_Themes/assets/images/loading.png" alt="" class="inline">
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="list-button text-right">
+                            @*<a href="#" class="btn btn-del inline">
+                                    <img src="~/App_Themes/assets/images/btn-del.png"
+                                         alt="" class="inline"><span class="inline">Xóa</span>
+                                </a>
+                                <a href="#" class="btn btn-del inline">
+                                    <img src="~/App_Themes/assets/images/btn-del.png"
+                                         alt="" class="inline"><span class="inline">Xóa tất</span>
+                                </a>*@
+                            @*<a href="#" class="btn btn-export inline btn-export-nhat-ky-nguoi-dung">
+                                    <img src="~/App_Themes/assets/images/btn-export.png"
+                                         alt="" class="inline"><span class="inline">Xuất</span>
+                                </a>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="wrap-height-table">
+                        <table class="table nowrap table-striped row-border order-column" id="table-nhat-ky-nguoi-dung" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên truy cập</th>
+                                    <th>Tên NSD</th>
+                                    <th>Login</th>
+                                    <th>Logout</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thời gian</th>
+                                    <th>Mobile</th>
+                                    <th>Nội dung</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="modal fade active default-popup" id="popup-history" data-backdrop="static" data-keyboard="true" tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title-popup" id="exampleModalLongTitle" style="font-weight: bold">
+                    Lịch sử thay đổi
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body position-relative thong-bao" style="padding-bottom:1.3rem;">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @*<ul class="list-group list-group-flush"></ul>*@
+                            <div class="wrap-height-table">
+                                <table class="table" id="table-chi-tiet-nhat-ky-nguoi-dung" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Thời gian</th>
+                                            <th>Nội dung</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section myScripts{
+    <script>
+        $(document).ready(function () {
+            $('#fNKND').val(moment(new Date()).format('DD/MM/yyyy'));
+            $('#tNKND').val(moment(new Date()).format('DD/MM/yyyy'));
+            let fdate = moment(new Date()).format('DD/MM/yyyy');
+            let tdate = moment(new Date()).format('DD/MM/yyyy');
+            let tbNhatKyNguoiDung_filterValues = {};
+
+            $('#table-nhat-ky-nguoi-dung thead tr').clone(true).appendTo('#table-nhat-ky-nguoi-dung thead');
+            $('#table-nhat-ky-nguoi-dung thead tr:eq(1) th').each(function (i) {
+                var title = $(this).text();
+                if (i == 0 || i == 3 || i == 4 || i == 6 || i == 7 || i == 9) {
+                    $(this).html('');
+                }
+                else if (i == 5) {
+                    $(this).html('<select data-index="' + i + '"><option value ="2">Tất cả</option> <option value ="0">Đang hoạt động</option> <option value ="1">Đã thoát</option> </select>');
+                }
+                else if (i == 8) {
+                    $(this).html('<input type="text" style="width:100%" placeholder="Search nội dung " data-index="' + i + '"/>');
+                }
+                else {
+                    $(this).html('<input type="text" style="width:100%" placeholder="Search ' + title.trim() + '" data-index="' + i + '"/>');
+                }
+
+                $('input', this).on('keyup change', delay(function () {
+                    if (tbNhatKyNguoiDung.column(i).search() !== this.value) {
+                        tbNhatKyNguoiDung
+                            .column(i)
+                            .search(this.value)
+                            .draw();
+                    }
+                }, 1000));
+                $('select', this).on('change', function () {
+                    tbNhatKyNguoiDung.draw();
+                });
+            });
+
+            var tbNhatKyNguoiDung = $('#table-nhat-ky-nguoi-dung').DataTable({
+                serverSide: true,
+                bFilter: false,
+                bInfo: false,
+                ajax: function (data, callback, settings) {
+                    tbNhatKyNguoiDung_filterValues.draw = data.draw;
+                    tbNhatKyNguoiDung_filterValues.start = data.start;
+                    tbNhatKyNguoiDung_filterValues.length = data.length;
+                    tbNhatKyNguoiDung_filterValues.order = data.order[0].column;
+                    tbNhatKyNguoiDung_filterValues.dir = data.order[0].dir;
+                    tbNhatKyNguoiDung_filterValues.fdate = fdate;
+                    tbNhatKyNguoiDung_filterValues.tdate = tdate;
+                    tbNhatKyNguoiDung_filterValues.searchUser = $('input[data-index=1]').val();
+                    tbNhatKyNguoiDung_filterValues.searchUserFullName = $('input[data-index=2]').val();
+                    tbNhatKyNguoiDung_filterValues.TrangThai = $('select[data-index=5]').val();
+                    tbNhatKyNguoiDung_filterValues.searchNoiDung = $('input[data-index=8]').val();
+                    $.ajax({
+                        url: '/NhatKyNguoiDung/LoadNKND',
+                        method: 'GET',
+                        data: tbNhatKyNguoiDung_filterValues,
+                        success: function (msg) {
+                            console.log(msg.data)
+                            if (msg.status == 2) {
+                                if (tbNhatKyNguoiDung_filterValues.draw != 1) {
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'error_outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                    return false;
+                                }
+                            } else if (msg.status == 3) {
+                                if (tbNhatKyNguoiDung_filterValues.draw != 1) {
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'error_outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                    return false;
+                                }
+                            }
+                        },
+                    }).done(callback, () => {
+
+                    });
+                },
+                columns: [
+                    {
+                        "data": null,
+                        "width": "5%",
+                    },
+                    {
+                        "data": "USERID",
+                        "width": "11%",
+                    },
+                    {
+                        "data": "USERFULLNAME",
+                        "width": "10%",
+                    },
+                    {
+                        "data": "THOIGIANDANGNHAPSTRING",
+                        "width": "10%",
+                    },
+                    {
+                        "data": "THOIGIANDANGXUAT",
+                        "width": "10%",
+                    },
+                    {
+                        "data": "TRANGTHAI",
+                        "width": "10%",
+                        render: function (data, type, row) {
+                            if (data == 0) {
+                                return `<span class="text-success">Đang hoạt động</span>`
+                            }
+                            else if (data == 1) {
+                                return `<span class="text-danger">Đã thoát</span>`
+                            }
+                            else {
+                                return "";
+                            }
+                        }
+                    },
+                    {
+                        data: "THOIGIANTHUCHIEN",
+                        "width": "10%",
+                    },
+                    {
+                        data: "MOBILE",
+                        "width": "4%",
+                        render: function (data, type, row) {
+                            if (data == 1) {
+                                return '<input type="checkbox" checked disabled/>';
+                            }
+                            return '';
+                        },
+                    },
+                    {
+                        data: "NOIDUNG",
+                        "width": "29%",
+                    },
+                    {
+                        "data": "ID",
+                        "width": "5%",
+                        render: function (data, type, row) {
+                            return '<button type="button" class="btn btn-success" value="' + data + '">Xem</button>';
+                        },
+                        orderable: false,
+                        className: "dt-body-center"
+                    },
+                ],
+                columnDefs: [
+                    {
+                        "targets": [1, 7, 8, 9],
+                        "orderable": false
+                    },
+                ],
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                    return nRow;
+                },
+                //fnCreatedRow: function (nRow, data, iDataIndex) {
+                //    $(nRow).attr('data-id', data.USERID);
+                //    console.log($(nRow));
+                //    //if (data.TimeSignOut === null) {
+                //    //    $($(nRow).children()[5]).html(`<span class="text-success">Đang hoạt động</span>`);
+                //    //}
+                //},
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 15
+                },
+                scrollResize: true,
+                scrollY: 100,
+                scrollCollapse: true,
+                searching: true,
+                paging: true,
+                "lengthChange": false,
+                orderCellsTop: true
+            });
+
+            var tbCTNhatKyNguoiDung_filterValues = {};
+            tbCTNhatKyNguoiDung_filterValues.startDraw = 0;
+            var tbCTNhatKyNguoiDung = $('#table-chi-tiet-nhat-ky-nguoi-dung').DataTable({
+                serverSide: true,
+                bFilter: false,
+                bInfo: false,
+                ajax: function (data, callback, settings) {
+                    if (tbCTNhatKyNguoiDung_filterValues.startDraw > 0) {
+                        tbCTNhatKyNguoiDung_filterValues.draw = data.draw;
+                        tbCTNhatKyNguoiDung_filterValues.start = data.start;
+                        tbCTNhatKyNguoiDung_filterValues.length = data.length;
+                        tbCTNhatKyNguoiDung_filterValues.order = data.order[0].column;
+                        tbCTNhatKyNguoiDung_filterValues.dir = data.order[0].dir;
+                        tbCTNhatKyNguoiDung_filterValues.searchNoiDung = $('input[data-index=8]').val();
+                        tbCTNhatKyNguoiDung_filterValues.id = $('input[name="id"]').val();
+                        $.ajax({
+                            url: '/NhatKyNguoiDung/LoadCTNKND',
+                            method: 'GET',
+                            data: tbCTNhatKyNguoiDung_filterValues,
+                            success: function (msg) {
+                                console.log(msg.data)
+                                if (msg.status == 2) {
+                                    if (tbCTNhatKyNguoiDung_filterValues.draw != 1) {
+                                        toast.create({
+                                            title: 'Notification!',
+                                            text: msg.message,
+                                            icon: 'error_outline',
+                                            classBackground: 'noti-error',
+                                            timeout: 3000
+                                        });
+                                        return false;
+                                    }
+                                } else if (msg.status == 3) {
+                                    if (tbCTNhatKyNguoiDung_filterValues.draw != 1) {
+                                        toast.create({
+                                            title: 'Notification!',
+                                            text: msg.message,
+                                            icon: 'error_outline',
+                                            classBackground: 'noti-error',
+                                            timeout: 3000
+                                        });
+                                        location.reload();
+                                        return false;
+                                    }
+                                }
+                            },
+                        }).done(callback, () => {
+
+                        });
+                    }
+                },
+                columns: [
+                    {
+                        "width": "15%",
+                        "data": "NGAYTAO"
+                    },
+                    {
+                        "width": "85%",
+                        "data": "NOIDUNG"
+                    },
+                ],
+                paging: true,
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 15,
+                },
+                'lengthChange': false,
+                scrollResize: true,
+                scrollY: 250,
+                scrollX: 300
+            });
+
+            $('#table-nhat-ky-nguoi-dung tbody').on('click', 'button', function () {
+                $('input[name="id"]').val(this.value);
+                tbCTNhatKyNguoiDung_filterValues.startDraw++;
+                $('#popup-history').modal();
+            });
+            $('#popup-history').on('shown.bs.modal', function () {
+                tbCTNhatKyNguoiDung.columns.adjust().draw();
+
+            });
+            document.querySelector('.btn-search-nhat-ky-nguoi-dung').addEventListener('click', function () {
+                fdate = document.getElementById('fNKND').value;
+                tdate = document.getElementById('tNKND').value;
+                tbNhatKyNguoiDung.columns.adjust().draw();
+                var x = document.cookie;
+                console.log(x);
+            });
+        });
+
+        //window.onload = async function () {
+        //    $('#fNKND').val(moment(new Date()).format('DD/MM/yyyy'));
+        //    $('#tNKND').val(moment(new Date()).format('DD/MM/yyyy'));
+        //    let fdate = moment(new Date()).format('DD/MM/yyyy');
+        //    let tdate = moment(new Date()).format('DD/MM/yyyy');
+        //    let tbNhatKyNguoiDung_filterValues = {};
+
+        //    $('#table-nhat-ky-nguoi-dung thead tr').clone(true).appendTo('#table-nhat-ky-nguoi-dung thead');
+        //    $('#table-nhat-ky-nguoi-dung thead tr:eq(1) th').each(function (i) {
+        //        var title = $(this).text();
+        //        if (i == 0 || i == 3 || i == 4 || i == 6 || i == 7 || i == 9) {
+        //            $(this).html('');
+        //        }
+        //        else if (i == 5) {
+        //            $(this).html('<select data-index="' + i + '"><option value ="2">Tất cả</option> <option value ="0">Đang hoạt động</option> <option value ="1">Đã thoát</option> </select>');
+        //        }
+        //        else if (i == 8) {
+        //            $(this).html('<input type="text" style="width:100%" placeholder="Search nội dung " data-index="' + i + '"/>');
+        //        }
+        //        else {
+        //            $(this).html('<input type="text" style="width:100%" placeholder="Search ' + title.trim() + '" data-index="' + i + '"/>');
+        //        }
+
+        //        $('input', this).on('keyup change', delay(function () {
+        //            if (tbNhatKyNguoiDung.column(i).search() !== this.value) {
+        //                tbNhatKyNguoiDung
+        //                    .column(i)
+        //                    .search(this.value)
+        //                    .draw();
+        //            }
+        //        }, 1000));
+        //        $('select', this).on('change', function () {
+        //            tbNhatKyNguoiDung.draw();
+        //        });
+        //    });
+
+        //    var tbNhatKyNguoiDung = $('#table-nhat-ky-nguoi-dung').DataTable({
+        //        serverSide: true,
+        //        bFilter: false,
+        //        bInfo: false,
+        //        ajax: function (data, callback, settings) {
+        //            tbNhatKyNguoiDung_filterValues.draw = data.draw;
+        //            tbNhatKyNguoiDung_filterValues.start = data.start;
+        //            tbNhatKyNguoiDung_filterValues.length = data.length;
+        //            tbNhatKyNguoiDung_filterValues.order = data.order[0].column;
+        //            tbNhatKyNguoiDung_filterValues.dir = data.order[0].dir;
+        //            tbNhatKyNguoiDung_filterValues.fdate = fdate;
+        //            tbNhatKyNguoiDung_filterValues.tdate = tdate;
+        //            tbNhatKyNguoiDung_filterValues.searchUser = $('input[data-index=1]').val();
+        //            tbNhatKyNguoiDung_filterValues.searchUserFullName = $('input[data-index=2]').val();
+        //            tbNhatKyNguoiDung_filterValues.TrangThai = $('select[data-index=5]').val();
+        //            tbNhatKyNguoiDung_filterValues.searchNoiDung = $('input[data-index=7]').val();
+        //            $.ajax({
+        //                url: '/NhatKyNguoiDung/LoadNKND',
+        //                method: 'GET',
+        //                data: tbNhatKyNguoiDung_filterValues,
+        //                success: function (msg) {
+        //                    console.log(msg.data)
+        //                    if (msg.status == 2) {
+        //                        if (tbNhatKyNguoiDung_filterValues.draw != 1) {
+        //                            toast.create({
+        //                                title: 'Notification!',
+        //                                text: msg.message,
+        //                                icon: 'error_outline',
+        //                                classBackground: 'noti-error',
+        //                                timeout: 3000
+        //                            });
+        //                            return false;
+        //                        }
+        //                    } else if (msg.status == 3) {
+        //                        if (tbNhatKyNguoiDung_filterValues.draw != 1) {
+        //                            toast.create({
+        //                                title: 'Notification!',
+        //                                text: msg.message,
+        //                                icon: 'error_outline',
+        //                                classBackground: 'noti-error',
+        //                                timeout: 3000
+        //                            });
+        //                            location.reload();
+        //                            return false;
+        //                        }
+        //                    }
+        //                },
+        //            }).done(callback, () => {
+
+        //            });
+        //        },
+        //        columns: [
+        //            {
+        //                "data": null,
+        //                "width": "5%",
+        //            },
+        //            {
+        //                "data": "USERID",
+        //                "width": "11%",
+        //            },
+        //            {
+        //                "data": "USERFULLNAME",
+        //                "width": "10%",
+        //            },
+        //            {
+        //                "data": "THOIGIANDANGNHAPSTRING",
+        //                "width": "10%",
+        //            },
+        //            {
+        //                "data": "THOIGIANDANGXUAT",
+        //                "width": "10%",
+        //            },
+        //            {
+        //                "data": "TRANGTHAI",
+        //                "width": "10%",
+        //                render: function (data, type, row) {
+        //                    if (data == 0) {
+        //                        return `<span class="text-success">Đang hoạt động</span>`
+        //                    }
+        //                    else if (data == 1) {
+        //                        return `<span class="text-danger">Đã thoát</span>`
+        //                    }
+        //                    else {
+        //                        return "";
+        //                    }
+        //                }
+        //            },
+        //            {
+        //                data: "THOIGIANTHUCHIEN",
+        //                "width": "10%",
+        //            },
+        //            {
+        //                data: "MOBILE",
+        //                "width": "4%",
+        //                render: function (data, type, row) {
+        //                    if (data == 1) {
+        //                        return '<input type="checkbox" checked disabled/>';
+        //                    }
+        //                    return '';
+        //                },
+        //            },
+        //            {
+        //                data: "NOIDUNG",
+        //                "width": "29%",
+        //            },
+        //            {
+        //                "data": "ID",
+        //                "width": "5%",
+        //                render: function (data, type, row) {
+        //                    return '<button type="button" class="btn btn-success" value="' + data + '">Xem</button>';
+        //                },
+        //                orderable: false,
+        //                className: "dt-body-center"
+        //            },
+        //        ],
+        //        columnDefs: [
+        //            {
+        //                "targets": [1,7,8,9],
+        //                "orderable": false
+        //            },
+        //        ],
+        //        "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+        //            var info = $(this).DataTable().page.info();
+        //            $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+        //            return nRow;
+        //        },
+        //        //fnCreatedRow: function (nRow, data, iDataIndex) {
+        //        //    $(nRow).attr('data-id', data.USERID);
+        //        //    console.log($(nRow));
+        //        //    //if (data.TimeSignOut === null) {
+        //        //    //    $($(nRow).children()[5]).html(`<span class="text-success">Đang hoạt động</span>`);
+        //        //    //}
+        //        //},
+        //        scroller: {
+        //            loadingIndicator: true,
+        //            displayBuffer: 15
+        //        },
+        //        scrollResize: true,
+        //        scrollY: 100,
+        //        scrollCollapse: true,
+        //        searching: true,
+        //        paging: true,
+        //        "lengthChange": false,
+        //        orderCellsTop: true
+        //    });
+
+        //    var tbCTNhatKyNguoiDung_filterValues = {};
+        //    tbCTNhatKyNguoiDung_filterValues.startDraw = 0;
+        //    var tbCTNhatKyNguoiDung = $('#table-chi-tiet-nhat-ky-nguoi-dung').DataTable({
+        //        serverSide: true,
+        //        bFilter: false,
+        //        bInfo: false,
+        //        ajax: function (data, callback, settings) {
+        //            if (tbCTNhatKyNguoiDung_filterValues.startDraw > 0) {
+        //                tbCTNhatKyNguoiDung_filterValues.draw = data.draw;
+        //                tbCTNhatKyNguoiDung_filterValues.start = data.start;
+        //                tbCTNhatKyNguoiDung_filterValues.length = data.length;
+        //                tbCTNhatKyNguoiDung_filterValues.order = data.order[0].column;
+        //                tbCTNhatKyNguoiDung_filterValues.dir = data.order[0].dir;
+        //                tbCTNhatKyNguoiDung_filterValues.searchNoiDung = $('input[data-index=7]').val();
+        //                tbCTNhatKyNguoiDung_filterValues.id = $('input[name="id"]').val();
+        //                $.ajax({
+        //                    url: '/NhatKyNguoiDung/LoadCTNKND',
+        //                    method: 'GET',
+        //                    data: tbCTNhatKyNguoiDung_filterValues,
+        //                    success: function (msg) {
+        //                        console.log(msg.data)
+        //                        if (msg.status == 2) {
+        //                            if (tbCTNhatKyNguoiDung_filterValues.draw != 1) {
+        //                                toast.create({
+        //                                    title: 'Notification!',
+        //                                    text: msg.message,
+        //                                    icon: 'error_outline',
+        //                                    classBackground: 'noti-error',
+        //                                    timeout: 3000
+        //                                });
+        //                                return false;
+        //                            }
+        //                        } else if (msg.status == 3) {
+        //                            if (tbCTNhatKyNguoiDung_filterValues.draw != 1) {
+        //                                toast.create({
+        //                                    title: 'Notification!',
+        //                                    text: msg.message,
+        //                                    icon: 'error_outline',
+        //                                    classBackground: 'noti-error',
+        //                                    timeout: 3000
+        //                                });
+        //                                location.reload();
+        //                                return false;
+        //                            }
+        //                        }
+        //                    },
+        //                }).done(callback, () => {
+
+        //                });
+        //            }
+        //        },
+        //        columns: [
+        //            {
+        //                "width": "15%",
+        //                "data": "NGAYTAO"
+        //            },
+        //            {
+        //                "width": "85%",
+        //                "data": "NOIDUNG"
+        //            },
+        //        ],
+        //        paging: true,
+        //        scroller: {
+        //            loadingIndicator: true,
+        //            displayBuffer: 15,
+        //        },
+        //        'lengthChange': false,
+        //        scrollResize: true,
+        //        scrollY: 250,
+        //        scrollX: 300
+        //    });
+
+        //    $('#table-nhat-ky-nguoi-dung tbody').on('click', 'button', function () {
+        //        $('input[name="id"]').val(this.value);
+        //        tbCTNhatKyNguoiDung_filterValues.startDraw++;
+        //        $('#popup-history').modal();
+        //    });
+        //    $('#popup-history').on('shown.bs.modal', function () {
+        //        tbCTNhatKyNguoiDung.columns.adjust().draw();
+
+        //    });
+        //    document.querySelector('.btn-search-nhat-ky-nguoi-dung').addEventListener('click', function () {
+        //        fdate = document.getElementById('fNKND').value;
+        //        tdate = document.getElementById('tNKND').value;
+        //        tbNhatKyNguoiDung.columns.adjust().draw();
+        //        var x = document.cookie;
+        //        console.log(x);
+        //    });
+
+        //    //await zxc();
+
+        //    //$('.search-date').datetimepicker({
+        //    //    timepicker: false,
+        //    //    format: 'd/m/Y',
+        //    //    mask: true,
+        //    //});
+        //};
+
+        //async function zxc() {
+        //    $('.search-date').datetimepicker({
+        //        timepicker: false,
+        //        format: 'd/m/Y',
+        //        mask: true,
+        //    });
+        //}
+
+        //$('#popup-history').on('hidden.bs.modal', function () {
+        //    myNode.innerHTML = '';
+        //});
+        function delay(fn, ms) {
+            let timer = 0
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(fn.bind(this, ...args), ms || 0)
+            }
+        }
+        function InitDatetime() {
+            //datepicker
+            $.datetimepicker.setLocale('en');
+            $('.datetimepicker').each(function () {
+                $(this).attr('autocomplete', 'off');
+                $(this).datetimepicker({
+                    format: 'd/m/Y H:i',
+                    formatDate: 'd/m/Y',
+                    allowTimes: [
+                        '06:00',
+                        '06:15',
+                        '06:30',
+                        '06:45',
+                        '07:00',
+                        '07:15',
+                        '07:30',
+                        '07:45',
+                        '08:00',
+                        '08:15',
+                        '08:30',
+                        '08:45',
+                        '09:00',
+                        '09:15',
+                        '09:30',
+                        '09:45',
+                        '10:00',
+                        '10:15',
+                        '10:30',
+                        '10:45',
+                        '11:00',
+                        '11:15',
+                        '11:30',
+                        '11:45',
+                        '12:00',
+                        '12:15',
+                        '12:30',
+                        '12:45',
+                        '13:00',
+                        '13:15',
+                        '13:30',
+                        '13:45',
+                        '14:00',
+                        '14:15',
+                        '14:30',
+                        '14:45',
+                        '15:00',
+                        '15:15',
+                        '15:30',
+                        '15:45',
+                        '16:00',
+                        '16:15',
+                        '16:30',
+                        '16:45',
+                        '17:00',
+                        '17:15',
+                        '17:30',
+                        '17:45',
+                        '18:00',
+                        '18:15',
+                        '18:30',
+                        '18:45',
+                        '19:00',
+                        '19:15',
+                        '19:30',
+                        '19:45',
+                        '20:00',
+                        '20:15',
+                        '20:30',
+                        '20:45',
+                        '21:00',
+                        '21:15',
+                        '21:30',
+                        '21:45',
+                        '22:00',
+                        '22:15',
+                        '22:30',
+                        '22:45',
+                        '23:00',
+                        '23:15',
+                        '23:30',
+                        '23:45',
+                    ],
+                    // theme:'dark',
+                    // defaultDate:new Date(),
+                    onShow: function (ct, element) {
+                        if ($(element).hasClass('to-date')) {
+                            var minDate = $(element).closest('.row').find('.from-date').val();
+                            console.log(minDate);
+                            this.setOptions({
+                                minDate: minDate ? minDate : false,
+                            })
+                        }
+                        if ($(element).hasClass('date-only')) {
+                            this.setOptions({
+                                timepicker: false,
+                                format: 'd/m/Y',
+                                mask: true,
+                            })
+                        }
+                    }
+                });
+            });
+        }
+    </script>
+}

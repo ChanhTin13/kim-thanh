@@ -1,0 +1,641 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<style>
+    .select2-container--default {
+        width: 58.333333% !important
+    }
+
+    #them-phieu-ghi-chu .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    #sua-phieu-ghi-chu .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    input[readonly] {
+        background: #ccc
+    }
+</style>
+
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="wrap-table__button">
+            <div class="row ">
+                <div class="col-md-12">
+                    <div class="list-button text-left">
+                        <a href="#" class="btn btn-add inline" id="btn-insert">
+                            <img src="../App_Themes/assets/images/btn-add.png" alt=""
+                                 class="inline">
+                            <span class="inline">Thêm</span>
+                        </a>
+                        <a href="#" class="btn btn-fix inline" id="btn-update">
+                            <img src="../App_Themes/assets/images/btn-fix.png" alt=""
+                                 class="inline"><span class="inline">Sửa</span>
+                        </a>
+                        <a href="#" class="btn btn-del inline" id="btn-delete">
+                            <img src="../App_Themes/assets/images/btn-del.png" alt=""
+                                 class="inline"><span class="inline">Xóa</span>
+                        </a>
+                        @*<a href="#" class="btn btn-export inline">
+                            <img src="../App_Themes/assets/images/btn-import.png" alt=""
+                                 class="inline"><span class="inline">Nhập</span>
+                        </a>*@
+
+                        <a href="#" class="btn btn-export inline" id="btn-export">
+                            <img src="../App_Themes/assets/images/btn-export.png" alt=""
+                                 class="inline"><span class="inline">Xuất</span>
+                        </a>
+                        <a href="#" class="btn btn-import inline" id="btn-reset">
+                            <img src="../App_Themes/assets/images/reuse.png" alt=""
+                                 class="inline"><span class="inline">Nạp</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box-choose-time">
+                        <p class="mr-2">Xem phiếu ghi chú</p>
+                        <p class="mr-2">Từ</p>
+                        <input class="datepicker datetimepicker mr-2 date-only" name="chooseDate_From" id="chooseDate_From">
+                        <p class="mr-2">Đến</p>
+                        <input class="datepicker datetimepicker mr-2 date-only" name="chooseDate_To" id="chooseDate_To">
+                        <p class="mr-2">
+                            <div class="list-button">
+                                <a href="#" class="btn btn-export
+                            inline" id="search-phieu">
+                                    <img src="~/App_Themes/assets/images/btn-search.png"
+                                         alt="" class="inline"><span class="inline">Tìm kiếm</span>
+                                </a>
+                            </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="bg-white p-3 mt-3">
+                <div class="wrap-height-table">
+                    <table class="table display table-striped" style="width: 100%;"
+                           id="table-phieu-ghi-chu">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Người tạo</th>
+                                <th>Mã hàng</th>
+                                <th>Tên hàng</th>
+                                <th>Ghi chú 1</th>
+                                <th>Ghi chú 2</th>
+                                <th>Ghi chú 3</th>
+                                <th>Ngày cập nhật</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+</main>
+
+<div class="modal fade default-popup popup-them-so-du-quy" data-keyboard="true" data-backdrop="static" id="them-phieu-ghi-chu"
+     tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                    Phiếu ghi chú
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="default-form">
+                                <div class="form-group">
+                                    <label for="">Mặt hàng</label>
+                                    <select name="slMatHang" class="col-7 p-0">
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Ghi chú 1</label>
+                                    <textarea name="ghichu1-insert" type="text" class="col-7 p-0"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Ghi chú 2</label>
+                                    <textarea name="ghichu2-insert" type="text" class="col-7 p-0"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Ghi chú 3</label>
+                                    <textarea name="ghichu3-insert" type="text" class="col-7 p-0"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn-save-insert">Lưu</button>
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade default-popup popup-them-so-du-quy" data-keyboard="true" data-backdrop="static" id="sua-phieu-ghi-chu"
+     tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                    Phiếu ghi chú
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="default-form">
+                                <div class="form-group">
+                                    <label for="">Mặt hàng</label>
+                                    <input readonly name="mathang" class="col-7 p-0" />
+                                    <input type="hidden" name="id" />
+                                    <input type="hidden" name="mathangid" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Ghi chú 1</label>
+                                    <textarea name="ghichu1-update" type="text" class="col-7 p-0"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Ghi chú 2</label>
+                                    <textarea name="ghichu2-update" type="text" class="col-7 p-0"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Ghi chú 3</label>
+                                    <textarea name="ghichu3-update" type="text" class="col-7 p-0"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn-save-update">Lưu</button>
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section myScripts{
+    <script>
+        $(document).ready(function () {
+            $('#chooseDate_From').val(moment(new Date()).format('DD/MM/yyyy'));
+            $('#chooseDate_To').val(moment(new Date()).format('DD/MM/yyyy'));
+            $('select[name="slMatHang"]').select2({
+                ajax: {
+                    url: "/MatHang/LoadMatHangSelect2",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        var query = {
+                            search: params.term,
+                            start: (params.page || 0) * 50,
+                            length: 50,
+                            page: params.page
+                        }
+                        // Query parameters will be ?search=[term]&type=public
+                        return query;
+                    },
+                    processResults: function (data, params) {
+                        var select2Data = $.map(data.data, function (obj) {
+                            obj.text = obj.text + " - " + obj.MHTEN;
+                            return obj;
+                        });
+                        return {
+                            results: select2Data,
+                            pagination: {
+                                more: ((params.page + 1) * 50) < data.recordsTotal
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: 'Nhập mã mặt hàng / tên mặt hàng',
+                minimumInputLength: 1,
+                templateResult: formatRepo,
+                dropdownParent: $('#them-phieu-ghi-chu')
+            });
+            function formatRepo(repo) {
+                if (repo.loading) {
+                    return repo.text;
+                }
+                var $container = $(
+                    "<div class='select2-result-repository clearfix'>" + repo.text +
+                    "</div>"
+                );
+                return $container;
+            };
+
+            //Database phiếu ghi chú
+            let tbPhieuGhiChu_filterValues = {};
+            $('#table-phieu-ghi-chu thead tr').clone(true).appendTo('#table-phieu-ghi-chu thead');
+            $('#table-phieu-ghi-chu thead tr:eq(1) th').each(function (i) {
+                var title = $(this).text();
+                if (i == 0 || i == 7) {
+                    return $(this).html('');
+                }
+                else {
+                    $(this).html('<input type="text" style="width:100%" placeholder="Search ' + title.trim() + '" data-search-phieu-ghi-chu="' + i + '"/>');
+                }
+            });
+
+            var tbPhieuGhiChu = $('#table-phieu-ghi-chu').DataTable({
+                serverSide: true,
+                bFilter: false,
+                bInfo: false,
+                ajax: function (data, callback, settings) {
+                    tbPhieuGhiChu_filterValues.draw = data.draw;
+                    tbPhieuGhiChu_filterValues.search = data.search["value"];
+                    tbPhieuGhiChu_filterValues.start = data.start;
+                    tbPhieuGhiChu_filterValues.length = data.length;
+                    tbPhieuGhiChu_filterValues.order = data.order[0].column;
+                    tbPhieuGhiChu_filterValues.dir = data.order[0].dir;
+
+                    tbPhieuGhiChu_filterValues.search1 = $('input[data-search-phieu-ghi-chu=1]').val();
+                    tbPhieuGhiChu_filterValues.search2 = $('input[data-search-phieu-ghi-chu=2]').val();
+                    tbPhieuGhiChu_filterValues.search3 = $('input[data-search-phieu-ghi-chu=3]').val();
+                    tbPhieuGhiChu_filterValues.search4 = $('input[data-search-phieu-ghi-chu=4]').val();
+                    tbPhieuGhiChu_filterValues.search5 = $('input[data-search-phieu-ghi-chu=5]').val();
+                    tbPhieuGhiChu_filterValues.search6 = $('input[data-search-phieu-ghi-chu=6]').val();
+                    tbPhieuGhiChu_filterValues.FromDate = $('input[name="chooseDate_From"]').val();
+                    tbPhieuGhiChu_filterValues.ToDate = $('input[name="chooseDate_To"]').val();
+
+                    tbPhieuGhiChu_filterValues.export = 0;
+                    $.ajax({
+                        url: '/PhieuGhiChu/LoadPhieuGhiChu',
+                        method: 'GET',
+                        data: tbPhieuGhiChu_filterValues,
+                        success: function (msg) {
+                            if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                return false;
+                            }
+                            else if (msg.status == 3) {
+                                if (tbPhieuGhiChu_filterValues.draw != 1) {
+                                    toast.create({
+                                        title: 'Notification',
+                                        text: msg.message,
+                                        icon: 'error-outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                    return false;
+                                }
+                            }
+                        }
+                    }).done(callback, () => { });
+                },
+                columns: [
+                    { "data": "RowIndex" },
+                    { "data": "NGUOITAO" },
+                    { "data": "MHCODE" },
+                    { "data": "MHTEN" },
+                    { "data": "GHICHU1" },
+                    { "data": "GHICHU2" },
+                    { "data": "GHICHU3" },
+                    { data: "NGAYSUA"},
+                ],
+                fnCreatedRow: function (nRow, data, iDataIndex) {
+                    $(nRow).attr('data-id', data.ID);
+                },
+
+                scrollX: true,
+                scrollResize: true,
+                scrollY: 100,
+                scrollCollapse: true,
+
+                paging: true,
+                searching: false,
+                pageLength: 10,
+                lengthChange: false,
+
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 10
+                },
+
+                orderCellsTop: true
+            });
+
+            $(tbPhieuGhiChu.table().container()).on('keyup change', 'thead input',  delay (function (e) {
+                tbPhieuGhiChu.draw();
+            },1000));
+
+            //Click
+            $('#table-phieu-ghi-chu tbody').on('click', 'tr', function () {
+                $(this).addClass('selected');
+                $('#table-phieu-ghi-chu tbody tr').not(this).removeClass('selected');
+            });
+
+            //Double click
+            $('#table-phieu-ghi-chu tbody').on('dblclick', 'tr', function () {
+                LoadPhieuGhiChu();
+            });
+
+            //Insert
+            $('#btn-insert').click(function () {
+                $('#them-phieu-ghi-chu').modal();
+            });
+
+            //Update
+            $('#btn-update').click(function () {
+                LoadPhieuGhiChu();
+            });
+
+            //Delete
+            $('#btn-delete').click(function () {
+
+            });
+
+            //Export
+            $('#btn-export').click(function () {
+                var filterReport = {};
+
+                tbPhieuGhiChu_filterValues.search1 = $('input[data-search-phieu-ghi-chu=1]').val();
+                tbPhieuGhiChu_filterValues.search2 = $('input[data-search-phieu-ghi-chu=2]').val();
+                tbPhieuGhiChu_filterValues.search3 = $('input[data-search-phieu-ghi-chu=3]').val();
+                tbPhieuGhiChu_filterValues.search4 = $('input[data-search-phieu-ghi-chu=4]').val();
+                tbPhieuGhiChu_filterValues.search5 = $('input[data-search-phieu-ghi-chu=5]').val();
+
+                tbPhieuGhiChu_filterValues.export = 0;
+                filterReport.draw = tbPhieuGhiChu_filterValues.draw;
+                filterReport.search = tbPhieuGhiChu_filterValues.search;
+                filterReport.start = tbPhieuGhiChu_filterValues.start;
+                filterReport.length = tbPhieuGhiChu_filterValues.length;
+                filterReport.order = tbPhieuGhiChu_filterValues.order;
+                filterReport.dir = tbPhieuGhiChu_filterValues.dir;
+                filterReport.FromDate = tbPhieuGhiChu_filterValues.FromDate;
+                filterReport.ToDate = tbPhieuGhiChu_filterValues.ToDate;
+                filterReport.export = 1;
+                var link = `/PhieuGhiChu/LoadPhieuGhiChu?draw=` + filterReport.draw + `&search=` + filterReport.search + `&start=` + filterReport.start + `&length=` + filterReport.length + `&order=` + filterReport.order + `&dir=` + filterReport.dir + `&FromDate=` + filterReport.FromDate + `&ToDate=` + filterReport.ToDate + `&export=` + filterReport.export + `&search1=` + tbPhieuGhiChu_filterValues.search1 + `&search2=` + tbPhieuGhiChu_filterValues.search2 + `&search3=` + tbPhieuGhiChu_filterValues.search3 + `&search4=` + tbPhieuGhiChu_filterValues.search4 + `&search5=` + tbPhieuGhiChu_filterValues.search5;
+                window.open(link);
+            });
+
+            //Save (Thêm)
+            $('#btn-save-insert').click(function () {
+                let data = new FormData();
+                let mhid = $('select[name="slMatHang"]').val();
+
+                if (mhid == '' || mhid == undefined || mhid == null) {
+                    toast.create({
+                        title: 'Notification!',
+                        text: 'Vui lòng chọn mặt hàng',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    })
+                    return false;
+                }
+
+                data.append("MHID", mhid);
+                data.append("GHICHU1", $('textarea[name="ghichu1-insert"]').val());
+                data.append("GHICHU2", $('textarea[name="ghichu2-insert"]').val());
+                data.append("GHICHU3", $('textarea[name="ghichu3-insert"]').val());
+
+                $.ajax({
+                    async: false,
+                    type: 'POST',
+                    url: '/PhieuGhiChu/InsertUpdate',
+                    data: data,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            tbPhieuGhiChu.draw();
+                            $('#them-phieu-ghi-chu').modal('hide');
+                            $('#them-phieu-ghi-chu textarea').val('');
+                            $('#them-phieu-ghi-chu select').val('');
+                            toast.create({
+                                title: 'Notification!',
+                                text: 'Thành công',
+                                icon: 'check',
+                                classBackground: 'noti-success',
+                                timeout: 3000
+                            })
+                        } else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            })
+                        } else {
+                            if (msg.draw != 1) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                                return false;
+                            }
+                        }
+                    },
+                    error: function (error) {
+                        console.log('e');
+                    }
+                });
+            });
+            //Save (Sửa)
+            $('#btn-save-update').click(function () {
+                let data = new FormData();
+                data.append("ID", $('input[name="id"]').val());
+                data.append("MHID", $('input[name="mathangid"]').val());
+                data.append("GHICHU1", $('textarea[name="ghichu1-update"]').val());
+                data.append("GHICHU2", $('textarea[name="ghichu2-update"]').val());
+                data.append("GHICHU3", $('textarea[name="ghichu3-update"]').val());
+                for (var pair of data.entries()) {
+                    console.log(pair[0] + ', ' + pair[1]);
+                }
+                $.ajax({
+                    async: false,
+                    type: 'POST',
+                    url: '/PhieuGhiChu/InsertUpdate',
+                    data: data,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            tbPhieuGhiChu.draw();
+                            $('#sua-phieu-ghi-chu').modal('hide');
+                            $('#sua-phieu-ghi-chu input').val('');
+                            $('#sua-phieu-ghi-chu textarea').val('');
+                            toast.create({
+                                title: 'Notification!',
+                                text: 'Thành công',
+                                icon: 'check',
+                                classBackground: 'noti-success',
+                                timeout: 3000
+                            })
+                        } else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            })
+                        } else {
+                            if (msg.draw != 1) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                                return false;
+                            }
+                        }
+                    },
+                    error: function (error) {
+                        console.log('e');
+                    }
+                });
+            });
+
+            //Xoa
+            $('#btn-delete').click(function () {
+                let id = $('#table-phieu-ghi-chu tbody tr.selected').attr('data-id');
+                if (id == undefined) {
+                    toast.create({
+                        title: 'Thông Báo!',
+                        text: 'Hãy chọn một đơn hàng',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000   
+                    })
+                }
+                else {
+                    if (confirm('Bạn chắc chắn muốn hủy xếp hàng cho đơn này không?')) {
+                        $.ajax({
+                            async: true,
+                            method: 'POST',
+                            url: '/PhieuGhiChu/XoaPhieuGhiChu?id=' + id,
+                            success: function (msg) {
+                                if (msg.status == 1) {
+                                    tbPhieuGhiChu.ajax.reload();
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: 'Thành công',
+                                        icon: 'check',
+                                        classBackground: 'noti-success',
+                                        timeout: 3000
+                                    });
+                                }
+                                else {
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'error_outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
+            })
+            //Reset
+            $('#btn-reset').click(function () {
+                tbPhieuGhiChu.draw();
+            });
+
+            $('#search-phieu').click(function () {
+                tbPhieuGhiChu_filterValues.FromDate = $('input[name="chooseDate_From"]').val();
+                tbPhieuGhiChu_filterValues.ToDate = $('input[name="chooseDate_To"]').val();
+                tbPhieuGhiChu.draw();
+            })
+        });
+
+        async function LoadDetail(id) {
+            return $.ajax({
+                async: true,
+                method: 'GET',
+                url: '/PhieuGhiChu/LoadDetail?id=' + id,
+                success: function (msg) {
+                    return msg.data;
+                },
+            });
+        }
+
+        function LoadPhieuGhiChu() {
+            let id = $('#table-phieu-ghi-chu tbody tr.selected').attr('data-id');
+            if (id != undefined) {
+                LoadDetail(id).then((rs) => {
+                    $('input[name="id"]').val(rs.data.ID);
+                    $('input[name="mathangid"]').val(rs.data.MHID);
+                    $('input[name="mathang"]').val(rs.data.MHCODE + ' - ' + rs.data.MHTEN);
+                    $('textarea[name="ghichu1-update"]').val(rs.data.GHICHU1);
+                    $('textarea[name="ghichu2-update"]').val(rs.data.GHICHU2);
+                    $('textarea[name="ghichu3-update"]').val(rs.data.GHICHU3);
+                });
+                $('#sua-phieu-ghi-chu').modal();
+            } else {
+                toast.create({
+                    title: 'Notification!',
+                    text: 'Vui lòng chọn phiếu ghi chú',
+                    icon: 'error_outline',
+                    classBackground: 'noti-error',
+                    timeout: 3000
+                });
+            }
+        }
+        function delay(fn, ms) {
+            let timer = 0
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(fn.bind(this, ...args), ms || 0)
+            }
+        }
+    </script>
+}

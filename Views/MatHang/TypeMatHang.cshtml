@@ -1,0 +1,463 @@
+﻿@{
+    ViewBag.Title = "Type";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+<link href="~/App_Themes/select2/css/select2.min.css" rel="stylesheet" />
+<style>
+    .select2-container--default {
+        width: 58.333333% !important
+    }
+
+    #them-vi-tri .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    #sua-vi-tri .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    input[readonly] {
+        background: #ccc
+    }
+
+    #tb-import-vitri input {
+        height: 30px;
+        border-radius: 5px;
+        width: 100%;
+        padding: 5px;
+    }
+</style>
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="wrap-table__button">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="list-button text-left">
+                        <a href="javascript:;" class="btn btn-add inline" data-toggle="modal"
+                           data-target="#them-kieu">
+                            <img src="../App_Themes/assets/images/btn-add.png" alt=""
+                                 class="inline">
+                            <span class="inline">Thêm</span>
+                        </a>
+                        @*<a href="javascript:;" class="btn btn-fix inline" data-toggle="modal" id="btn-edit-kieu">
+
+                            <img src="../App_Themes/assets/images/btn-fix.png" alt=""
+                                 class="inline"><span class="inline">Sửa</span>
+                        </a>*@
+                        @*<a href="javascript:;" class="btn btn-del vi-tri-btn-delete inline">
+                                <img src="../App_Themes/assets/images/btn-del.png" alt=""
+                                     class="inline"><span class="inline">Xóa</span>
+                            </a>
+                            <a href="javascript:;" class="btn btn-import vi-tri-refresh inline">
+                                <img src="../App_Themes/assets/images/btn-import.png" alt=""
+                                     class="inline"><span class="inline">Nạp</span>
+                            </a>
+                            <a href="javascript:;" class="btn btn-export vi-tri-btn-export inline">
+                                <img src="../App_Themes/assets/images/btn-export.png" alt=""
+                                     class="inline"><span class="inline">Xuất</span>
+                            </a>*@
+                        @*<a href="javascript:;" class="btn btn-export vi-tri-btn-import inline">
+                                <img src="../App_Themes/assets/images/btn-import-2.png" alt=""
+                                     class="inline"><span class="inline">Nhập</span>
+                            </a>*@
+                        @*<a href="#" class="btn btn-export
+                                            inline" id="import-vitrimathang">
+                                <img src="/App_Themes/assets/images/btn-import-2.png"
+                                     alt="" class="inline"><span class="inline">Nhập</span>
+                            </a>*@
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div hidden class="box-choose-time" id="date-vitri">
+                        <p class="mr-2">Từ</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_From" data-date-format="mm/dd/yyyy">
+                        <p class="mr-2">Đến</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_To" data-date-format="mm/dd/yyyy">
+
+                        <button class="btn btn-trans" id="btn-search-vitri">
+                            <img src="../App_Themes/assets/images/loading.png" alt="" class="inline">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__body">
+            <div class="wrap-height-table">
+                <table class="table display table-striped" style="width: 100%;"
+                       id="table-type-mathang">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Mã kiểu</th>
+                            <th>Tên kiểu</th>
+                            <th>Người tạo</th>
+                            <th>Ngày tạo</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="modal fade default-popup popup-them-so-du-quy" data-keyboard="true" data-backdrop="static" id="them-kieu"
+     tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                    Kiểu mặt hàng
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="default-form">
+                                <div class="form-group">
+                                    <label for="">Mã kiểu</label>
+                                    <input name="txt_ma_kieu" class="col-7 p-0" />
+                                    <input type="hidden" name="txt_id_kieu" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Tên kiểu</label>
+                                    <input name="txt_ten_kieu" class="col-7 p-0" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn-add-kieu">Lưu</button>
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section myScripts{
+    <script src="~/App_Themes/select2/js/select2.full.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('input[name="chooseDate_From"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            $('input[name="chooseDate_To"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            let fdate = moment(new Date()).format('DD/MM/yyyy');
+            let tdate = moment(new Date()).format('DD/MM/yyyy');
+            let tblTypefilterValues = {};
+            $('#table-type-mathang thead tr').clone(true).appendTo('#table-type-mathang thead');
+            $('#table-type-mathang thead tr:eq(1) th').each(function (i) {
+                var title = $(this).text();
+                if (i == 1 || i == 2) {
+                    $(this).html('<input type="text" placeholder="Search ' + title.trim() + '" data-search-kieu-mathang="' + i + '"/>');
+                }
+                else {
+                    return $(this).html('');
+                }
+                $('input', this).on('keyup change', delay(function () {
+                    table_type
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                }, 1000));
+            });
+            var table_type = $('#table-type-mathang').DataTable({
+                serverSide: true,
+                bFilter: false,
+                bInfo: false,
+                "order": [[4, "desc"]],
+                ajax: function (data, callback, settings) {
+                    tblTypefilterValues.draw = data.draw;
+                    tblTypefilterValues.search = data.search["value"];
+                    tblTypefilterValues.fdate = fdate;
+                    tblTypefilterValues.tdate = tdate;
+                    tblTypefilterValues.start = data.start;
+                    tblTypefilterValues.length = data.length;
+                    tblTypefilterValues.order = data.order[0].column;
+                    tblTypefilterValues.dir = data.order[0].dir;
+
+                    tblTypefilterValues.searchMaKieu = $('input[data-search-kieu-mathang=1]').val();
+                    tblTypefilterValues.searchTenKieu = $('input[data-search-kieu-mathang=2]').val();
+                    //tblTypefilterValues.search4 = $('input[data-search-vitri-mathang=4]').val();
+                    //tblTypefilterValues.search5 = $('input[data-search-vitri-mathang=5]').val();
+                    //tblTypefilterValues.search6 = $('input[data-search-vitri-mathang=6]').val();
+
+                    $.ajax({
+                        url: '/MatHang/LoadDataTypeMathang',
+                        method: 'GET',
+                        data: tblTypefilterValues,
+                        success: function (msg) {
+                            console.log(msg.data);
+                            if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                return false;
+                            } else if (msg.status == 3) {
+                                if (tblTypefilterValues.draw != 1) {
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'error_outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                    return false;
+                                }
+                            }
+                        },
+                    }).done(callback, () => {
+
+                    });
+                },
+                columns: [
+                    { "data": null },
+                    { "data": "Code" },
+                    { "data": "Name" },
+                    { "data": "NguoiTao" },
+                    {
+                        "data": "NgayTao",
+                        render: function (data, row, type) {
+                            return moment(data).format('DD/MM/yyyy HH:mm:SS')
+                        }
+                    },
+                ],
+                fnCreatedRow: function (nRow, data, iDataIndex) {
+                    $(nRow).attr('data-id', data.TypeID);
+
+                },
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                    return nRow;
+                },
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 15
+                },
+                // scrollY: '300px',
+                scrollResize: true,
+                scrollY: 100,
+                scrollCollapse: true,
+                bInfo: false,
+                paging: true,
+                searching: true,
+                pageLength: 5,
+                lengthChange: false,
+                orderCellsTop: true
+            });
+
+            //$(table_type.table().container()).on('keyup change', 'thead input', delay(function (e) {
+            //    table_type.draw();
+            //}, 1000));
+
+            //Search ngày -> ngày
+            $('#btn-search-vitri').click(function () {
+                fdate = $('#date-vitri input[name="chooseDate_From"]').val();
+                tdate = $('#date-vitri input[name="chooseDate_To"]').val();
+                table_type.columns.adjust().draw();
+            });
+
+            //Click
+            $(document).on('click', '#table-type-mathang tbody tr', function () {
+                $(this).addClass('selected');
+                $('#table-type-mathang tbody tr').not(this).removeClass('selected');
+            });
+
+            //Double Click
+            $(document).on('dblclick', '#table-type-mathang tbody tr', async function () {
+                $(this).addClass('selected');
+                $('#table-type-mathang tbody tr').not(this).removeClass('selected');
+                let id = $(this).attr('data-id');
+                let obj = table_type.row($(this)).data();
+                DetailTypeMatHang(obj);
+            });
+
+            function DetailTypeMatHang(data) {
+                $('input[name="txt_id_kieu"]').val(data.TypeID);
+                $('input[name="txt_ma_kieu"]').val(data.Code);
+                $('input[name="txt_ten_kieu"]').val(data.Name);
+                $('#them-kieu').modal();
+            }
+
+            //Insert and Update )
+            $('#btn-add-kieu').click(function () {
+                let Code = $('input[name="txt_ma_kieu"]').val();
+                let Name = $('input[name="txt_ten_kieu"]').val();
+                let TypeID = $('input[name="txt_id_kieu"]').val();
+                if (Code == '' || Name == '') {
+                    toast.create({
+                        title: 'Notification!',
+                        text: 'Vui lòng không để trống mã và tên kiểu',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    })
+                    return false;
+                }
+                //let data = {};
+                //data.CateName = CateName
+                //data.CateCode = CateCode
+                //data.CateID = CateID
+                //data.ParentID = ParentID
+                $.ajax({
+                    type: 'POST',
+                    url: '/MatHang/InsertOrUpdateTypeMatHang',
+                    data:
+                        JSON.stringify(
+                            {
+                                Name: Name,
+                                Code: Code,
+                                TypeID: TypeID,
+                            }
+                        )
+                    ,
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            table_type.draw();
+                            $('#them-kieu').modal('hide');
+                            toast.create({
+                                title: 'Notification!',
+                                text: 'Thành công',
+                                icon: 'check',
+                                classBackground: 'noti-success',
+                                timeout: 3000
+                            })
+                            //LoadDataadd();
+                        } else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            })
+                        } else {
+                            if (msg.draw != 1) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                                return false;
+                            }
+                        }
+                    },
+                    error: function (error) {
+                        console.log('e');
+                    }
+                });
+            });
+
+            //Update
+            $('.btn-edit-kieu').click(function () {
+                let id = $('#table-type-mathang tbody tr.selected').attr('data-id');
+                if (id == undefined) {
+                    toast.create({
+                        title: 'Notification!',
+                        text: 'Vui lòng chọn vị trí',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    });
+                    return false;
+                }
+                DetailCateMatHang(id);
+            });
+
+            //Reset
+            $('.vi-tri-refresh').click(function () {
+                table_type.draw();
+            });
+
+
+            $('#them-kieu').on('hidden.bs.modal', function () {
+                $('input[name="txt_ma_kieu"]').val('');
+                $('input[name="txt_ten_kieu"]').val('');
+                $('input[name="txt_id_kieu"]').val('');
+            });
+
+            //Chạy lần đâu load Cate
+            //var first = 1;
+            //FirstLoadDataAdd();
+            //function FirstLoadDataAdd() {
+            //    if (first == 1) {
+            //        first = 2;
+            //        LoadDataadd()
+            //    }
+            //}
+            //async function LoadDataadd() {
+            //    LoadDataCateMatHang().then(async (e) =>
+            //    {
+            //        $('#sl_loai_cha').empty()
+            //        $.map(e.data, function (obj) {
+            //            var newOption = new Option(obj.CateCode + " - " + obj.CateName, obj.CateID);
+            //            $('#sl_loai_cha').append(newOption);
+            //        });
+            //        $('#sl_loai_cha').val('').trigger('change')
+            //    })
+            //}
+        });
+        //function LoadDataCateMatHang() {
+        //    return $.ajax({
+        //        async: false,
+        //        type: 'GET',
+        //        url: '/Mathang/LoadDataCateMathang',
+        //        dataType: 'json',
+        //        success: function (msg) {
+        //            if (msg.status == 1) {
+        //                console.log(msg.data);
+        //                return msg.data;
+        //            } else {
+        //                location.reload();
+        //            }
+        //        },
+        //        error: function (error) {
+        //            console.log('e');
+        //        }
+        //    });
+        //}
+        serialize = function (obj) {
+            var str = [];
+            for (var p in obj)
+                if (obj.hasOwnProperty(p)) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+            return str.join("&");
+        }
+        function delay(fn, ms) {
+            let timer = 0
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(fn.bind(this, ...args), ms || 0)
+            }
+        }
+    </script>
+}

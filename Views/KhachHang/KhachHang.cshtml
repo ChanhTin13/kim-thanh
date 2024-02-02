@@ -1,0 +1,1817 @@
+﻿@using KimThanh.Database;
+@using KimThanh.Models;
+@using System.Text.RegularExpressions;
+@using MB.Extensions;
+
+@{
+    ViewBag.Title = "KhachHang";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+    List<sp_LoadKHACHHANGNHOMList_Result> slKHNID = DanhMucNhomKhachHang.LoadKhachHangNhomList();
+    List<sp_LoadKHACHHANGCARDList_Result> slKHCID = DanhMucNhomKhachHang.LoadKhachHangCardList();
+    List<sp_LoadSHOWROOMList_Result> slSRID = ShowRoom.LoadSHOWROOMList();
+    List<sp_LoadNHANVIEN_Result> slNVID = NhanVien.LoadStaff();
+    KHACHHANG KHCODE = KhachHang.GetKHCODERecommend();
+    // tạo KHCODE
+    var codeTemp = Regex.Replace(KHCODE.KHCODE, "[^1-9]+", string.Empty);
+    int intCode = codeTemp.ToInt();
+    intCode = intCode + 1;
+    var code = intCode.ToString();
+    if (intCode.ToString().Length != 6)
+    {
+        for (int i = 0; i < 6 - intCode.ToString().Length; i++)
+        {
+            code = "0" + code;
+        }
+    }
+    var finalCode = "AA" + code;
+}
+<style>
+    .table tr.selected td {
+        color: white !important;
+    }
+
+    .wj-flexgrid {
+        max-height: 250px;
+        margin: 10px 0;
+    }
+
+    /* style frozen cells */
+    .wj-cell.wj-frozen,
+    .wj-cell.wj-alt.wj-frozen {
+        background: rgb(255, 255, 125);
+    }
+
+    .right {
+        float: right;
+    }
+    .dataTables_scrollHeadInner{
+        width:100%!important;
+    }
+    .table-striped {
+        width: 100% !important;
+    }
+    .was-validated input:required:valid, input:required.is-valid {
+        border-color: #15af76;
+        background-image: url('/App_themes/assets/images/btn-tick.png');
+        background-repeat: no-repeat;
+        background-position: right calc(.375em + .23438rem) center;
+    }
+
+    .was-validated input:required:invalid {
+        border-color: #ff0000;
+        background-image: url(/App_themes/assets/images/error-form.png);
+        background-repeat: no-repeat;
+        background-position: right calc(.375em + 0.1rem) center;
+    }
+</style>
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ql-user user-table wrap-table-pq">
+                    <div class="user-table__header">
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="list-button text-left">
+                                    <a href="#" class="btn btn-add inline"
+                                       data-toggle="modal"
+                                       data-target="#them-khach-hang">
+                                        <img src="~/App_Themes/assets/images/btn-add.png"
+                                             alt="" class="inline">
+                                        <span class="inline">Thêm</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline"
+                                       data-toggle="modal"
+                                       data-target="#form-add-group-user">
+                                        <img src="~/App_Themes/assets/images/btn-fix.png"
+                                             alt="" class="inline"><span class="inline">Sửa</span>
+                                    </a>
+                                    <a href="#" class="btn btn-del inline">
+                                        <img src="~/App_Themes/assets/images/btn-del.png"
+                                             alt="" class="inline"><span class="inline">Xóa</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="~/App_Themes/assets/images/btn-import.png"
+                                             alt="" class="inline"><span class="inline">Nạp</span>
+                                    </a>
+                                    <a href="#" class="btn btn-send-email inline">
+                                        <img src="~/App_Themes/assets/images/btn-note.png"
+                                             alt="" class="inline"><span class="inline">Notes</span>
+                                    </a>
+                                    <a href="#" class="btn btn-export inline">
+                                        <img src="~/App_Themes/assets/images/btn-export.png"
+                                             alt="" class="inline"><span class="inline">Xuất</span>
+                                    </a>
+                                    <a href="#" class="btn btn-export inline">
+                                        <img src="~/App_Themes/assets/images/btn-import-2.png"
+                                             alt="" class="inline"><span class="inline">Nhập</span>
+                                    </a>
+                                    <a href="#" class="btn btn-export inline">
+                                        <img src="~/App_Themes/assets/images/nhapkh.png"
+                                             alt="" class="inline"><span class="inline">Nhập KHCS</span>
+                                    </a>
+                                    <a href="#" class="btn btn-import inline">
+                                        <img src="~/App_Themes/assets/images/btn-import.png"
+                                             alt="" class="inline"><span class="inline">Nạp</span>
+                                    </a>
+                                    <a href="#" class="btn btn-print inline">
+                                        <img src="~/App_Themes/assets/images/btn-print.png"
+                                             alt="" class="inline"><span class="inline">In</span>
+                                    </a>
+                                    <a href="#" class="btn btn-close inline">
+                                        <img src="~/App_Themes/assets/images/btn-close.png"
+                                             alt="" class="inline"><span class="inline">Đóng</span>
+                                    </a>
+                                    <a href="#" class="btn btn-question
+                                    inline">
+                                        <img src="~/App_Themes/assets/images/question.png"
+                                             alt="" class="inline"><span class="inline">Hỏi</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="list-button text-right">
+                                    <div class="dropdown">
+                                        <button class="btn btn-email btn-secondary
+                                        dropdown-toggle" type="button"
+                                                id="dropdownMenu2"
+                                                data-toggle="dropdown"
+                                                aria-haspopup="true"
+                                                aria-expanded="false">
+                                            Gửi Email
+                                        </button>
+                                        <div class="dropdown-menu"
+                                             aria-labelledby="dropdownMenu2">
+                                            <button class="dropdown-item"
+                                                    type="button">
+                                                Gửi qua outlook
+                                            </button>
+                                            <button class="dropdown-item"
+                                                    type="button" data-toggle="modal"
+                                                    data-target="#gui-email">
+                                                Gửi bằng
+                                                mail của
+                                                chương trình
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wrap-height-table">
+                        <table border="1" class="table display nowrap table-striped row-border 
+                        order-column table-khachhang fixed-2-column"
+                               id="table-khachhang" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Mã KH</th>
+                                    <th>Tên KH</th>
+                                    <th>Địa chỉ NR</th>
+                                    <th>Điện thoại</th>
+                                    <th>Di động</th>
+                                    <th>Ngày sinh</th>
+                                    <th>Giới tính</th>
+                                    <th>Thẻ KH</th>
+                                    <th>Nhóm KH</th>
+
+                                    @*<th>Người đại diện</th>
+                                    <th>Địa chỉ cty</th>
+                                    <th>MST</th>
+                                    <th>Fax</th>
+                                    <th>Email</th>
+                                    <th>Website</th>
+                                    <th>Chức vụ</th>
+                                    <th>Ngày tạo KH</th>
+                                    <th>Nhận tin</th>
+                                    <th>Theo dõi</th>
+
+                                    <th>Người QL</th>
+                                    <th>Chi nhánh QL</th>
+                                    <th>Khu vực địa chỉ</th>
+                                    <th>Ghi chú</th>
+                                    <th>Tên viết tắt</th>
+                                    <th>Alias</th>
+                                    <th>Tên công ty</th>
+                                    <th>ĐC giao hóa đơn</th>
+                                    <th>ĐC giao hàng</th>
+                                    <th>ĐC giao hàng 2</th>
+
+                                    <th>PT vận chuyển</th>
+                                    <th>Điều khoản</th>
+                                    <th>Kênh KH</th>
+                                    <th>Tài khoản NH</th>
+                                    <th>Chủ TK</th>
+                                    <th>Mở tại</th>
+                                    <th>Giới hạn nợ</th>
+                                    <th>Giới hạn ngày nợ</th>
+                                    <th>Giới hạn số phiến nợ</th>
+                                    <th>Tính lãi gần nhất</th>
+
+                                    <th>Mức chiết khấu</th>
+                                    <th>Ngày được tạo</th>
+                                    <th>Người tạo</th>
+                                    <th>Ngày được sửa</th>
+                                    <th>Người được sửa</th>
+                                    <th>Khách hàng tiềm năng</th>
+                                    <th>Thuộc kiểu</th>
+                                    <th>KHTT card</th>
+                                    <th>Ngày mua cuối cùng</th>*@
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Popup gửi email -->
+    <div class="modal fade default-popup" id="gui-email" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Gửi
+                        email
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluif">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="list-button bg-trans text-left">
+                                    <a href="#" class="btn
+                                    btn-create-email
+                                    inline">
+                                        <img src="~/App_Themes/assets/images/tao-email.png"
+                                             alt="" class="inline"><span class="inline">
+                                            Tạo
+                                            email mới
+                                        </span>
+                                    </a>
+                                    <a href="#" class="btn btn-send-email
+                                    inline">
+                                        <img src="~/App_Themes/assets/images/gui-email.png"
+                                             alt="" class="inline">Gửi
+                                        email
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="~/App_Themes/assets/images/btn-out.png"
+                                             alt="" class="inline"><span class="inline">Thoát</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <form action="" id="form-gui-email"
+                                      class="default-form">
+                                    <div class="form-group">
+                                        <label>Gửi từ</label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Đến</label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>CC</label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tiêu đề</label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form-group last">
+                                        <label>Đính kèm</label>
+                                        <div class="box-dinh-kem">
+                                            <input type="text">
+                                            <div class="box-button">
+                                                <button class="btn btn-secondary">Đính kèm</button>
+                                                <button class="btn btn-secondary">Bỏ</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade default-popup popup-them-khach-hang" id="them-khach-hang"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Khách hàng/Nhà cung cấp
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="header_in">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="select-tk">
+                                        <p class="font-weight-bold">Thuộc kiểu<span style="color:red;"> *</span></p>
+                                        <select class="ml-4" name="slClassID">
+                                            <option value="0">Khách hàng</option>
+                                            <option value="1">Nhà cung cấp</option>
+                                            <option value="2">Khách hàng + Nhà cung cấp</option>
+                                        </select>
+                                    </div>
+                                    <input type="hidden" id="hdID" name="hdID" value="0" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="body_in">
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <ul class="nav nav-tabs" id="myTab"
+                                        role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="home-tab"
+                                               data-toggle="tab"
+                                               href="#thong-tin-chung"
+                                               role="tab" aria-controls="home"
+                                               aria-selected="true">Thông tin chung</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="profile-tab"
+                                               data-toggle="tab"
+                                               href="#mua-ban-hang"
+                                               role="tab" aria-controls="profile"
+                                               aria-selected="false">Mua bán hàng</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="contact-tab"
+                                               data-toggle="tab"
+                                               href="#noi-bo-quan-li"
+                                               role="tab" aria-controls="contact"
+                                               aria-selected="false">Nội bộ quản lí</a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content" id="myTabContent">
+                                        <!--THÔNG TIN-->
+                                        <div class="tab-pane fade show active"
+                                             id="thong-tin-chung"
+                                             role="tabpanel"
+                                             aria-labelledby="home-tab">
+                                            <div class="row">
+                                                <div class="col-md-7">
+                                                    <div class="row">
+                                                        <div class="col-md-7">
+                                                            <form action="" class="form-ttc default-form">
+                                                                <div class="form-group">
+                                                                    <label>Ngày tạo KH<span style="color:red;"> *</span></label>
+                                                                    <input type="text" class="datetimepicker date-only" required name="txt-create-date" id="choose-day-them-kh">
+                                                                </div>
+                                                                <div class="form-group thuoc-nhom">
+                                                                    <label>Thuộc nhóm<span style="color:red;"> *</span></label>
+                                                                    <select name="slKHNID">
+                                                                        @{
+                                                                            foreach (var item in slKHNID)
+                                                                            {
+                                                                                <option value="@item.KHNID">@item.TEN</option>
+                                                                            }
+                                                                        }
+                                                                    </select>
+                                                                    <span class="search-icon absolute" data-toggle="modal" data-target="#danh-muc-nhom-kh">
+                                                                        <i class="fas fa-search"></i>
+                                                                    </span>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Mã KH<span style="color:red;"> *</span></label>
+                                                                    <input type="text" name="KHCODE" id="KHCODE" required value="@finalCode">
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input mr-2" id="ISKHTIEMNANG" name="ISKHTIEMNANG">
+                                                        <label class="form-check-label ml-1" for="exampleCheck1">Khách hàng tiềm năng</label>
+                                                    </div>
+                                                    <textarea class="w-100 mt-2"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-7">
+                                                    <div class="box-border mt-4">
+                                                        <p class="box-border__title title-nau">Thông tin cá nhân</p>
+                                                        <form action=""
+                                                              class="form-thong-tin-cn default-form">
+                                                            <div class="form-group">
+                                                                <label>Tên khách hàng</label>
+                                                                <input type="text" name="KHTEN" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Địa chỉ NR</label>
+                                                                <input type="text" name="DIACHI" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Mobile</label>
+                                                                <input type="text" name="DIDONG" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Telephone</label>
+                                                                <input type="text" name="DIENTHOAI" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Ngày sinh</label>
+                                                                <input type="text" class="datetimepicker date-only" name="NGAYSINH" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Giới tính<span style="color:red;"> *</span></label>
+                                                                <select name="slGIOITINH">
+                                                                    <option value="Nam">Nam</option>
+                                                                    <option value="Nữ">Nữ</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Email</label>
+                                                                <input type="text" name="EMAIL" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Hạng thẻ hiện hành</label>
+                                                                <select name="slKHCID">
+                                                                    @{
+                                                                        foreach (var item in slKHCID)
+                                                                        {
+                                                                            <option value="@item.KHCID">@item.TEN</option>
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Hình thức nhận tin</label>
+                                                                <select name="slPREFEREDCONTACTMODE">
+                                                                    <option value="0">Hình thức bất kỳ</option>
+                                                                    <option value="1">Qua LMS</option>
+                                                                    <option value="2">Qua Email</option>
+                                                                    <option value="3">Qua Tel/Mob</option>
+                                                                    <option value="4">Không muốn liên hệ</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Khu vực/Địa chỉ</label>
+                                                                <div class="position-relative box-input">
+                                                                    <input type="text" name="DCID" value="">
+                                                                    <span class="search-icon absolute" data-toggle="modal" data-target="#danh-sach-dia-chi">
+                                                                        <i class="fas fa-search"></i>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <div class="box-border mt-4">
+                                                        <p class="box-border__title title-nau">
+                                                            Thông tin công ty
+                                                        </p>
+                                                        <form action="" class="form-thong-tin-cn default-form">
+                                                            <div class="form-group">
+                                                                <label>Tên công ty</label>
+                                                                <input type="text" name="CONGTY" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Tên viết tắt</label>
+                                                                <input type="text" name="KHTENTAT" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Alias</label>
+                                                                <input type="text" name="Alias" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Địa chỉ công ty</label>
+                                                                <input type="text" name="DIACHICONGTY" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Mã số thuế</label>
+                                                                <input type="text" name="MST" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Fax</label>
+                                                                <input type="text" name="FAX" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Website</label>
+                                                                <input type="text" name="WEBSITE" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Người đại diện</label>
+                                                                <input type="text" name="NGUOIDAIDIEN" value="">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--MUA BÁN HÀNG-->
+                                        <div class="tab-pane fade"
+                                             id="mua-ban-hang"
+                                             role="tabpanel"
+                                             aria-labelledby="profile-tab">
+                                            <div class="row mt-4
+                                            align-items-strech">
+                                                <div class="col-md-5">
+                                                    <div class="box-border">
+                                                        <p class="box-border__title title-nau">Công nợ</p>
+                                                        <form action="" class="default-form form-no">
+                                                            <div class="form-group">
+                                                                <label>Giới hạn nợ (VND)</label>
+                                                                <input type="text" name="GIOIHANCONGNO" data-type="currency" value="0">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Giới hạn ngày nợ</label>
+                                                                <select name="slGIOIHANNGAYNO">
+                                                                    @{
+                                                                        for (int i = 0; i < 361; i++)
+                                                                        {
+                                                                            <option value="@i">@i</option>
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Giới hạn số phiếu trả nợ</label>
+                                                                <select name="slGIOIHANSOPHIEUNO">
+                                                                    @{
+                                                                        for (int i = 0; i < 301; i++)
+                                                                        {
+                                                                            <option value="@i">@i</option>
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Mức chiết khấu</label>
+                                                                <input type="text" data-type="currency" name="MUCHIETKHAU" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Ngày tính lãi nợ gần nhất</label>
+                                                                <input type="text" class="datetimepicker date-only" name="TINHLAINOGANNHAT" value="">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <div class="box-border h-100">
+                                                        <p class="box-border__title title-nau">Tài khoản</p>
+                                                        <form action="" class="default-form form-tk">
+                                                            <div class="form-group">
+                                                                <label>Số TK</label>
+                                                                <input type="text" name="TKNHCODE" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Chủ TK</label>
+                                                                <input type="text" name="TKNHTEN" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Mở tại</label>
+                                                                <input type="text" name="TKNHMOTAI" value="">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-5">
+                                                <div class="col-md-12">
+                                                    <div class="box-border h-100">
+                                                        <p class="box-border__title title-nau">Địa chỉ giao hàng và hóa đơn</p>
+                                                        <form action="" class="default-form form-tk">
+                                                            <div class="form-group">
+                                                                <label>Địa chỉ giao hóa đơn</label>
+                                                                <input type="text" name="DIACHIGIAOHOADON" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Địa chỉ giao hàng</label>
+                                                                <input type="text" name="DIACHIGIAOHANG" value="">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Địa chỉ giao hàng 2</label>
+                                                                <input type="text" name="DIACHIGIAOHANG2" value="">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--NỘI BỘ QUẢN LÍ-->
+                                        <div class="tab-pane fade"
+                                             id="noi-bo-quan-li"
+                                             role="tabpanel"
+                                             aria-labelledby="contact-tab">
+                                            <!--Thông tin nội bộ quản lí-->
+                                            <div class="box-border mt-3">
+                                                <p class="box-border__title title-nau">Thông tin nội bộ quản lý</p>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <form class="default-form form-noi-bo-quan-li" action="">
+                                                            <div class="form-group">
+                                                                <label>Chi nhánh quản lý</label>
+                                                                <div class="box-select">
+                                                                    <select name="slSRID">
+                                                                        @{
+                                                                            foreach (var item in slSRID)
+                                                                            {
+                                                                                <option value="@item.SRID">@item.TEN</option>
+                                                                            }
+                                                                        }
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Người quản lí</label>
+                                                                <div class="box-select">
+                                                                    <select name="slNVID">
+                                                                        @{
+                                                                            foreach (var item in slNVID)
+                                                                            {
+                                                                                <option value="@item.NVID">@item.NVTEN</option>
+                                                                            }
+                                                                        }
+                                                                    </select>
+                                                                    <span class="search-icon" data-toggle="modal" data-target="#danh-sach-nv">
+                                                                        <i class="fas fa-search"></i>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label>Kênh khách hàng</label>
+                                                                <div class="box-select">
+                                                                    <select name="KHTID">
+                                                                        <option value="0">Test </option>
+                                                                    </select>
+                                                                    <span class="search-icon" data-toggle="modal" data-target="#danh-sach-kenh-kh">
+                                                                        <i class="fas fa-search"></i>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--Tạo và sửa thông tin khách hàng-->
+                                            <div class="box-border mt-5">
+                                                <p class="box-border__title">
+                                                    Tạo và sửa thông tin khách hàng
+                                                </p>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="box-info">
+                                                            <div class="box-info__row">
+                                                                <p>Ngày tạo</p>
+                                                                <p>-</p>
+                                                            </div>
+                                                            <div class="box-info__row">
+                                                                <p>Ngày sửa lần cuối</p>
+                                                                <p>-</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="box-info__row">
+                                                            <p>User tạo</p>
+                                                            <p>-</p>
+                                                        </div>
+                                                        <div class="box-info__row">
+                                                            <p>User sửa lần cuối</p>
+                                                            <p>-</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--User Chăm sóc khách hàng-->
+                                            <div class="box-border mt-5">
+                                                <p class="box-border__title">User chăm sóc khách hàng</p>
+                                                <div class="list-button mb-2">
+                                                    <a href="#" class="btn btn-add inline" id="btn-them-user-cham-soc" data-toggle="modal"
+                                                       data-target="#form-them-user-cham-soc">
+                                                        <img src="~/App_Themes/assets/images/btn-add.png" alt="" class="inline" />
+                                                        <span class="inline">Thêm</span>
+                                                    </a>
+                                                </div>
+                                                <table class="table display nowrap table-striped" id="table-user-cham-soc">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>User chăm sóc</th>
+                                                            <th>User tạo</th>
+                                                            <th>Ngày tạo</th>
+                                                            <th>Khóa quyền</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="body-them-user-cham-soc">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="display:unset;">
+                    <div style="display:inline;width:80px;left:30px;position:relative;">
+                        <input type="checkbox" id="theodoi" name="theodoi" />
+                        <span for="theodoi">Theo dõi</span>
+                    </div>
+                    <button type="button" class="btn btn-secondary right" data-dismiss="modal">Thoát</button>
+                    <button type="button" class="btn btn-primary btn-add-customer right">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade default-popup" id="danh-sach-kenh-kh" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Danh mục kênh khách hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="list-button bg-trans text-left">
+                                    <a href="#" class="btn btn-add inline"
+                                       data-toggle="modal"
+                                       data-target="#them-kenh-khach-hang">
+                                        <img src="~/App_Themes/assets/images/btn-add.png"
+                                             alt="" class="inline">
+                                        <span class="inline">Thêm</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline"
+                                       data-toggle="modal"
+                                       data-target="#them-nhom-khach-hang">
+                                        <img src="~/App_Themes/assets/images/btn-fix.png"
+                                             alt="" class="inline"><span class="inline">Sửa</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="~/App_Themes/assets/images/btn-del.png"
+                                             alt="" class="inline"><span class="inline">Xóa</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="~/App_Themes/assets/images/btn-import.png"
+                                             alt="" class="inline"><span class="inline">Nạp</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="~/App_Themes/assets/images/btn-export.png"
+                                             alt="" class="inline"><span class="inline">Xuất</span>
+                                    </a>
+                                    <a href="#" class="btn btn-question
+                                    inline">
+                                        <img src="~/App_Themes/assets/images/question.png"
+                                             alt="" class="inline"><span class="inline">Hỏi</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="~/App_Themes/assets/images/btn-close.png"
+                                             alt="" class="inline"><span class="inline">Đóng</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="wrap-height-table">
+                                    <table class="table display"
+                                           id="table-danh-muc-nhom-kh">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Kênh khách hàng</th>
+                                                <th>Mô tả</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>Test</td>
+                                                <td>Something</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade default-popup" id="them-kenh-khach-hang" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Thêm kênh khách hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box-border mt-3">
+                                    <p class="box-border__title bg-gray">
+                                        kênh khách hàng
+                                    </p>
+                                    <form action="" method="post"
+                                          class="default-form"
+                                          id="form-them-nhom-kh">
+                                        <div class="form-group">
+                                            <label>kênh khách hàng</label>
+                                            <input type="text">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Mô tả</label>
+                                            <textarea name="" id="" cols="30" rows="3"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"> Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade default-popup" id="danh-sach-dia-chi" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">Địa chỉ</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="list-button bg-trans text-left">
+                                    <a href="#" class="btn btn-add inline"
+                                       data-toggle="modal" data-target="#form-add">
+                                        <img src="~/App_Themes/assets/images/btn-add.png"
+                                             alt="" class="inline">
+                                        <span class="inline">Thêm</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline"
+                                       data-toggle="modal"
+                                       data-target="#form-add-group-user">
+                                        <img src="~/App_Themes/assets/images/btn-fix.png"
+                                             alt="" class="inline"><span class="inline">Sửa</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="~/App_Themes/assets/images/btn-del.png"
+                                             alt="" class="inline"><span class="inline">Xóa</span>
+                                    </a>
+                                    <a href="#" class="btn btn-save inline">
+                                        <img src="~/App_Themes/assets/images/btn-save.png"
+                                             alt="" class="inline"><span class="inline">Ghi</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="~/App_Themes/assets/images/btn-import.png"
+                                             alt="" class="inline"><span class="inline">Nạp</span>
+                                    </a>
+                                    <a href="#" class="btn btn-print
+                                    inline">
+                                        <img src="~/App_Themes/assets/images/btn-print.png"
+                                             alt="" class="inline"><span class="inline">In</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="~/App_Themes/assets/images/btn-export.png"
+                                             alt="" class="inline"><span class="inline">Xuất</span>
+                                    </a>
+                                    <a href="#" class="btn btn-question
+                                    inline">
+                                        <img src="~/App_Themes/assets/images/question.png"
+                                             alt="" class="inline"><span class="inline">Hỏi</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="~/App_Themes/assets/images/btn-close.png"
+                                             alt="" class="inline"><span class="inline">Đóng</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-12"></div>
+                        </div>
+                    </div>
+                    <div class="body_in">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="box-dia-chi">
+                                        <p class="title-head">Danh mục địa chỉ</p>
+                                        <div class="content mt-2">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <form action="" id="form-them-dia-chi"
+                                          class="default-form">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Mã địa chỉ</label>
+                                                    <input type="text">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Mã rút gọn</label>
+                                                    <input type="text">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Tên địa chỉ</label>
+                                                    <input type="text">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Alias</label>
+                                                    <input type="text">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Mô tả</label>
+                                                    <textarea name="" id=""
+                                                              cols="30" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Ghi chú</label>
+                                                    <textarea name="" id=""
+                                                              cols="30" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="box-title list-button d-flex">
+                                        <p class="title-head inline mr-2">Địa chỉ</p>
+                                        <a href="#" class="btn btn-watch
+                                        inline">
+                                            <img src="~/App_Themes/assets/images/btn-watch.png"
+                                                 alt="" class="inline">Xem
+                                        </a>
+                                    </div>
+                                    <div class="wrap-height-table-2">
+                                        <table class="table display"
+                                               id="table-them-dia-chi">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Mã địa chỉ</th>
+                                                    <th>Tên địa chỉ</th>
+                                                    <th>Mã ngắn</th>
+                                                    <th>Path</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>HELLO</td>
+                                                    <td>HOLLE</td>
+                                                    <td>ANDEPTRAI</td>
+                                                    <td>andeptrai.com</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade default-popup" id="danh-muc-nhom-kh" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Danh mục nhóm khách hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="list-button bg-trans text-left">
+                                    <a href="#" class="btn btn-add inline"
+                                       data-toggle="modal"
+                                       data-target="#them-nhom-khach-hang">
+                                        <img src="~/App_Themes/assets/images/btn-add.png"
+                                             alt="" class="inline">
+                                        <span class="inline">Thêm</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline"
+                                       data-toggle="modal"
+                                       data-target="#them-nhom-khach-hang">
+                                        <img src="~/App_Themes/assets/images/btn-fix.png"
+                                             alt="" class="inline"><span class="inline">Sửa</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="~/App_Themes/assets/images/btn-del.png"
+                                             alt="" class="inline"><span class="inline">Xóa</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="~/App_Themes/assets/images/btn-import.png"
+                                             alt="" class="inline"><span class="inline">Nạp</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="~/App_Themes/assets/images/btn-export.png"
+                                             alt="" class="inline"><span class="inline">Xuất</span>
+                                    </a>
+                                    <a href="#" class="btn btn-question
+                                    inline">
+                                        <img src="~/App_Themes/assets/images/question.png"
+                                             alt="" class="inline"><span class="inline">Hỏi</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="~/App_Themes/assets/images/btn-close.png"
+                                             alt="" class="inline"><span class="inline">Đóng</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="wrap-height-table">
+                                    <table class="table display"
+                                           id="table-danh-muc-nhom-kh">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Tên nhóm KH</th>
+                                                <th>Ghi chú</th>
+                                                <th>Nhóm giá</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>Test</td>
+                                                <td>Something</td>
+                                                <td>Something</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade default-popup" id="them-nhom-khach-hang" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Thêm
+                        nhóm khách hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box-border mt-3">
+                                    <p class="box-border__title bg-gray">
+                                        Nhóm khách hàng
+                                    </p>
+                                    <form action="" method="post"
+                                          class="default-form"
+                                          id="form-them-nhom-kh">
+                                        <div class="form-group">
+                                            <label>Nhóm khách hàng</label>
+                                            <input type="text">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Mô tả</label>
+                                            <textarea name="" id="" cols="30"
+                                                      rows="3"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Hướng nhóm giá bán lẻ</label>
+                                            <select name="" id="">
+                                                <option value="">Nhóm 1</option>
+                                                <option value="">Nhóm 2</option>
+                                                <option value="">Nhóm 3</option>
+                                                <option value="">Nhóm 4</option>
+                                            </select>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form thêm user chăm sóc khách hàng -->
+    <div class="modal fade default-popup" id="form-them-user-cham-soc" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Danh sách user
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="wrap-height-table">
+                        <table class="table display nowrap table-striped" id="table-them-user-cham-soc" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tên truy cập</th>
+                                    <th>Tên đầy đủ</th>
+                                    @*<th>Thao tác</th>*@
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="them-nv-chamsoc" class="btn btn-primary">Chọn</button>
+                    <button type="button" id="hide-from-them-nv-chamsoc" class="btn btn-secondary">Bỏ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Danh mục nhân viên -->
+    <div class="modal fade default-popup popup-danhsach-nv" id="danh-sach-nv"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Danh mục nhân viên
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-button text-left">
+                        <a href="#" class="btn btn-add inline" data-toggle="modal"
+                           data-target="#them-nhan-vien">
+                            <img src="~/App_Themes/assets/images/btn-add.png" alt=""
+                                 class="inline"> <span class="inline">Thêm</span>
+                        </a>
+                        <a href="#" class="btn btn-fix inline" style="font-weight:
+                        500;">
+                            <img src="~/App_Themes/assets/images/btn-fix.png"
+                                 alt="" class="inline"><span class="inline">Sửa</span>
+                        </a>
+                        <a href="#" class="btn btn-fix inline">
+                            <img src="~/App_Themes/assets/images/btn-del.png" alt=""
+                                 class="inline"><span class="inline">Xóa</span>
+                        </a>
+                        <a href="#" class="btn btn-fix inline">
+                            <img src="~/App_Themes/assets/images/btn-import.png" alt=""
+                                 class="inline"><span class="inline">Nạp</span>
+                        </a>
+                        <a href="#" class="btn btn-fix inline">
+                            <img src="~/App_Themes/assets/images/btn-export.png" alt=""
+                                 class="inline"><span class="inline">Xuất</span>
+                        </a>
+                    </div>
+                    <div class="wrap-height-table">
+                        <table class="table display nowrap table-striped row-border
+                        order-column table-nv-2" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Mã NV</th>
+                                    <th>
+                                        Tên NV
+                                    </th>
+                                    <th>
+                                        Địa chỉ
+                                    </th>
+                                    <th>
+                                        Điện thoại
+                                    </th>
+                                    <th>
+                                        Di động
+                                    </th>
+                                    <th>
+                                        Ngày sinh
+                                    </th>
+                                    <th>
+                                        Giới tính
+                                    </th>
+                                    <th>
+                                        Chức vụ
+                                    </th>
+                                    <th>
+                                        Mức lương
+                                    </th>
+                                    <th>
+                                        CMTND
+                                    </th>
+                                    <th>
+                                        Email
+                                    </th>
+                                    <th>
+                                        Gia đình
+                                    </th>
+                                    <th>
+                                        Quê quán
+                                    </th>
+                                    <th>
+                                        Theo dõi
+                                    </th>
+                                    <th>
+                                        Nhóm
+                                    </th>
+                                    <th>
+                                        Ngày tạo mã
+                                    </th>
+                                    <th>
+                                        Người QL
+                                    </th>
+                                    <th>
+                                        Làm việc tại C
+                                    </th>
+                                    <th>
+                                        Địa chỉ 2
+                                    </th>
+                                    <th>
+                                        Ghi chú
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>NVDEPTRAI</td>
+                                    <td>AnCute</td>
+                                    <td>Ở đâu còn lâu mới nói</td>
+                                    <td>0123456789</td>
+                                    <td>9876543215</td>
+                                    <td>25/8/2020</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>Vô tận</td>
+                                    <td>Cái này là gì k biết</td>
+                                    <td>Test@gmail.com</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>?</td>
+                                    <td>Test</td>
+                                    <td>30/10/2030</td>
+                                    <td>Test</td>
+                                    <td>Mona Media</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>NVDEPTRAI</td>
+                                    <td>AnCute</td>
+                                    <td>Ở đâu còn lâu mới nói</td>
+                                    <td>0123456789</td>
+                                    <td>9876543215</td>
+                                    <td>25/8/2020</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>Vô tận</td>
+                                    <td>Cái này là gì k biết</td>
+                                    <td>Test@gmail.com</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>?</td>
+                                    <td>Test</td>
+                                    <td>30/10/2030</td>
+                                    <td>Test</td>
+                                    <td>Mona Media</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>NVDEPTRAI</td>
+                                    <td>A Thức Giấc</td>
+                                    <td>Ở đâu còn lâu mới nói</td>
+                                    <td>0123456789</td>
+                                    <td>9876543215</td>
+                                    <td>25/8/2020</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>Vô tận</td>
+                                    <td>Cái này là gì k biết</td>
+                                    <td>Test@gmail.com</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>?</td>
+                                    <td>Test</td>
+                                    <td>30/10/2030</td>
+                                    <td>Test</td>
+                                    <td>Mona Media</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>NVDEPTRAI</td>
+                                    <td>A Đạt Tốc Độ</td>
+                                    <td>Ở đâu còn lâu mới nói</td>
+                                    <td>0123456789</td>
+                                    <td>9876543215</td>
+                                    <td>25/8/2020</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>Vô tận</td>
+                                    <td>Cái này là gì k biết</td>
+                                    <td>Test@gmail.com</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>?</td>
+                                    <td>Test</td>
+                                    <td>30/10/2030</td>
+                                    <td>Test</td>
+                                    <td>Mona Media</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>NVDEPTRAI</td>
+                                    <td>A Quang Test</td>
+                                    <td>Ở đâu còn lâu mới nói</td>
+                                    <td>0123456789</td>
+                                    <td>9876543215</td>
+                                    <td>25/8/2020</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>Vô tận</td>
+                                    <td>Cái này là gì k biết</td>
+                                    <td>Test@gmail.com</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>?</td>
+                                    <td>Test</td>
+                                    <td>30/10/2030</td>
+                                    <td>Test</td>
+                                    <td>Mona Media</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>NVDEPTRAI</td>
+                                    <td>AnCute</td>
+                                    <td>Ở đâu còn lâu mới nói</td>
+                                    <td>0123456789</td>
+                                    <td>9876543215</td>
+                                    <td>25/8/2020</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>Vô tận</td>
+                                    <td>Cái này là gì k biết</td>
+                                    <td>Test@gmail.com</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>?</td>
+                                    <td>Test</td>
+                                    <td>30/10/2030</td>
+                                    <td>Test</td>
+                                    <td>Mona Media</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>NVDEPTRAI</td>
+                                    <td>AnCute</td>
+                                    <td>Ở đâu còn lâu mới nói</td>
+                                    <td>0123456789</td>
+                                    <td>9876543215</td>
+                                    <td>25/8/2020</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>Vô tận</td>
+                                    <td>Cái này là gì k biết</td>
+                                    <td>Test@gmail.com</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>?</td>
+                                    <td>Test</td>
+                                    <td>30/10/2030</td>
+                                    <td>Test</td>
+                                    <td>Mona Media</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>NVDEPTRAI</td>
+                                    <td>AnCute</td>
+                                    <td>Ở đâu còn lâu mới nói</td>
+                                    <td>0123456789</td>
+                                    <td>9876543215</td>
+                                    <td>25/8/2020</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>Vô tận</td>
+                                    <td>Cái này là gì k biết</td>
+                                    <td>Test@gmail.com</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>?</td>
+                                    <td>Test</td>
+                                    <td>30/10/2030</td>
+                                    <td>Test</td>
+                                    <td>Mona Media</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>NVDEPTRAI</td>
+                                    <td>AnCute</td>
+                                    <td>Ở đâu còn lâu mới nói</td>
+                                    <td>0123456789</td>
+                                    <td>9876543215</td>
+                                    <td>25/8/2020</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>Vô tận</td>
+                                    <td>Cái này là gì k biết</td>
+                                    <td>Test@gmail.com</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>?</td>
+                                    <td>Test</td>
+                                    <td>30/10/2030</td>
+                                    <td>Test</td>
+                                    <td>Mona Media</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>NVDEPTRAI</td>
+                                    <td>AnCute</td>
+                                    <td>Ở đâu còn lâu mới nói</td>
+                                    <td>0123456789</td>
+                                    <td>9876543215</td>
+                                    <td>25/8/2020</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>Vô tận</td>
+                                    <td>Cái này là gì k biết</td>
+                                    <td>Test@gmail.com</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>?</td>
+                                    <td>Test</td>
+                                    <td>30/10/2030</td>
+                                    <td>Test</td>
+                                    <td>Mona Media</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>NVDEPTRAI</td>
+                                    <td>AnCute</td>
+                                    <td>Ở đâu còn lâu mới nói</td>
+                                    <td>0123456789</td>
+                                    <td>9876543215</td>
+                                    <td>25/8/2020</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>Vô tận</td>
+                                    <td>Cái này là gì k biết</td>
+                                    <td>Test@gmail.com</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                    <td>?</td>
+                                    <td>Test</td>
+                                    <td>30/10/2030</td>
+                                    <td>Test</td>
+                                    <td>Mona Media</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="21">54</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thêm nhân viên -->
+    <div class="modal fade default-popup popup-them-nv" id="them-nhan-vien"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Thêm/sửa
+                        nhân
+                        viên
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <form action=""  class="form-2-col">
+                                    <div class="form-row">
+                                        <label>Mã NV</label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Tên NV</label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Ngày sinh</label>
+                                        <input type="date">
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Giới tính</label>
+                                        <select name="" id="">
+                                            <option value="">Nam</option>
+                                            <option value="">Nữ</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Chức vụ</label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Lương</label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Số CMND</label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Địa chỉ</label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form-row">
+                                        <label>điện thoại</label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form-row">
+                                        <label>di động</label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Email</label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Làm việc tại CN</label>
+                                        <select name="" id="">
+                                            <option value="">Place 1</option>
+                                            <option value="">Place 2</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Nhóm</label>
+                                        <select name="" id="">
+                                            <option value="">Group 1</option>
+                                            <option value="">Group 2</option>
+                                        </select>
+                                        <span class="search-icon"
+                                              data-toggle="modal"
+                                              data-target="#them-nhom-nv">
+                                            <i class="fas
+                                            fa-search"></i>
+                                        </span>
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Quê quán</label>
+                                        <input type="text">
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Gia đình</label>
+                                        <input type="text">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="box-up-img text-center">
+                                    <h2>Up ảnh cá nhân tại đây</h2>
+                                    <div class="avatar-upload">
+                                        <div class="avatar-edit">
+                                            <input type='file' id="imageUpload"
+                                                   accept=".png, .jpg, .jpeg" />
+                                            <label for="imageUpload">
+                                                <i class="fas fa-cloud-upload-alt"></i>
+                                            </label>
+                                        </div>
+                                        <div class="avatar-preview">
+                                            <div id="imagePreview"
+                                                 style="background-image:
+                                            url('~/App_Themes/assets/images/rose.jpg');">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danh mục nhóm nhân viên -->
+    <div class="modal fade default-popup popup-them-nhom-nv" id="them-nhom-nv"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Danh
+                        mục nhóm nhân viên
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-button text-left">
+                        <a href="#" class="btn btn-add inline" data-toggle="modal"
+                           data-target="#form-add">
+                            <img src="~/App_Themes/assets/images/btn-add.png" alt=""
+                                 class="inline"> <span class="inline">Thêm</span>
+                        </a>
+                        <a href="#" class="btn btn-fix inline" data-toggle="modal"
+                           data-target="#form-add-group-user" style="font-weight:
+                        500;">
+                            <img src="~/App_Themes/assets/images/btn-fix.png"
+                                 alt="" class="inline"><span class="inline">Sửa</span>
+                        </a>
+                        <a href="#" class="btn btn-fix inline" data-toggle="modal"
+                           data-target="#form-add-group-user">
+                            <img src="~/App_Themes/assets/images/btn-del.png" alt=""
+                                 class="inline"><span class="inline">Xóa</span>
+                        </a>
+                        <a href="#" class="btn btn-fix inline" data-toggle="modal"
+                           data-target="#form-add-group-user">
+                            <img src="~/App_Themes/assets/images/btn-export.png" alt=""
+                                 class="inline"><span class="inline">Xuất</span>
+                        </a>
+                    </div>
+                    <div class="wrap-height-table">
+                        <table class="table dislay" id="table-nhom-nv">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nhóm NV</th>
+                                    <th>Mô tả</th>
+                                    <th>Hoa Hồng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Nhóm 1</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Nhóm 1</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Nhóm 1</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Nhóm 1</td>
+                                    <td>Test</td>
+                                    <td>Test</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+@section myScripts{
+    <script src="~/PageScript/KhachHang/khachhang.js"></script>
+}

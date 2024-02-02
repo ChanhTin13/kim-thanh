@@ -1,0 +1,134 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<style>
+    .disabled-dia-chi {
+        pointer-events: none;
+        opacity: 0.4;
+    }
+</style>
+<main class="wrapper">
+    <div class="container-fluid wrap-table-2">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="list-button bg-gray text-left">
+                    <a href="javascript:;" class="btn inline" id="btn-insert-dia-chi">
+                        <img src="/App_Themes/assets/images/btn-add.png"
+                             alt="" class="inline">
+                        <span class="inline">Thêm</span>
+                    </a>
+                    <a href="javascript:;" class="btn inline" id="btn-update-dia-chi">
+                        <img src="/App_Themes/assets/images/btn-fix.png"
+                             alt="" class="inline"><span class="inline">Sửa</span>
+                    </a>
+                    <a href="javascript:;" class="btn inline" id="btn-delete-dia-chi">
+                        <img src="/App_Themes/assets/images/btn-del.png"
+                             alt="" class="inline"><span class="inline">Xóa</span>
+                    </a>
+                    <a href="javascript:;" class="btn inline disabled" id="btn-save-dia-chi">
+                        <img src="/App_Themes/assets/images/btn-save.png"
+                             alt="" class="inline"><span class="inline">Ghi</span>
+                    </a>
+                    <a href="javascript:;" class="btn inline" id="btn-reset-dia-chi">
+                        <img src="/App_Themes/assets/images/btn-import.png"
+                             alt="" class="inline"><span class="inline">Nạp</span>
+                    </a>
+                    <a href="javascript:;" class="btn inline" id="btn-prev-dia-chi">
+                        <img src="~/App_Themes/assets/images/btn-close.png"
+                             alt="" class="inline"><span class="inline">Hoàn</span>
+                    </a>
+                    @*<a href="javascript:;" class="btn inline" id="btn-print-dia-chi">
+                        <img src="/App_Themes/assets/images/btn-print.png"
+                             alt="" class="inline"><span class="inline">In</span>
+                    </a>*@
+                    <a href="javascript:;" class="btn inline" id="btn-export-dia-chi">
+                        <img src="/App_Themes/assets/images/paste-excel.png"
+                             alt="" class="inline"><span class="inline">Excel</span>
+                    </a>
+                    @*<a href="javascript:;" class="btn inline disabled">
+                        <img src="/App_Themes/assets/images/question.png"
+                             alt="" class="inline"><span class="inline">Hỏi</span>
+                    </a>
+                    <a href="#" class="btn btn-fix inline disabled">
+                        <img src="/App_Themes/assets/images/btn-close.png"
+                             alt="" class="inline"><span class="inline">Đóng</span>
+                    </a>*@
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-2">
+                <div class="box-dia-chi box-info">
+                    <p class="title-head">Danh mục địa chỉ</p>
+                    <div class="content mt-2" id="jstree">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <form action=""
+                      class="form-add" id="form-them-diachi">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Mã địa chỉ</label>
+                                <input type="text" name="maDiaChi" disabled required>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Mã rút gọn</label>
+                                <input type="text" name="maRutGon" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Tên địa chỉ</label>
+                                <input type="text" name="tenDiaChi" disabled required>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Alias</label>
+                                <input type="text" name="aliasDiaChi" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="">Mô tả</label>
+                                <textarea name="moTaDiaChi" cols="30" rows="1" disabled></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Ghi chú</label>
+                                <textarea name="ghiChuDiaChi" id="" cols="30" rows="1" disabled></textarea>
+                            </div>
+                            <input type="hidden" name="parentIDDiachi" disabled />
+                            <input type="hidden" name="idDiaChi" disabled />
+                        </div>
+                    </div>
+                </form>
+                <div class="box-title list-button d-flex">
+                    <p class="title-head inline" id="title-dia-chi">Địa chỉ</p>
+                    @*<a href="javascript:;" class="btn btn-watch binline" data-toggle="modal" data-target=".bd-example-modal-sm">
+                            <img src="/App_Themes/assets/images/btn-watch.png"
+                                 alt="" class="inline">Xem
+                        </a>*@
+                </div>
+                <div class="wrap-height-table">
+                    <table class="table display" id="table-dia-chi" width="100%">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Mã địa chỉ</th>
+                                <th>Tên địa chỉ</th>
+                                <th>Mã ngắn</th>
+                                <th>Path</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section myScripts{
+    <script src="~/PageScript/DiaChi/diachi.js"></script>
+}
+

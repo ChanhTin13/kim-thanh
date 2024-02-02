@@ -1,0 +1,398 @@
+﻿
+@{
+    ViewBag.Title = "DanhSachCongViecDuocGiao";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+<link href="~/App_Themes/select2/css/select2.min.css" rel="stylesheet" />
+<style>
+    .dataTables_filter, .dataTables_info {
+        display: none;
+    }
+    #sua-vi-tri .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    input[readonly] {
+        background: #ccc
+    }
+    .disabled-dia-chi {
+        pointer-events: none;
+        opacity: 0.4;
+    }
+    #tb-import-vitri input {
+        height: 30px;
+        border-radius: 5px;
+        width: 100%;
+        padding: 5px;
+    }
+</style>
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="wrap-table__header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box-choose-time" id="date-vitri">
+                        <p class="mr-2">Từ</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_From" data-date-format="mm/dd/yyyy">
+                        <p class="mr-2">Đến</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_To" data-date-format="mm/dd/yyyy">
+                        <div class="list-button">
+                            <a href="#" class="btn btn-export
+                            inline" id="btn-search-congviec">
+                                <img src="/App_Themes/assets/images/btn-search.png" alt="" class="inline"><span class="inline">Tìm kiếm</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__body">
+            <div class="wrap-height-table">
+                <table class="table display table-striped" style="width: 100%;"
+                       id="table-danh-sach-cong-viec">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tên công việc</th>
+                            <th>Nội dung</th>
+                            <th>Ngày bắt đầu</th>
+                            <th>Ngày kết thúc</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày hoàn thành</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade default-popup popup-them-so-du-quy" id="chi-tiet-cong-viec" data-keyboard="true" data-backdrop="static"
+         tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Công việc
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="default-form">
+                                    <div class="form-group">
+                                        <label for="">Tên công việc: </label>
+                                        <p id="ten-cong-viec" class="col-9 p-0">
+                                        </p>
+                                        <input type="hidden" name="id-phancong" />
+                                        <input type="hidden" name="trangThai" />
+                                    </div>
+
+                                    <div class="form-group" id="html-hoan-thanh">
+                                        <label for="">Ngày hoàn thành: </label>
+                                        <p id="ngay-hoan-thanh"class="col-9 p-0">
+                                        </p>
+                                    </div>
+                                    <div id="html-chu-y">
+                                        <b>Chý ý: </b>đây là bước xác nhận công việc đã hoàn thành, khi xác nhận sẽ không được chỉnh sửa
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="capnhat-trangthai">Hoàn thành công việc</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section myScripts{
+    <script>
+        $(document).ready(function () {
+            $('input[name="chooseDate_From"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            $('input[name="chooseDate_To"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            let fdate = moment(new Date()).format('DD/MM/yyyy');
+            let tdate = moment(new Date()).format('DD/MM/yyyy');
+            let tbCongViec_filterValues = {};
+            $('#table-danh-sach-cong-viec thead tr').clone(true).appendTo('#table-danh-sach-cong-viec thead');
+            $('#table-danh-sach-cong-viec thead tr:eq(1) th').each(function (i) {
+                var title = $(this).text();
+                if (i == 0 || i == 3 || i == 4 || i == 6) {
+                    return $(this).html('');
+                }
+                else if (i == 5) {
+                    $(this).html('<select data-search-cong-viec="' + i + '"><option value ="0">Đang thực hiện</option> <option value ="1">Đã hoàn thành</option> <option value ="3">Tất cả</option> </select>');
+                }
+                else {
+                    $(this).html('<input type="text" placeholder="Search ' + title.trim() + '" data-search-cong-viec="' + i + '"/>');
+                }
+                $('input', this).on('keyup change', delay(function () {
+                    table_danhsachcongviec
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                }, 1000));
+                $('select', this).on('change',function () {
+                    table_danhsachcongviec.draw();
+                });
+            });
+            var table_danhsachcongviec = $('#table-danh-sach-cong-viec').DataTable({
+                serverSide: true,
+                bFilter: false,
+                bInfo: false,
+                "order": [[1, "desc"]],
+                ajax: function (data, callback, settings) {
+                    tbCongViec_filterValues.draw = data.draw;
+                    tbCongViec_filterValues.search = data.search["value"];
+                    tbCongViec_filterValues.FromDate = fdate;
+                    tbCongViec_filterValues.ToDate = tdate;
+                    tbCongViec_filterValues.start = data.start;
+                    tbCongViec_filterValues.length = data.length;
+                    tbCongViec_filterValues.order = data.order[0].column;
+                    tbCongViec_filterValues.dir = data.order[0].dir;
+
+                    tbCongViec_filterValues.searchCongViec = $('input[data-search-cong-viec=1]').val();
+                    tbCongViec_filterValues.searchNoiDung = $('input[data-search-cong-viec=2]').val();
+                    tbCongViec_filterValues.trangThai = $('select[data-search-cong-viec=5]').val();
+
+                    $.ajax({
+                        url: '/CongViec/LoadDataDanhSachCongViecDuocGiao',
+                        method: 'GET',
+                        data: tbCongViec_filterValues,
+                        success: function (msg) {
+                            console.log(msg);
+                            console.log(msg.data);
+                            if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                return false;
+                            } else if (msg.status == 3) {
+                                if (tbCongViec_filterValues.draw != 1) {
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'error_outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                    return false;
+                                }
+                            }
+                        },
+                    }).done(callback, () => {
+
+                    });
+                },
+                columns: [
+                    { "data": null },
+                    { "data": "tenCongViec" },
+                    { "data": "noiDung" },
+                    { "data": "ngayBatDau" },
+                    { "data": "ngayKetThuc" },
+                    {
+                        "data": "trangThai",
+                        "render": function (data) {
+                            if (data == 0) {
+                                return "Đang thực hiện";
+                            }
+                            else if (data == 1) {
+                                return "Đã hoàn thành";
+                            }
+                            else {
+                                return '';
+                            }
+                        }
+                    },
+                    { "data": "ngayHoanThanh" },
+                    
+                ],
+                columnDefs: [
+                    {
+                        "targets": [0],
+                        "orderable": false
+                    },
+                ],
+                fnCreatedRow: function (nRow, data, iDataIndex) {
+                    $(nRow).attr('data-id', data.phanCongID);
+                },
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                    return nRow;
+                },
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 15
+                },
+                // scrollY: '300px',
+                scrollResize: true,
+                scrollY: 100,
+                scrollCollapse: true,
+                paging: true,
+                searching: true,
+                lengthChange: false,
+                orderCellsTop: true
+            });
+            //Search ngày -> ngày
+            $('#btn-search-congviec').click(function () {
+                fdate = $('input[name="chooseDate_From"]').val();
+                tdate = $('input[name="chooseDate_To"]').val();
+                table_danhsachcongviec.columns.adjust().draw();
+            });
+
+            //Click
+            $(document).on('click', '#table-danh-sach-cong-viec tbody tr', function () {
+                $(this).addClass('selected');
+                $('#table-danh-sach-cong-viec tbody tr').not(this).removeClass('selected');
+            });
+
+            $('#chi-tiet-cong-viec').on('hidden.bs.modal', function (e) {
+                $('#html-chu-y').show();
+                $('#html-hoan-thanh').show();
+            })
+            //Double Click
+            $(document).on('dblclick', '#table-danh-sach-cong-viec tbody tr', async function () {
+                $(this).addClass('selected');
+                $('#table-danh-sach-cong-viec tbody tr').not(this).removeClass('selected');
+                let id = $(this).attr('data-id');
+                if (id != undefined && id != '') {
+                    $.ajax({
+                        method: "POST",
+                        url: "/CongViec/LoadChiTietCongViecDuocGiao?phanCongID=" + id,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (msg) {
+                            if (msg.status == 1) {
+                                let data = msg.data[0];
+                                $('input[name="trangThai"]').val(data.trangThai);
+                                $('input[name="id-phancong"]').val(data.phanCongID);
+                                $('#ten-cong-viec').empty();
+                                $('#ten-cong-viec').append('<u>' + data.tenCongViec + '</u>');
+                                if (data.trangThai == 1) {
+                                    $('#html-chu-y').hide();
+                                    $('#ngay-hoan-thanh').empty();
+                                    $('#ngay-hoan-thanh').append('<u>' + data.ngayHoanThanh + '</u>');
+                                    $('#capnhat-trangthai').addClass('disabled-dia-chi');
+                                }
+                                else {
+                                    $('#html-hoan-thanh').hide();
+                                    $('#capnhat-trangthai').removeClass('disabled-dia-chi');
+                                }
+                                
+                                $('#chi-tiet-cong-viec').modal();
+                            }
+                            else if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                            }
+                            else if (msg.status == 3) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                            }
+                        }
+                    })
+                }
+                else {
+                    toast.create({
+                        title: 'Notification!',
+                        text: 'Không tìm thấy phiên',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    })
+                }
+            });
+
+            // cap nhat cong viec
+            $('#capnhat-trangthai').click(function () {
+                let trangThai = $('input[name="trangThai"]').val();
+                let phanCongID = $('input[name="id-phancong"]').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '/CongViec/CatNhapTrangThaiCongViec?phanCongID=' + phanCongID + '&trangThai=' + trangThai,                    
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            $('#chi-tiet-cong-viec').modal('hide');
+                            table_danhsachcongviec.draw();
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'check',
+                                classBackground: 'noti-success',
+                                timeout: 3000
+                            })
+                        }
+                        else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            })
+                        } else if (msg.status == 3) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            location.reload();
+                        }
+                    }
+                })
+            })
+
+
+            //#endregion
+
+        });
+        serialize = function (obj) {
+            var str = [];
+            for (var p in obj)
+                if (obj.hasOwnProperty(p)) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+            return str.join("&");
+        }
+        function delay(fn, ms) {
+            let timer = 0
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(fn.bind(this, ...args), ms || 0)
+            }
+        }
+    </script>
+}

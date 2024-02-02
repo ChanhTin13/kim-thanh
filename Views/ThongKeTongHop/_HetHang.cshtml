@@ -1,0 +1,498 @@
+﻿<style>
+    @@media only screen and (max-width:1024px) {
+        .sidebar-search {
+            width: 220px;
+        }
+
+        .custom {
+            padding-left: 8%;
+        }
+    }
+
+    @@media only screen and (min-width:1025px) and (max-width:1439px) {
+        .sidebar-search {
+            width: 220px;
+        }
+
+        .custom {
+            padding-left: 8%;
+        }
+    }
+
+    @@media only screen and (min-width:768px) and (max-width:1023px) {
+        .sidebar-search {
+            width: 220px;
+        }
+
+        .custom {
+            padding-left: 17%;
+        }
+    }
+
+    #ul-don-hang ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        *display: inline;
+        zoom: 1
+    }
+
+    .tab-footer {
+        border-top: 1px solid #dee2e6;
+        border-bottom: none;
+        margin-top: 15px;
+    }
+
+    .disabled-hethang {
+        pointer-events: none;
+        opacity: 0.4;
+    }
+
+    .nav-tabss .nav-items.show .nav-link, .nav-tabss .nav-links.active {
+        border-bottom: 1px solid #0000001a;
+        border-top: none;
+        margin-top: -1px;
+        border-radius: 0;
+        border-bottom-right-radius: 3px;
+        border-bottom-left-radius: 3px;
+    }
+
+    .quare {
+        height: 20px;
+        width: 20px;
+    }
+
+    #home-child {
+        position: relative;
+    }
+
+        #home-child a {
+            text-decoration: none;
+        }
+
+    #home-root a {
+        text-decoration: none;
+        vertical-align: middle;
+    }
+
+    .haschild:before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f0fe";
+        display: inline-block;
+        padding-right: 3px;
+        vertical-align: middle;
+        font-weight: 900;
+    }
+
+    .haschild.checked:before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f146";
+        display: inline-block;
+        padding-right: 3px;
+        vertical-align: middle;
+        font-weight: 900;
+    }
+
+    .btn-home:before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f015";
+        display: inline-block;
+        padding-right: 3px;
+        vertical-align: middle;
+        font-weight: 900;
+    }
+
+    .list-group-item-action:before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f101";
+        display: inline-block;
+        padding-right: 10px;
+        vertical-align: middle;
+        font-weight: 900;
+        color: #007bff;
+    }
+
+    .dia-chi-con {
+        margin-left: 15px
+    }
+
+    .diachi.danhmuc {
+        margin-left: 0px;
+    }
+
+        .diachi.danhmuc.haschild {
+            margin-left: 0px;
+        }
+
+    .form-add label {
+        width: 20%;
+    }
+
+    .activeee {
+        color: red;
+    }
+
+    .style-border {
+        border-left: 1px dashed #007bff;
+        margin-left: 6px;
+    }
+
+    .input-align {
+        float: right;
+        clear: both;
+        text-align: right;
+    }
+
+    .shorter-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .jstree-showroom li.jstree-node > a {
+        white-space: normal !important;
+        height: auto !important;
+        padding-right: 24px;
+    }
+
+        .jstree-showroom li.jstree-node > a .jstree-themeicon {
+            background: url("/App_Themes/assets/images/chi-nhanh.png") 0px 0px no-repeat !important;
+        }
+
+    .jstree-showroom li.jstree-node > ul > li.jstree-node > a .jstree-themeicon {
+        background: url("/App_Themes/assets/images/kho-hang.png") 0px 0px no-repeat !important;
+    }
+</style>
+
+<div class="bctk-hethang">
+    <main class="wrapper bg-white">
+        <div class="container-fluid mt-4 wrap-table-2">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="nav nav-tabs" id="myTab"
+                        role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab"
+                               data-toggle="tab"
+                               href="#hethang"
+                               role="tab" aria-controls="home"
+                               aria-selected="true">Hết hàng</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab"
+                               data-toggle="tab"
+                               href="#hethang-theonguong"
+                               role="tab" aria-controls="profile"
+                               aria-selected="false">Hết hàng theo ngưỡng</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent" style="padding-top: 20px">
+
+                        <div class="tab-pane fade show active hethang" id="hethang" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="box-border sidebar-search">
+                                        <p class="box-border__title">Tiêu chí tìm kiếm</p>
+                                        <!-- Nav tabs -->
+                                        <ul class="nav nav-tabs">
+                                            <li class="nav-item">
+                                                <a class="nav-link active grid-tab" data-toggle="tab"
+                                                   href="#grid">Grid</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link tree-tab" data-toggle="tab" href="#tree">
+                                                    Tree
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                        <!-- Tab panes -->
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="grid">
+                                                <table class="table w-100 mt-5 table-a table-showroom">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>
+                                                                <input name="checkbox-sr-all" type="checkbox">
+                                                            </th>
+                                                            <th>Chi nhánh</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                                <table class="table w-100 mt-5 table-a table-kho">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Chọn</th>
+                                                            <th>Mã kho</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                                <div class="box-select mb-3" hidden>
+                                                    <p>Chọn nhóm</p>
+                                                    <select name="" id="" class="w-100">
+                                                        <option value="">Linh tinh</option>
+                                                        <option value="">Mã hủy</option>
+                                                        <option value="">Phụ tùng xe</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-check-inline mt-2">
+                                                    <label class="form-check-label">
+                                                        <input name="chontat" type="checkbox"
+                                                               class="form-check-input inline"
+                                                               value=""><span class="inline">
+                                                            Chọn    tất
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="tree">
+                                                <div class="box-dia-chi box-info" id="nhomHang">
+                                                    <div class="content mt-2 jstree-showroom"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="list-button mt-3">
+                                            <div class="box-select mb-3" hidden>
+                                                <p>Cách tính giá vốn</p>
+                                                <select name="giavon" id="" class="w-100 bg-gray select-gray">
+                                                    <option value="0">Giá vốn theo giá bình quân</option>
+                                                    <option value="2">Giá vốn theo giá cao nhất</option>
+                                                    <option value="1">Giá vốn theo giá thấp nhất</option>
+                                                </select>
+                                            </div>
+                                            <a href="#" id="btn-search" class="btn btn-search d-block">
+                                                <img src="../App_Themes/assets/images/btn-search.png"
+                                                     alt="" class="inline"><span class="inline">
+                                                    Tìm
+                                                    kiếm
+                                                </span>
+                                            </a>
+
+                                            <a href="#" id="btn-xuat" class="btn btn-export mt-1  d-block disabled-hethang">
+                                                <img src="../App_Themes/assets/images/btn-export.png"
+                                                     alt="" class="inline"><span class="inline">Xuất ra excel</span>
+                                            </a>
+                                            <a href="#" id="btn-in" class="btn btn-print mt-1   d-block disabled-hethang">
+                                                <img src="../App_Themes/assets/images/btn-print.png"
+                                                     alt="" class="inline"><span class="inline">In</span>
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-10 custom">
+                                    <div class="content">
+                                        <div class="list-button mb-3" hidden>
+                                            <p class="inline mr-3">Filter by paste from</p>
+                                            <a href="#" class="btn btn-print    inline">
+                                                <img src="../App_Themes/assets/images/paste-excel.png"
+                                                     alt="" class="inline"><span class="inline">Excel</span>
+                                            </a>
+                                            <a href="#" class="btn btn-print   inline">
+                                                <img src="../App_Themes/assets/images/icon-list.png"
+                                                     alt="" class="inline"><span class="inline">List</span>
+                                            </a>
+                                            <a href="#" class="btn btn-print  inline">
+                                                <img src="../App_Themes/assets/images/tick.png"
+                                                     alt="" class="inline"><span class="inline">All</span>
+                                            </a>
+                                        </div>
+                                        <p class="title-head">Nội dung</p>
+                                    </div>
+                                    <div class="wrap-height-table">
+                                        <table class="table nowrap table-striped row-border order-column table-content" style="width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Mã hàng</th>
+                                                    <th>Tên hàng</th>
+                                                    <th>Ngày hết hàng</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade hethang-theonguong" id="hethang-theonguong" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="box-border sidebar-search">
+                                        <p class="box-border__title">Tiêu chí tìm kiếm</p>
+                                        <!-- Nav tabs -->
+                                        <ul class="nav nav-tabs">
+                                            <li class="nav-item">
+                                                <a class="nav-link active grid-tab" data-toggle="tab"
+                                                   href="#grid2">Grid</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link tree-tab" data-toggle="tab" href="#tree2">
+                                                    Tree
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                        <!-- Tab panes -->
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="grid2">
+                                                <table class="table w-100 mt-5 table-a table-showroom">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>
+                                                                <input name="checkbox-sr-all" type="checkbox">
+                                                            </th>
+                                                            <th>Chi nhánh</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                                <table class="table w-100 mt-5 table-a table-kho">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Chọn</th>
+                                                            <th>Mã kho</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                                <div class="box-select mb-3" hidden>
+                                                    <p>Chọn nhóm</p>
+                                                    <select name="" id="" class="w-100">
+                                                        <option value="">Linh tinh</option>
+                                                        <option value="">Mã hủy</option>
+                                                        <option value="">Phụ tùng xe</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-check-inline mt-2">
+                                                    <label class="form-check-label">
+                                                        <input name="chontat" type="checkbox"
+                                                               class="form-check-input inline"
+                                                               value=""><span class="inline">
+                                                            Chọn    tất
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="tree2">
+                                                <div class="box-dia-chi box-info" id="nhomHang">
+                                                    <div class="content mt-2 jstree-showroom"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="list-button mt-3">
+                                            <div class="box-select mb-3" hidden>
+                                                <p>Cách tính giá vốn</p>
+                                                <select name="giavon" id="" class="w-100 bg-gray select-gray">
+                                                    <option value="0">Giá vốn theo giá bình quân</option>
+                                                    <option value="2">Giá vốn theo giá cao nhất</option>
+                                                    <option value="1">Giá vốn theo giá thấp nhất</option>
+                                                </select>
+                                            </div>
+                                            <a href="#" id="btn-search" class="btn btn-search d-block">
+                                                <img src="../App_Themes/assets/images/btn-search.png"
+                                                     alt="" class="inline"><span class="inline">
+                                                    Tìm
+                                                    kiếm
+                                                </span>
+                                            </a>
+
+                                            <a href="#" id="btn-xuat" class="btn btn-export mt-1  d-block disabled-hethang">
+                                                <img src="../App_Themes/assets/images/btn-export.png"
+                                                     alt="" class="inline"><span class="inline">Xuất ra excel</span>
+                                            </a>
+                                            <a href="#" id="btn-in" class="btn btn-print mt-1   d-block disabled-hethang">
+                                                <img src="../App_Themes/assets/images/btn-print.png"
+                                                     alt="" class="inline"><span class="inline ">In</span>
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-10 custom">
+                                    <div class="content">
+                                        <div class="list-button mb-3" hidden>
+                                            <p class="inline mr-3">Filter by paste from</p>
+                                            <a href="#" class="btn btn-print    inline">
+                                                <img src="../App_Themes/assets/images/paste-excel.png"
+                                                     alt="" class="inline"><span class="inline">Excel</span>
+                                            </a>
+                                            <a href="#" class="btn btn-print   inline">
+                                                <img src="../App_Themes/assets/images/icon-list.png"
+                                                     alt="" class="inline"><span class="inline">List</span>
+                                            </a>
+                                            <a href="#" class="btn btn-print  inline">
+                                                <img src="../App_Themes/assets/images/tick.png"
+                                                     alt="" class="inline"><span class="inline">All</span>
+                                            </a>
+                                        </div>
+                                        <p class="title-head">Nội dung</p>
+                                    </div>
+                                    <div class="wrap-height-table">
+                                        <table class="table nowrap table-striped row-border order-column table-content" style="width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Mã hàng</th>
+                                                    <th>Tên hàng</th>
+                                                    <th>Số lượng</th>
+                                                    <th>Ngưỡng Min</th>
+                                                    <th>Kho</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </main>
+</div>
+<script class="js-baocao-chitiet" src="~/PageScript/BCTKHetHang/HetHang.js"></script>
+<script class="js-baocao-chitiet" src="~/PageScript/BCTKHetHang/HetHangTheoNguong.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#chooseDate_To,#chooseDate_Form, #choose-day-them-kh, #chon-ngay-sinh, #tinh-lai-no').datetimepicker({
+            timepicker: false,
+            format: 'd/m/Y',
+            mask: true,
+        });
+        $('.choose-date').datetimepicker({
+            timepicker: false,
+            format: 'd/m/Y',
+            mask: true,
+        });
+    });
+</script>

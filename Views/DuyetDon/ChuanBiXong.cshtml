@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewBag.Title = "ChuanBiXong";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<style>
+    .table-check-code .late {
+        background: #f34646e3
+    }
+
+    .table-check-code .soon {
+        background: #18b73a
+    }
+
+    .table-check-code tbody tr td {
+        font-weight: 500;
+        color: #fff
+    }
+</style>
+
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box-check-code">
+                    <div class="box-check-input list-button">
+                        <input type="text" class="m-auto mr-2 inline check-code-input" onblur="this.focus()">
+                        <a href="#" class="btn btn-export inline" id="check-code-excel">
+                            <img src="~/App_Themes/assets/images/paste-excel.png" alt="" class="inline">
+                            <span class="inline">Excel</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box-choose-time">
+                        <p class="mr-2">Xem chuẩn bị hàng </p>
+                        <p class="mr-2">Từ</p>
+                        <input class="datepicker datetimepicker mr-2 date-only" name="chooseDate_From" id="chooseDate_From">
+                        <p class="mr-2">Đến</p>
+                        <input class="datepicker datetimepicker mr-2 date-only" name="chooseDate_To" id="chooseDate_To">
+                        <p class="mr-2">
+                            <div class="list-button">
+                                <a href="#" class="btn btn-export
+                            inline" id="search-phieu">
+                                    <img src="~/App_Themes/assets/images/btn-search.png"
+                                         alt="" class="inline"><span class="inline">Tìm kiếm</span>
+                                </a>
+                            </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white p-3">
+            <div class="wrap-height-table-cn">
+                <table class="display table table-check-code" style="width: 100%;" id="table-check-code">
+                    <thead>
+                        <tr>
+                            <th>Mã đơn hàng</th>
+                            <th>Giờ tạo</th>
+                            <th>Hoàn thành</th>
+                            <th>Thời gian</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+@section MyScripts{
+    <script src="~/PageScript/DuyetDon/duyetdon.js"></script>
+}

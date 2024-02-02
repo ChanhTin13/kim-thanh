@@ -1,0 +1,956 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+    //List<UNIT> unit = DonVi.getAll();
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+
+<style>
+    @@media only screen and (min-width:1900px) and (max-width: 2570px) {
+        [class*="col-md-2 custom2"] {
+            max-width: 9%;
+        }
+
+        [class*="col-md-10 custom3"] {
+            max-width: 85.9%;
+        }
+
+        .box-title {
+            width: 106%;
+        }
+
+        .wrap-height-table {
+            width: 106%;
+        }
+    }
+
+    select[name="slDonViTinh"] + .select2-container--default {
+        width: 100% !important;
+    }
+
+    select[name="slBaoHanh"] + .select2-container--default {
+        width: 100% !important;
+    }
+
+    select[name="slNCCMatHang"] + .select2-container--default {
+        width: 67% !important;
+    }
+
+    #them-dvt .required::before {
+        content: "*";
+        color: red;
+    }
+</style>
+
+<main class="wrapper">
+    <div class="container-fluid wrap-table-2 table-mat-hang">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="list-button bg-gray text-left">
+                    <a href="#" class="btn btn-add inline disabled" id="btn-insert-mat-hang">
+                        <img src="/App_Themes/assets/images/btn-add.png" alt="" class="inline">
+                        <span class="inline">Thêm</span>
+                    </a>
+                    <a href="#" class="btn btn-fix inline" id="btn-update-mat-hang">
+                        <img src="/App_Themes/assets/images/btn-fix.png"
+                             alt="" class="inline"><span class="inline">Sửa</span>
+                    </a>
+                    <a href="#" class="btn btn-del inline" id="btn-delete-mat-hang">
+                        <img src="/App_Themes/assets/images/btn-del.png" alt="" class="inline">
+                        <span class="inline">Xóa</span>
+                    </a>
+                    <a href="javascript:;" class="btn btn-nap inline" id="btn-reset-mat-hang">
+                        <img src="/App_Themes/assets/images/btn-import.png" alt="" class="inline">
+                        <span class="inline">Nạp</span>
+                    </a>
+                    @*<a href="#" class="btn btn-print inline" id="btn-print-mat-hang">
+                            <img src="/App_Themes/assets/images/btn-print.png" alt="" class="inline">
+                            <span class="inline">In mã vạch</span>
+                        </a>*@
+                    <a href="#" class="btn btn-export inline" id="btn-export-mat-hang">
+                        <img src="~/App_Themes/assets/images/btn-export.png" alt="" class="inline">
+                        <span class="inline">Xuất</span>
+                    </a>
+                    <a href="#them-mat-hang-excel" data-toggle="modal" class="btn btn-export inline">
+                        <img src="/App_Themes/assets/images/paste-excel.png" alt="" class="inline">
+                        <span class="inline">Nhập excel</span>
+                    </a>
+                    @*<a href="#" class="btn btn-question inline disabled">
+                            <img src="/App_Themes/assets/images/question.png" alt="" class="inline">
+                            <span class="inline">Hỏi</span>
+                        </a>
+                        <a href="#" class="btn btn-close inline">
+                            <img src="/App_Themes/assets/images/btn-close.png"
+                                 alt="" class="inline"><span class="inline">Đóng</span>
+                        </a>*@
+                </div>
+            </div>
+        </div>
+        <div class="table-nhom-kh">
+            <div class="row">
+                <div class="col-md-2 custom2">
+                    <div class="box-dia-chi box-info">
+                        <p class="title-head">Danh mục nhóm hàng</p>
+                        <div class="content mt-2" id="jstree">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10 custom3">
+                    <div class="box-title list-button d-flex">
+                        <p class="title-head inline" id="title-mathang">Mặt hàng</p>
+                        @*<a href="sua-mat-hang-theo-lo-table.html" class="btn btn-watch flex inline">
+                                <img src="/App_Themes/assets/images/btn-watch.png"
+                                     alt="" class="inline">Sửa mặt hàng theo lô
+                            </a>*@
+                    </div>
+                    <div class="wrap-height-table">
+                        <table class="table display" id="table-mathang" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Mã hàng</th>
+                                    <th>Tên hàng</th>
+                                    <th>Đơn vị</th>
+                                    <th>Alias</th>
+                                    <th>Nhà cung cấp 1</th>
+                                    <th>Giá nhập 1</th>
+                                    <th>Giá bán 1</th>
+                                    <th>Giá bán 2</th>
+                                    <th>Giá bán 3</th>
+                                    <th>Giá bán 4</th>
+                                    <th>Giá bán 5</th>
+                                    <th>Giá bán 6</th>
+                                    <th>Giá bán 7</th>
+                                    <th>Nhóm hàng</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Ngày cập nhật</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thêm/sửa mặt hàng -->
+    <div class="modal fade default-popup popup-them-mat-hang" id="them-mat-hang"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Thêm/sửa mặt hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body bg-white">
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#info-coban" role="tab" aria-controls="nav-home" aria-selected="true">
+                                Thông tin cơ bản
+                            </a>
+                            @*<a class="nav-item nav-link" id="nav-profile-tab"
+                                data-toggle="tab" href="#them-anh" role="tab"
+                                aria-controls="nav-profile" aria-selected="false">Ảnh</a>*@
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="info-coban"
+                             role="tabpanel" aria-labelledby="nav-home-tab">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="box-border mt-4">
+                                            <p class="box-border__title">
+                                                Thông tin chính
+                                            </p>
+                                            <form action="" class="form-them-mat-hang">
+                                                <div class="form-group">
+                                                    <input type="hidden" name="idMatHang" />
+                                                    <label for="">Mã hàng</label>
+                                                    <input type="text" name="codeMatHang" class="col-4 p-0">
+                                                    <div class="form-check ml-3 col-5">
+                                                        <label class="form-check-label">
+                                                            <input type="checkbox" hidden name="hasDetailMatHang" class="form-check-input" value="">@*<span>
+                                                                    Có Serial/IMEI
+                                                                </span>*@
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Tên hàng</label>
+                                                    <input type="text" name="tenMatHang" class="col-9 p-0">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Alias</label>
+                                                    <input type="text" name="aliasMatHang" class="col-9 p-0">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Link ảnh</label>
+                                                    <input type="text" name="linkMatHang" class="col-9 p-0">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Đơn vị tính</label>
+                                                    <div class="box-select col-9 p-0">
+                                                        <select name="slDonViTinh" class="w-100"></select>
+                                                        <span class="search-icon absolute right-30" id="btn-don-vi">
+                                                            <i class="fas fa-search"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Bảo hành</label>
+                                                    <div class="box-select col-9 p-0">
+                                                        <select name="slBaoHanh">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Mô tả</label>
+                                                    <textarea name="moTaMatHang" id="" rows="3" class="col-9 p-0"></textarea>
+                                                </div>
+                                                @*<div class="form-group">
+                                                        <label for="">Xuất xứ</label>
+                                                        <div class="box-select col-6
+                                                        p-0">
+                                                            <select name="" id=""
+                                                                    class="w-100" disabled>
+                                                                <option value=""></option>
+                                                            </select>
+                                                            <span class="search-icon
+                                                                absolute right-30"
+                                                                      id="button-danh-sach-nv"
+                                                                      data-toggle="modal"
+                                                                      data-target="#danh-muc-xuat-xu">
+                                                                    <i class="fas
+                                                                    fa-search"></i>
+                                                                </span>
+                                                        </div>
+                                                    </div>*@
+                                                <div class="form-group">
+                                                    <label for="">Ghi chú</label>
+                                                    <textarea name="ghiChuMatHang" rows="3" class="col-9 p-0"></textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Thuộc loại</label>
+                                                    <select name="slLoaiMatHang" id="" class="col-9 p-0">
+                                                        <option value="0">Vật tư,hàng hóa(Có quản lý tồn kho)</option>
+                                                        <option value="1">Mã combo/Group(Để quản lý khuyến mãi)</option>
+                                                        <option value="7">Mã chiết khấu(Luôn cho phép xuất kho âm)</option>
+                                                        <option value="5">Công nợ phải thu</option>
+                                                        <option value="6">Công nợ phải trả</option>
+                                                    </select>
+                                                </div>
+                                                @*<div class="form-group">
+                                                        <label for="">NCC chính</label>
+                                                        <div class="box-input col-9 p-0">
+                                                            <input type="hidden" name="idNCCMatHang" value="">
+                                                            <input type="text" name="codeNCCMatHang" value="" disabled>
+                                                            <input type="text" name="tenNCCMatHang" value="" disabled>
+                                                            <span class="search-icon absolute" id="btn-khach-hang" data-toggle="modal" data-target="#danh-sach-khach-hang">
+                                                                <i class="fas fa-search"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>*@
+                                                <div class="form-group">
+                                                    <label for=""> Mã vạch <br> Code 128</label>
+                                                    <div id="barCodeMatHang"></div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="box-border mt-4">
+                                            <p class="box-border__title"> Thông tin khác </p>
+                                            <form action="" class="default-form">
+                                                @*<div class="form-group">
+                <label for="">Giá nhập</label>
+                <input type="text" name="giaNhapMatHang" data-type="currency" class="col-8 p-0">
+            </div>
+            <div class="form-group">
+                <label for="">Giá bán lẻ</label>
+                <input type="text" name="giaBanLeMatHang" data-type="currency" class="col-8 p-0">
+            </div>
+            <div class="form-group">
+                <label for="">Giá bán buôn</label>
+                <input type="text" name="giaBanBuonMatHang" data-type="currency" class="col-8 p-0">
+            </div>
+            <div class="form-group">
+                <label for="">Thuế</label>
+                <input type="text" name="thueMatHang" data-type="currency" class="col-8 p-0">
+            </div>
+            <div class="form-group">
+                <label for="">SL tồn max</label>
+                <input type="text" name="soLuongMaxMatHang" data-type="currency" class="col-8 p-0">
+            </div>
+            <div class="form-group">
+                <label for="">SL tồn min</label>
+                <input type="text" name="soLuongMinMatHang" data-type="currency" class="col-8 p-0">
+            </div>*@
+                                                <div class="form-group">
+                                                    <label for="">Giá nhập 1</label>
+                                                    <input type="text" name="giaNhap1MatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">NCC 1</label>
+                                                    <select name="slNCCMatHang" class="col-7 p-0" id="NCC1">
+                                                        <option value="0">--Chọn nhà cung cấp 1--</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Giá nhập 2</label>
+                                                    <input type="text" name="giaNhap2MatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="">NCC 2</label>
+                                                    <select name="slNCCMatHang" class="col-7 p-0" id="NCC2">
+                                                        <option value="0">--Chọn nhà cung cấp 2--</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Giá nhập 3</label>
+                                                    <input type="text" name="giaNhap3MatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">NCC 3</label>
+                                                    <select name="slNCCMatHang" class="col-7 p-0" id="NCC3">
+                                                        <option value="0">--Chọn nhà cung cấp 3--</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group" hidden>
+                                                    <label for="">Số lượng 1</label>
+                                                    <input type="text" name="soLuong1MatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Giá bán 1</label>
+                                                    <input type="text" name="giaBan1MatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                                <div class="form-group" hidden>
+                                                    <label for="">Số lượng 2</label>
+                                                    <input type="text" name="soLuong2MatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Giá bán 2</label>
+                                                    <input type="text" name="giaBan2MatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                                <div class="form-group" hidden>
+                                                    <label for="">Số lượng 3</label>
+                                                    <input type="text" name="soLuong3MatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Giá bán 3</label>
+                                                    <input type="text" name="giaBan3MatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                                <div class="form-group" hidden>
+                                                    <label for="">Số lượng 4</label>
+                                                    <input type="text" name="soLuong4MatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Giá bán 4</label>
+                                                    <input type="text" name="giaBan4MatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                                <div class="form-group" hidden>
+                                                    <label for="">Số lượng 5</label>
+                                                    <input type="text" name="soLuong5MatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Giá bán 5</label>
+                                                    <input type="text" name="giaBan5MatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                                <div class="form-group" hidden>
+                                                    <label for="">Số lượng 6</label>
+                                                    <input type="text" name="soLuong6MatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Giá bán 6</label>
+                                                    <input type="text" name="giaBan6MatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                                <div class="form-group" hidden>
+                                                    <label for="">Số lượng 7</label>
+                                                    <input type="text" name="soLuong7MatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Giá bán 7</label>
+                                                    <input type="text" name="giaBan7MatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                                <div hidden class="form-group">
+                                                    <label for="">SL tồn max</label>
+                                                    <input type="text" name="soLuongMaxMatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                                <div hidden class="form-group">
+                                                    <label for="">SL tồn min</label>
+                                                    <input type="text" name="soLuongMinMatHang" data-type="currency" class="col-8 p-0">
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="tab-pane fade" id="them-anh" role="tabpanel"
+                                 aria-labelledby="nav-profile-tab">
+                                <div class="box-up-img mt-3 text-center">
+                                    <h2>Up ảnh tại đây</h2>
+                                    <div class="avatar-upload">
+                                        <div class="avatar-edit">
+                                            <input type="file" id="imageUpload"
+                                                   accept=".png, .jpg, .jpeg">
+                                            <label for="imageUpload">
+                                                <i class="fas fa-cloud-upload-alt"></i>
+                                            </label>
+                                        </div>
+                                        <div class="avatar-preview">
+                                            <div id="imagePreview"
+                                                 style="background-image:
+                                            url('../..//App_Themes/assets/images/rose.jpg');">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-row mr-auto">
+                        <label>Theo dõi</label>
+                        <input type="checkbox" name="theoDoiMatHang">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="btn-save-mat-hang">Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"> Đóng </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Thêm mặt hàng excel-->
+    <div class="modal fade default-popup popup-them-order" id="them-mat-hang-excel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">Thêm mặt hàng excel</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid wrap-table-2 table-mat-hang-excel">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="list-button bg-gray text-right">
+                                    <div class="col-left d-flex align-items-center justify-content-start">
+                                        <p>Tìm Excel Sheets để nhập</p>
+                                        <select name="slExcel" id=""></select>
+                                        <input type=file name="excelMatHang" style="display: none">
+                                        <button id="btn-import-mat-hang-excel" class="btn btn-default ">
+                                            <img src="~/App_Themes/assets/images/paste-excel.png" alt=""
+                                                 class="inline"><span class="inline">Import</span>
+                                        </button>
+                                    </div>
+                                    <div class="col-right d-flex justify-content-end">
+                                        <a href="#" class="btn btn-nap inline" id="btn-reset-mat-hang-excel">
+                                            <img src="~/App_Themes/assets/images/loading.png" alt=""
+                                                 class="inline"><span class="inline">Nạp lại dữ liệu</span>
+                                        </a>
+                                        <a href="#" class="btn btn-export inline" id="btn-create-mat-hang-excel">
+                                            <img src="~/App_Themes/assets/images/btn-export.png" alt=""
+                                                 class="inline"><span class="inline">Tạo mẫu nhập liệu</span>
+                                        </a>
+                                        @*<div class="btn-group dropup">
+                                                <button type="button" class="btn btn-secondary
+                                                dropdown-toggle" data-toggle="dropdown"
+                                                        aria-haspopup="true" aria-expanded="false">
+                                                    Advenced
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#"
+                                                       data-toggle="modal"
+                                                       data-target="#them-tien-to">
+                                                        Thêm tiền tố hoặc
+                                                        hậu tố và nhân bản mã hàng
+                                                    </a>
+                                                </div>
+                                            </div>*@
+                                        <a href="#" class="btn btn-save inline" id="btn-save-mat-hang-excel">
+                                            <img src="~/App_Themes/assets/images/btn-save.png" alt=""
+                                                 class="inline"><span class="inline">Ghi</span>
+                                        </a>
+                                        @*<a href="#" class="btn btn-question inline">
+                                                <img src="~/App_Themes/assets/images/question.png"
+                                                     alt="" class="inline"><span class="inline">Hỏi</span>
+                                            </a>
+                                            <a href="#" class="btn btn-fix inline">
+                                                <img src="~/App_Themes/assets/images/btn-close.png"
+                                                     alt="" class="inline"><span class="inline">Đóng</span>
+                                            </a>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-nhom-kh">
+                            <div class="row">
+                                @*<div class="col-md-2">
+                                        <div class="box-dia-chi box-info">
+                                            <p class="title-head">Danh mục nhóm hàng</p>
+                                            <div class="content mt-2" id="jstree">
+                                            </div>
+                                        </div>
+                                    </div>*@
+                                <div class="col-md-12">
+                                    <div class="wrap-height-table" style="width: 100%;">
+                                        <table class="table display" id="table-mat-hang-excel" style="width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Nhóm cấp 1</th>
+                                                    <th>Nhóm cấp 2</th>
+                                                    <th>Nhóm cấp 3</th>
+                                                    <th>Nhóm cấp 4</th>
+                                                    <th>Nhóm cấp 5</th>
+                                                    <th>Mã hàng</th>
+                                                    <th>Tên hàng</th>
+                                                    <th>Alias</th>
+                                                    <th>Đơn vị tính</th>
+                                                    <th>Bảo hành</th>
+                                                    <th>Mô tả</th>
+                                                    <th>Ghi chú</th>
+                                                    <th>NCC1</th>
+                                                    <th>Giá nhập 1</th>
+                                                    <th>NCC2</th>
+                                                    <th>Giá nhập 2</th>
+                                                    <th>NCC3</th>
+                                                    <th>Giá nhập 3</th>
+                                                    <th>Giá bán 1</th>
+                                                    <th>Giá bán 2</th>
+                                                    <th>Giá bán 3</th>
+                                                    <th>Giá bán 4</th>
+                                                    <th>Giá bán 5</th>
+                                                    <th>Giá bán 6</th>
+                                                    <th>Giá bán 7</th>
+                                                    <th>Số lượng tồn Max</th>
+                                                    <th>Số lượng tồn Min</th>
+                                                    <th>Link ảnh</th>
+
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Lưu</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+
+    <!--Modal cho mặt hàng excel-->
+    <div class="modal fade active default-popup" id="popup-thong-bao-mat-hang" data-backdrop="static" data-keyboard="false" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle" style="font-weight: bold">
+                        Thay đổi mặt hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body position-relative thong-bao" style="padding-bottom:1.3rem;">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="wrap-form-login">
+                                    <div class="needs-validation">
+                                        <div class="form-group">
+                                            <div class="form-check mt-2">
+                                                <div class="form-check-label">
+                                                    <div class="form-group ma-hang" style="display:flex;"></div>
+                                                    <div class="form-group gia-nhap-1" style="display:flex;"></div>
+                                                    <div class="form-group gia-nhap-2" style="display:flex;"></div>
+                                                    <div class="form-group gia-nhap-3" style="display:flex;"></div>
+                                                    <div class="form-group gia-ban-1" style="display:flex;"></div>
+                                                    <div class="form-group gia-ban-2" style="display:flex;"></div>
+                                                    <div class="form-group gia-ban-3" style="display:flex;"></div>
+                                                    <div class="form-group gia-ban-4" style="display:flex;"></div>
+                                                    <div class="form-group gia-ban-5" style="display:flex;"></div>
+                                                    <div class="form-group gia-ban-6" style="display:flex;"></div>
+                                                    <div class="form-group gia-ban-7" style="display:flex;"></div>
+                                                    <div class="form-group" style="display:flex;">
+                                                        <p>Bạn có muốn tiếp tục?</p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-check-label">
+                                                    <div class="form-group" style="display:flex;">
+                                                        <p>Nhấn YES nếu muốn tiếp tục check các mã hàng khác</p>
+                                                    </div>
+                                                    <div class="form-group" style="display:flex;">
+                                                        <p>Nhấn NO để bỏ qua bước check</p>
+                                                    </div>
+                                                    <div class="form-group" style="display:flex;">
+                                                        <p>Nhấn CANCEL để tạm dừng việc ghi dữ liệu</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="action-login mt-4">
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <button id="btn-mat-hang-excel-yes" type="button" class="btn btn-primary">
+                                                        Yes
+                                                    </button>
+                                                    <button id="btn-mat-hang-excel-no" type="button" class="btn btn-primary">
+                                                        No
+                                                    </button>
+                                                    <button id="btn-mat-hang-excel-cancel" type="button" class="btn btn-primary" data-dismiss="modal">
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade active default-popup" id="popup-check-mat-hang" data-backdrop="static" data-keyboard="false" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle" style="font-weight: bold">
+                        Xác nhận lần cuối
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body position-relative thong-bao" style="padding-bottom:1.3rem;">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="wrap-form-login">
+                                    <div class="needs-validation">
+                                        <div class="form-group">
+                                            <div class="form-check mt-2">
+                                                <div class="form-check-label">
+                                                    <div class="form-group check" style="display:flex;"></div>
+                                                    <div class="form-group check-1" style="display:flex;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="action-login mt-4">
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <button id="btn-check-yes" type="button" class="btn btn-primary">
+                                                        Yes
+                                                    </button>
+                                                    <button id="btn-check-no" type="button" class="btn btn-primary" data-dismiss="modal">
+                                                        No
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Đơn vị tính-->
+    <div class="modal fade default-popup popup-don-vi-tinh" id="don-vi-tinh"
+         tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Danh mục đơn vị tính
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="list-button text-left">
+                                    <a href="#" class="btn inline" id="btn-insert-don-vi">
+                                        <img src="~/App_Themes/assets/images/btn-add.png"
+                                             alt="" class="inline">
+                                        <span class="inline">Thêm</span>
+                                    </a>
+                                    <a href="#" class="btn inline" id="btn-update-don-vi">
+                                        <img src="~/App_Themes/assets/images/btn-fix.png"
+                                             alt="" class="inline"><span class="inline">Sửa</span>
+                                    </a>
+                                    <a href="#" class="btn inline" id="btn-delete-don-vi">
+                                        <img src="~/App_Themes/assets/images/btn-del.png"
+                                             alt="" class="inline"><span class="inline">Xóa</span>
+                                    </a>
+                                    <a href="#" class="btn  inline" id="btn-reset-don-vi">
+                                        <img src="~/App_Themes/assets/images/btn-import.png"
+                                             alt="" class="inline"><span class="inline">Nạp</span>
+                                    </a>
+                                    <a href="#" class="btn inline" id="btn-export-don-vi">
+                                        <img src="~/App_Themes/assets/images/paste-excel.png"
+                                             alt="" class="inline"><span class="inline">Xuất</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <table class="display table table-striped" style="width: 100%;" id="table-donvi">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Tên đơn vị tính</th>
+                                            <th>Mô tả</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Thêm/Sửa đơn vị tính-->
+    <div class="modal fade default-popup popup-top" id="them-dvt" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Thêm đơn vị tính
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box-border mt-4">
+                                    <p class="box-border__title bg-gray">
+                                        Thông tin đơn vị tính
+                                    </p>
+                                    <form action="" class="default-form">
+                                        <input type="hidden" name="idDonVi" />
+                                        <div class="form-group">
+                                            <label for="">Tên đơn vị tính</label>
+                                            <input type="text" name="tenDonVi" class="col-8 p-0" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Mô tả</label>
+                                            <input type="text" name="moTaDonVi" class="col-8 p-0">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn-save-don-vi">Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade default-popup popup-don-vi-tinh" id="danh-muc-xuat-xu"
+         tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Danh
+                        mục xuất xứ
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="list-button text-left">
+                                    <a href="#" class="btn btn-add inline"
+                                       data-toggle="modal"
+                                       data-target="#them-dmxx">
+                                        <img src="../..//App_Themes/assets/images/btn-add.png"
+                                             alt="" class="inline">
+                                        <span class="inline">Thêm</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline"
+                                       data-toggle="modal"
+                                       data-target="#them-dvt">
+                                        <img src="../..//App_Themes/assets/images/btn-fix.png"
+                                             alt="" class="inline"><span class="inline">Sửa</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="../..//App_Themes/assets/images/btn-del.png"
+                                             alt="" class="inline"><span class="inline">Xóa</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="../..//App_Themes/assets/images/btn-import.png"
+                                             alt="" class="inline"><span class="inline">Nạp</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="../..//App_Themes/assets/images/btn-export.png"
+                                             alt="" class="inline"><span class="inline">Xuất</span>
+                                    </a>
+                                    <a href="#" class="btn btn-question
+                                    inline">
+                                        <img src="../..//App_Themes/assets/images/question.png"
+                                             alt="" class="inline"><span class="inline">Hỏi</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline">
+                                        <img src="../..//App_Themes/assets/images/btn-close.png"
+                                             alt="" class="inline"><span class="inline">Đóng</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <table class="display table table-striped"
+                                       style="width: 100%;" id="table-xuat-xu">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Kênh khách hàng</th>
+                                            <th>Mô tả</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Kênh khách hàng</td>
+                                            <td>Bên</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade default-popup popup-top" id="them-dmxx" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Thêm
+                        danh mục xuất xứ
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box-border mt-4">
+                                    <p class="box-border__title bg-gray">
+                                        Thông tin
+                                    </p>
+                                    <form action="" class="default-form">
+                                        <div class="form-group">
+                                            <label for="">Tên </label>
+                                            <input type="text" class="col-8 p-0">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Mô tả</label>
+                                            <input type="text" class="col-8 p-0">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section myScripts{
+    <script src="~/PageScript/MatHang/mathang.js?v=123"></script>
+    <script src="~/PageScript/NhomHang/nhomhang.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <script src="~/PageScript/MatHang/jquery-barcode.js"></script>
+    <script src="~/PageScript/MatHang/mathangexcel.js"></script>
+}

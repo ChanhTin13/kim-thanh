@@ -1,0 +1,135 @@
+﻿<style>
+    @@media only screen and (min-width:768px) and (max-width: 1024px) {
+        .sidebar-search {
+            width: 185%;
+        }
+
+        .custom {
+            padding-left: 12%;
+        }
+    }
+</style>
+<main class="bg-white bctk-thuchichotca">
+    <div class="container-fluid mt-4 wrap-table-2">
+        <div class="row mt-4">
+            <div class="col-md-2">
+                <div class="box-border sidebar-search">
+                    <p class="box-border__title">Tiêu chí tìm kiếm</p>
+                    <!-- Nav tabs -->
+                    <div class="box-border mt-3">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-6 pl-0 pr-1">
+                                    <p>Từ ngày</p>
+                                    <input type="text" class="choose-date w-100" name="fdate">
+                                </div>
+                                <div class="col-md-6 pr-0 pl-1">
+                                    <p>Đến ngày</p>
+                                    <input type="text" class="choose-date w-100" name="tdate">
+                                </div>
+                                <div class="col-md-12 p-0">
+                                    <div class="box-select mt-3">
+                                        <p>Nhân viên thu ngân</p>
+                                        <select style="width:100%" name="slNhanVien" id="" class="w-100 bg-gray select-gray">
+                                            <option value="00000000-0000-0000-0000-000000000000">Chọn tất cả</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-border mt-3">
+                        <table class="table w-100 mt-3 table-a table-showroom">
+                            <thead>
+                                <tr>
+                                    <th>Chi nhánh</th>
+                                    <th class="text-center">
+                                        <input type="checkbox" name="checkALL"><span class="ml-1">Chọn</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                    <div class="list-button mt-3">
+                        <a href="#" class="btn btn-search d-block" id="btn-search">
+                            <img src="/App_Themes/assets/images/btn-search.png" alt="" class="inline">
+                            <span class="inline">Tìm kiếm</span>
+                        </a>
+
+                        <a href="#" class="btn btn-export mt-1 d-block" id="btn-export">
+                            <img src="/App_Themes/assets/images/btn-export.png"
+                                 alt="" class="inline"><span class="inline">Xuất</span>
+                        </a>
+                        <a href="#" class="btn btn-print mt-1
+                        d-block">
+                            <img src="/App_Themes/assets/images/btn-print.png"
+                                 alt="" class="inline"><span class="inline">In</span>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-10 custom">
+                <div class="content">
+                    <p class="title-head">Nội dung</p>
+                </div>
+                <div class="content-tab">
+                    <div class="wrap-height-table-2">
+                        <table class="table display" style="width: 100%;" id="table-thu-chi-chot-ca">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Ngày</th>
+                                    <th>Phiếu thu</th>
+                                    <th>Phiếu chi</th>
+                                    <th>Ngân hàng</th>
+                                    <th>Thu (VND)</th>
+                                    <th>Chi (VND)</th>
+                                    <th>VAT</th>
+                                    <th>Lý do</th>
+                                    <th>Diễn giải</th>
+                                    <th>UserID</th>
+                                    <th>Tên khách hàng</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script class="js-baocao-chitiet" src="~/PageScript/BCTKThuChiChotCa/thuchichotca.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#chooseDate_To,#chooseDate_Form, #choose-day-them-kh, #chon-ngay-sinh, #tinh-lai-no').datetimepicker({
+            timepicker: false,
+            format: 'd/m/Y',
+            mask: true,
+        });
+        $('.choose-date').datetimepicker({
+            timepicker: false,
+            format: 'd/m/Y',
+            mask: true,
+        });
+    });
+</script>

@@ -1,0 +1,800 @@
+﻿
+
+
+@{
+    ViewBag.Title = "DanhSachPhienKiemHang";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+<link href="~/App_Themes/select2/css/select2.min.css" rel="stylesheet" />
+<style>
+    #table-chi-tiet-phieu-cho-xu-ly_filter {
+        display: none;
+    }
+
+    .btn-custom {
+        font-size: 90%;
+    }
+
+    #sua-vi-tri .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    input[readonly] {
+        background: #ccc
+    }
+
+    #tb-import-vitri input {
+        height: 30px;
+        border-radius: 5px;
+        width: 100%;
+        padding: 5px;
+    }
+    @@media only screen and (min-width:1440px) and (max-width: 2560px) {
+        .wrap-height-table-2 {
+            height: 400px !important
+        }
+    }
+</style>
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box-check-code">
+                    <div class="box-check-input list-button">
+                        <input type="text" class="m-auto mr-2 inline check-code-input" style="width:100%" id="txt-bhdcode">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="choxuly"
+                           href="~/ChuanBiHang/ChoXuLy" role="tab"
+                           aria-controls="home" aria-selected="true">
+                            Chờ xử lý
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="thanhtoan"
+                           href="~/ChuanBiHang/HoanThanh" role="tab" aria-controls="profile"
+                           aria-selected="false">Hoàn thành</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="huyphieu"
+                           href="~/ChuanBiHang/Huy" role="tab" aria-controls="profile"
+                           aria-selected="false">Hủy</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="wrap-table__header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box-choose-time" id="date-vitri">
+                        <p class="mr-2">Từ</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_From" data-date-format="mm/dd/yyyy">
+                        <p class="mr-2">Đến</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_To" data-date-format="mm/dd/yyyy">
+                        <div class="list-button">
+                            <a href="#" class="btn btn-export
+                            inline" id="btn-search-phienkiemhang">
+                                <img src="/App_Themes/assets/images/btn-search.png" alt="" class="inline"><span class="inline">Tìm kiếm</span>
+                            </a>
+                            @*<a href="#" class="btn btn-export
+                            inline" id="excel-cho-xu-ly">
+                                <img src="/App_Themes/assets/images/btn-export.png"
+                                     alt="" class="inline"><span class="inline">Xuất</span>
+                            </a>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <audio id="audio" src="/App_Themes/assets/H42VWCD-notification.mp3"autoplay ="" muted></audio>
+        @*<input id="message" />
+        <button id="sendmessage"></button>
+        <button onclick="play()">Play Audio</button>*@
+        <div class="wrap-table__body">
+            <div class="wrap-height-table">
+                <table class="table display table-striped" style="width: 100%;"
+                       id="table-cho-xu-ly">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Thời gian</th>
+                            <th>Mã đơn</th>
+                            <th>Nhân viên</th>
+                            <th>Tên KH</th>
+                            <th>Ghi chú</th>
+                            <th>Ghi chú phụ</th>
+                            <th>Ngày tạo</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade default-popup popup-them-so-du-quy" id="chinh-sua-phieu" @*data-keyboard="true" data-backdrop="static*@
+         tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Chỉnh sửa phiếu
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="default-form">
+                                    <div class="form-group">
+                                        <label for="">Ghi chú phụ </label>
+                                        <input name="txt-ghi-chu" type="text" class="col-9 p-0" />
+                                        <input type="hidden" name="bhdid" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-ghi-chu">Ghi chú</button>
+                    @*<button type="button" class="btn btn-primary" id="btn-thanh-toan">Thanh toán</button>
+                        <button type="button" class="btn btn-danger" id="btn-huy">Hủy</button>*@
+                    @*<button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">
+                            Đóng
+                        </button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-them-order">
+        <div class="modal fade default-popup popup-them-order" id="chi-tiet-hoa-don"
+             tabindex="-1"
+             role="dialog"
+             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title title-popup"
+                            id="exampleModalLongTitle">
+                            Xem chi tiết phiếu bán hàng
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid mt-3">
+                            <div class="wrap-box-border bg-white position-relative
+                            mt-3">
+                                <p class="title-special">Chi tiết phiếu</p>
+                                <div id="qrcode"></div>
+                                <div class="box-border p-2" style="border: none;">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="wrap-height-table-2">
+                                                <table border="1" class="display table
+                                                table-striped" style="width: 100%;"
+                                                       id="table-chi-tiet-phieu-cho-xu-ly">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Mã hàng</th>
+                                                            <th>Tên hàng</th>
+                                                            <th>Số lượng</th>
+                                                            <th>Đơn vị</th>
+                                                            <th>Đơn giá</th>
+                                                            <th>Thành tiền</th>
+                                                            <th>Ghi chú</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">
+                            Đóng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section myScripts{
+    <script src="~/App_Themes/select2/js/select2.full.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.4.2.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+        $(document).ready(function () {
+            var chat = $.connection.chatHub;
+            chat.client.addNewMessageToPage = function (message, uid) {
+                GetUser().then((e) => {
+                    if (uid != e.data) {
+                        toast.create({
+                            title: 'Notification!',
+                            text: message,
+                            icon: 'check',
+                            classBackground: 'noti-success',
+                            timeout: 3000
+                        });
+                        document.getElementById('audio').muted = false;
+                        document.getElementById('audio').play();
+                    
+                        //var audio = new Audio('/App_Themes/assets/H42VWCD-notification.mp3');
+                        //audio.play();
+                    }
+                })
+            };
+            $.connection.hub.start()
+            //$.connection.hub.start().done(function () {
+            //    $('#sendmessage').click(function () {
+            //        // Call the Send method on the hub. 
+            //        chat.server.send($('#message').val());
+            //        // Clear text box and reset focus for next comment. 
+            //        $('#message').val('').focus();
+            //    });
+            //});
+            $(document).keydown(async function (e) {
+
+                if (e.which == 113) {
+                    e.preventDefault();
+                    $('#choxuly')[0].click();
+                }
+                else if (e.which == 114) {
+                    e.preventDefault();
+                    $('#thanhtoan')[0].click();
+                }
+                else if (e.which == 115) {
+                    e.preventDefault();
+                    $('#huyphieu')[0].click();
+                }
+                else if (e.which == 117) {
+                    e.preventDefault();
+                    $('#txt-bhdcode').focus();
+                }
+                else if (e.which == 120) {
+                    e.preventDefault();
+                    $('#table-cho-xu-ly_filter label input').focus();
+                }
+            })
+            //$('input[name="chooseDate_From"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            //$('input[name="chooseDate_To"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            //let fdate = moment(new Date()).format('DD/MM/yyyy');
+            //let tdate = moment(new Date()).format('DD/MM/yyyy');
+            $('#txt-bhdcode').focus();
+            $('#txt-bhdcode').on('keyup', delay(function (e) {
+                let value = $(this).val();
+                if (value != "" && value.length >= 8) {
+                    $.ajax({
+                        async: true,
+                        type: 'GET',
+                        url: '/ChuanBiHang/CheckMaHoaDon',
+                        data: { 'BHDCODE': value },
+                        success: function (rs) {
+                            if (rs.status == 1) {
+                                tbChoXuLy.columns.adjust().draw();
+                                $('#txt-bhdcode').val('');
+                                $('#txt-bhdcode').focus();
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: 'Thành công',
+                                    icon: 'check',
+                                    classBackground: 'noti-success',
+                                    timeout: 3000
+                                });
+                            }
+                            else if (rs.status == 2) {
+                                $('#txt-bhdcode').val('');
+                                $('#txt-bhdcode').focus();
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: rs.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                            }
+                            else {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: rs.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                            }
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                }
+            }, 1000));
+
+            let tbChoXuLy_filterValues = {};
+            let tbChoXuLy = $('#table-cho-xu-ly').DataTable({
+                serverSide: true,
+                bFilter: false,
+                bInfo: false,
+                ajax: function (data, callback, settings) {
+                    tbChoXuLy_filterValues.draw = data.draw;
+                    tbChoXuLy_filterValues.start = data.start;
+                    tbChoXuLy_filterValues.length = data.length;
+                    tbChoXuLy_filterValues.order = data.order[0].column;
+                    tbChoXuLy_filterValues.dir = data.order[0].dir;
+                    tbChoXuLy_filterValues.search = data.search["value"];
+                    $.ajax({
+                        url: '/ChuanBiHang/LoadDataChoXuLy',
+                        method: 'GET',
+                        data: tbChoXuLy_filterValues,
+                        success: function (msg) {
+                            if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                return false;
+                            }
+                            else if (msg.status == 3) {
+                                if (tbChoXuLy_filterValues.draw != 1) {
+                                    toast.create({
+                                        title: 'Notification',
+                                        text: msg.message,
+                                        icon: 'error-outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                    return false;
+                                }
+                            }
+                        }
+                    }).done(callback, () => { });
+                },
+                "order": [[7, "desc"]],
+                columnDefs: [
+                    {
+                        "targets": 0,
+                        "data": null
+                    },
+                    {
+                        "targets": 1,
+                        "data": "NGAYHDSTRING"
+                    },
+                    {
+                        "targets": 2,
+                        "data": "BHDCODE"
+                    },
+                    {
+                        "targets": 3,
+                        "data": "NVTEN",
+                    },
+                    {
+                        "targets": 4,
+                        "data": "KHTEN"
+                    },
+                    {
+                        "targets": 5,
+                        "data": "DIENGIAI"
+                    },
+                    {
+                        "targets": 6,
+                        "data": "GHICHUPHU"
+                    },
+                    {
+                        "targets": 7,
+                        "data": "NGAYTAO",
+                        //render: function (data) {
+                        //    return data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+                        //}
+                    },
+                    {
+                        "targets": 8,
+                        "data": "BHDID",
+                        render: function (data, type, row) {
+                            return '<a type="button" id="chuanbihang-print" value="' + data + '" class="btn btn-warning text-white mr-1 btn-custom"> In</a><a type="button" id="chuanbihang-sua" value="' + data + '" class="btn btn-primary text-white mr-1 btn-custom">Sửa</a><a type="button" id="chuanbihang-hoanthanh" value="' + data + '" class="btn btn-success text-white mr-1 btn-custom">Hoàn thành</a><a type="button" id="chuanbihang-huy" value="' + data + '" class="btn btn-danger text-white btn-custom"> Hủy</a>';
+                        }
+                    },
+                    {
+                        "targets": [0, 8],
+                        "orderable": false
+                    }
+                ],
+                fnCreatedRow: function (nRow, data, iDataIndex) {
+                    $(nRow).attr('data-id', data.BHDID);
+                },
+                "fnRowCallback": function (nRow, data, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                },
+                scrollX: true,
+                scrollResize: true,
+                scrollY: 100,
+                scrollCollapse: true,
+
+                paging: true,
+                searching: true,
+                pageLength: 10,
+                lengthChange: false,
+
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 50
+                },
+            });
+
+            //Search ngày -> ngày
+            $('#btn-search-phienkiemhang').click(function () {
+                tbChoXuLy_filterValues.FromDate = $('#date-vitri input[name="chooseDate_From"]').val();
+                tbChoXuLy_filterValues.ToDate = $('#date-vitri input[name="chooseDate_To"]').val();
+                tbChoXuLy.columns.adjust().draw();
+            });
+
+            //Click
+            $(document).on('click', '#table-cho-xu-ly tbody tr', function () {
+                $(this).addClass('selected');
+                $('#table-cho-xu-ly tbody tr').not(this).removeClass('selected');
+            });
+
+            $('#table-cho-xu-ly tbody').on('click', 'a[type="button"]', function () {
+                var id = $(this).attr('value');
+                if ($(this).attr('id') == 'chuanbihang-huy') {
+                    if (confirm('Bạn chắc chắn muốn hủy xếp hàng cho đơn này không?')) {
+                        $.ajax({
+                            async: true,
+                            method: 'POST',
+                            url: '/ChuanBiHang/XuLyPhieuCho',
+                            data: { "BHDID": id, "TrangThai": 3 },
+                            success: function (msg) {
+                                if (msg.status == 1) {
+                                    tbChoXuLy.columns.adjust().draw();
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'check',
+                                        classBackground: 'noti-success',
+                                        timeout: 3000
+                                    });
+                                }
+                                else if (msg.status == 2) {
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'error_outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                }
+                                else if (msg.status == 3) {
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'error_outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                }
+                            }
+                        });
+                    }
+                }
+                else if ($(this).attr('id') == 'chuanbihang-hoanthanh') {
+                    $.ajax({
+                        async: true,
+                        method: 'POST',
+                        url: '/ChuanBiHang/XuLyPhieuCho',
+                        data: { "BHDID": id, "TrangThai": 2 },
+                        success: function (msg) {
+                            if (msg.status == 1) {
+                                tbChoXuLy.columns.adjust().draw();
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'check',
+                                    classBackground: 'noti-success',
+                                    timeout: 3000
+                                });
+                            }
+                            else if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                            }
+                            else if (msg.status == 3) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                            }
+                        }
+                    })
+                }
+                else if ($(this).attr('id') == 'chuanbihang-print') {
+                    console.log('vaor');
+                    $.ajax({
+                        async: true,
+                        method: "GET",
+                        url: '/ChuanBiHang/CheckRoleInChuanBiHang',
+                        success: function (msg) {
+                            if (msg.status == 1) {
+                                var link = '/ChuanBiHang/InMau80ChoXuLy?BHDID=' + id;
+                                window.open(link);
+                            }
+                            else if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                            }
+                            else if (msg.status == 3) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                            }
+                        }
+                    })
+                }
+                else {
+                    let data = tbChoXuLy.row($(this).parents()).data();
+                    $('input[name="bhdid"]').val(data.BHDID);
+                    $('input[name="txt-ghi-chu"]').val(data.GHICHUPHU);
+                    $('#chinh-sua-phieu').modal();
+                }
+            });
+
+            $('#btn-ghi-chu').click(function () {
+                let id = $('input[name="bhdid"]').val();
+                let GhiChuPhu = $('input[name="txt-ghi-chu"]').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '/ChuanBiHang/XuLyPhieuCho',
+                    data: { "BHDID": id, "TrangThai": 0, 'GhiChuPhu': GhiChuPhu },
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.status == 1) {
+                            $('#chinh-sua-phieu').modal('hide');
+                            tbChoXuLy.draw();
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'check',
+                                classBackground: 'noti-success',
+                                timeout: 3000
+                            })
+                        }
+                        else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            })
+                        } else if (msg.status == 3) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            location.reload();
+                        }
+                    }
+                })
+            })
+            //Double Click
+            $(document).on('dblclick', '#table-cho-xu-ly tbody tr', function () {
+                var id = $(this).attr('data-id');
+                if (tbCTChoXuLy_filterValues.BHDID !== id) {
+                    tbCTChoXuLy_filterValues.BHDID = id;
+                    tbCTChoXuLy_filterValues.statusDraw++;
+                    tbCTChoXuLy.draw();
+                }
+                $('#chi-tiet-hoa-don').modal();
+            });
+            $('#chi-tiet-hoa-don').on('shown.bs.modal', function () {
+                tbCTChoXuLy.columns.adjust();
+            });
+            //#Region Load Ban Hang
+            var tbCTChoXuLy_filterValues = {};
+            tbCTChoXuLy_filterValues.statusDraw = 0;
+            var tbCTChoXuLy = $('#table-chi-tiet-phieu-cho-xu-ly').DataTable({
+                serverSide: true,
+                bFilter: false,
+                "ordering": false,
+                bInfo: false,
+                ajax: function (data, callback, settings) {
+                    if (tbCTChoXuLy_filterValues.statusDraw > 0) {
+                        tbCTChoXuLy_filterValues.draw = data.draw;
+                        tbCTChoXuLy_filterValues.search = data.search["value"];
+                        tbCTChoXuLy_filterValues.start = data.start;
+                        tbCTChoXuLy_filterValues.length = data.length;
+                        $.ajax({
+                            url: '/ChuanBiHang/LoadDataCTChoXuLy',
+                            method: 'GET',
+                            data: tbCTChoXuLy_filterValues,
+                            success: function (msg) {
+                                if (msg.status == 2) {
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'error_outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                } else if (msg.status == 3) {
+                                    if (tbCTChoXuLy_filterValues.draw != 1) {
+                                        toast.create({
+                                            title: 'Notification!',
+                                            text: msg.message,
+                                            icon: 'error_outline',
+                                            classBackground: 'noti-error',
+                                            timeout: 3000
+                                        });
+                                        location.reload();
+                                    }
+                                }
+                            },
+                        }).done(callback, () => {
+                        });
+                    }
+                },
+                fnCreatedRow: function (nRow, data, iDataIndex) {
+                    $(nRow).attr('data-id', data.MDID);
+                },
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                    return nRow;
+                },
+                columns: [
+                    { data: null },
+                    { data: "MHCODE" },
+                    { data: "MHTEN" },
+                    {
+                        data: "SOLUONG",
+                        render: function (data, type, full, meta) {
+                            return data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+                        }
+                    },
+                    { data: "DONVI" },
+                    {
+                        data: "DONGIA",
+                        render: function (data, type, full, meta) {
+                            return data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+                        }
+                    },
+                    {
+                        data: "THANHTIEN",
+                        render: function (data, type, full, meta) {
+                            return data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+                        }
+                    },
+                    { data: "GHICHU" },
+                ],
+                scrollY: 350,
+                scrollX: true,
+                searching: "true",
+                paging: true,
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 100,
+                },
+            });
+            //end
+
+            function GetUser() {
+                return $.ajax({
+                    method: "GET",
+                    url: "/ChuanBiHang/CheckSessionNotification",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.rs) {
+                            return msg.data;
+                        }
+                    }
+                })
+            }
+
+            //#Region Excel Cho Xu Ly
+            //$('#excel-cho-xu-ly').click(function () {
+            //    $.ajax({
+            //        method: "GET",
+            //        url: "/ChoXuLyBanHang/CheckRoleXuatCXL",
+            //        contentType: "application/json; charset=utf-8",
+            //        dataType: "json",
+            //        success: function (msg) {
+            //            if (msg.status == 1) {
+            //                var link = `/ChoXuLyBanHang/ExcelChoXuLy?` + serialize(tbChoXuLy_filterValues) + ``;
+            //                window.open(link)
+            //            }
+            //            else if (msg.status == 2) {
+            //                toast.create({
+            //                    title: 'Notification!',
+            //                    text: msg.message,
+            //                    icon: 'error_outline',
+            //                    classBackground: 'noti-error',
+            //                    timeout: 3000
+            //                });
+            //            }
+            //            else if (msg.status == 3) {
+            //                toast.create({
+            //                    title: 'Notification!',
+            //                    text: msg.message,
+            //                    icon: 'error_outline',
+            //                    classBackground: 'noti-error',
+            //                    timeout: 3000
+            //                });
+            //                location.reload();
+            //            }
+            //        }
+            //    })
+            //});
+            //End
+
+            //#endregion
+        });
+        serialize = function (obj) {
+            var str = [];
+            for (var p in obj)
+                if (obj.hasOwnProperty(p)) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+            return str.join("&");
+        }
+        function delay(fn, ms) {
+            let timer = 0
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(fn.bind(this, ...args), ms || 0)
+            }
+        }
+    </script>
+}

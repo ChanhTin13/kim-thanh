@@ -1,0 +1,303 @@
+﻿
+@{
+    ViewBag.Title = "MatHangExcel";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+
+<main class="wrapper">
+    <div class="container-fluid wrap-table-2 table-mat-hang-excel">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="list-button bg-gray text-right">
+                    <div class="col-left d-flex align-items-center justify-content-start">
+                        <p>Tìm Excel Sheets để nhập</p>
+                        <select name="slExcel" id=""></select>
+                        <input type=file name="excelMatHang" style="display: none">
+                        <button id="btn-import-mat-hang-excel" class="btn btn-default ">
+                            <img src="~/App_Themes/assets/images/paste-excel.png" alt=""
+                                 class="inline"><span class="inline">Import</span>
+                        </button>
+                    </div>
+                    <div class="col-right d-flex justify-content-end">
+                        <a href="#" class="btn btn-nap inline" id="btn-reset-mat-hang-excel">
+                            <img src="~/App_Themes/assets/images/loading.png" alt=""
+                                 class="inline"><span class="inline">Nạp lại dữ liệu</span>
+                        </a>
+                        <a href="#" class="btn btn-export inline" id="btn-create-mat-hang-excel">
+                            <img src="~/App_Themes/assets/images/btn-export.png" alt=""
+                                 class="inline"><span class="inline">Tạo mẫu nhập liệu</span>
+                        </a>
+                        @*<div class="btn-group dropup">
+                                <button type="button" class="btn btn-secondary
+                                dropdown-toggle" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                    Advenced
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#"
+                                       data-toggle="modal"
+                                       data-target="#them-tien-to">
+                                        Thêm tiền tố hoặc
+                                        hậu tố và nhân bản mã hàng
+                                    </a>
+                                </div>
+                            </div>*@
+                        <a href="#" class="btn btn-save inline" id="btn-save-mat-hang-excel">
+                            <img src="~/App_Themes/assets/images/btn-save.png" alt=""
+                                 class="inline"><span class="inline">Ghi</span>
+                        </a>
+                        @*<a href="#" class="btn btn-question inline">
+                            <img src="~/App_Themes/assets/images/question.png"
+                                 alt="" class="inline"><span class="inline">Hỏi</span>
+                        </a>
+                        <a href="#" class="btn btn-fix inline">
+                            <img src="~/App_Themes/assets/images/btn-close.png"
+                                 alt="" class="inline"><span class="inline">Đóng</span>
+                        </a>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-nhom-kh">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="box-dia-chi box-info">
+                        <p class="title-head">Danh mục nhóm hàng</p>
+                        <div class="content mt-2" id="jstree">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="wrap-height-table">
+                        <table class="table display" id="table-mat-hang-excel" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nhóm cấp 1</th>
+                                    <th>Nhóm cấp 2</th>
+                                    <th>Nhóm cấp 3</th>
+                                    <th>Nhóm cấp 4</th>
+                                    <th>Nhóm cấp 5</th>
+                                    <th>Mã hàng</th>
+                                    <th>Tên hàng</th>
+                                    <th>Alias</th>
+                                    <th>Đơn vị tính</th>
+                                    <th>Bảo hành</th>
+                                    <th>Mô tả</th>
+                                    <th>Ghi chú</th>
+                                    <th>Giá nhập 1</th>
+                                    <th>NCC1</th>
+                                    <th>Giá nhập 2</th>
+                                    <th>NCC2</th>
+                                    <th>Giá nhập 3</th>
+                                    <th>NCC3</th>
+                                    <th>Giá bán 1</th>
+                                    <th>Giá bán 2</th>
+                                    <th>Giá bán 3</th>
+                                    <th>Giá bán 4</th>
+                                    <th>Số lượng tồn Max</th>
+                                    <th>Số lượng tồn Min</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <!--<div class="modal fade default-popup popup-them-tien-to" id="them-tien-to"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup">
+                        Chọn tiêu chí kiểm tra
+                        duplicate
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-check-inline">
+                        <label class="form-check-label">
+                            <input type="radio" class="form-check-input"
+                                   name="optradio">Tiền tố
+                        </label>
+                    </div>
+                    <div class="form-check-inline">
+                        <label class="form-check-label">
+                            <input type="radio" class="form-check-input"
+                                   name="optradio">Hậu tố
+                        </label>
+                    </div>
+                    <p class="mt-2">Tìm Excel Sheets chứa tiền tố hoặc hậu tố</p>
+                    <div class="box-select">
+                        <select name="" id="" class="inline w-80">
+                            <option value=""></option>
+                        </select>
+                        <input type="file" class="btn btn-default inline"
+                               placeholder="...">
+                    </div>
+                    <table class="table display" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Subfix</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>somethings</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="box-button">
+                        <div class="form-check-inline">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input"
+                                       name="optradio">Tự động tạo Alias
+                            </label>
+                        </div>
+                        <button class="btn btn-secondary inline">Tạo mẫu nhập</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>-->
+    <div class="modal fade active default-popup" id="popup-thong-bao-mat-hang" data-backdrop="static" data-keyboard="false" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle" style="font-weight: bold">
+                        Thay đổi mặt hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body position-relative thong-bao" style="padding-bottom:1.3rem;">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="wrap-form-login">
+                                    <div class="needs-validation">
+                                        <div class="form-group">
+                                            <div class="form-check mt-2">
+                                                <div class="form-check-label">
+                                                    <div class="form-group ma-hang" style="display:flex;"></div>
+                                                    <div class="form-group gia-nhap-1" style="display:flex;"></div>
+                                                    <div class="form-group gia-nhap-2" style="display:flex;"></div>
+                                                    <div class="form-group gia-nhap-3" style="display:flex;"></div>
+                                                    <div class="form-group gia-ban-1" style="display:flex;"></div>
+                                                    <div class="form-group gia-ban-2" style="display:flex;"></div>
+                                                    <div class="form-group gia-ban-3" style="display:flex;"></div>
+                                                    <div class="form-group gia-ban-4" style="display:flex;"></div>
+                                                    <div class="form-group" style="display:flex;">
+                                                        <p>Bạn có muốn tiếp tục?</p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-check-label">
+                                                    <div class="form-group" style="display:flex;">
+                                                        <p>Nhấn YES nếu muốn tiếp tục check các mã hàng khác</p>
+                                                    </div>
+                                                    <div class="form-group" style="display:flex;">
+                                                        <p>Nhấn NO để bỏ qua bước check</p>
+                                                    </div>
+                                                    <div class="form-group" style="display:flex;">
+                                                        <p>Nhấn CANCEL để tạm dừng việc ghi dữ liệu</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="action-login mt-4">
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <button id="btn-mat-hang-excel-yes" type="button" class="btn btn-primary">
+                                                        Yes
+                                                    </button>
+                                                    <button id="btn-mat-hang-excel-no" type="button" class="btn btn-primary">
+                                                        No
+                                                    </button>
+                                                    <button id="btn-mat-hang-excel-cancel" type="button" class="btn btn-primary" data-dismiss="modal">
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade active default-popup" id="popup-check-mat-hang" data-backdrop="static" data-keyboard="false" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle" style="font-weight: bold">
+                        Xác nhận lần cuối
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body position-relative thong-bao" style="padding-bottom:1.3rem;">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="wrap-form-login">
+                                    <div class="needs-validation">
+                                        <div class="form-group">
+                                            <div class="form-check mt-2">
+                                                <div class="form-check-label">
+                                                    <div class="form-group check" style="display:flex;"></div>
+                                                    <div class="form-group check-1" style="display:flex;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="action-login mt-4">
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <button id="btn-check-yes" type="button" class="btn btn-primary">
+                                                        Yes
+                                                    </button>
+                                                    <button id="btn-check-no" type="button" class="btn btn-primary" data-dismiss="modal">
+                                                        No
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section myScripts{
+    <script src="~/PageScript/NhomHang/nhomhang.js"></script>
+    <script src="~/PageScript/MatHang/mathangexcel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+}

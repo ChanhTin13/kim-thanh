@@ -1,0 +1,1837 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<style>
+    .disabled-dia-chi {
+        pointer-events: none;
+        opacity: 0.4;
+    }
+</style>
+
+<main class="wrapper">
+    <div class="container-fluid wrap-baocao">
+        <div class="bg-white p-3">
+            <div class="row mt-3" id="myTab" role="tablist">
+                <div class="col-md-4">
+                    <div class="box-border tabs h-100">
+                        <p class="box-border__title">Tổng hợp kho</p>
+                        <button class="btn btn-default" data-bc="sokho">Sổ kho</button>
+                        <button class="btn btn-default" data-bc="tonkho">Tồn kho</button>
+                        <button class="btn btn-default" data-bc="hethang">Hết hàng</button>
+                        <button class="btn btn-default" data-bc="the-kho-chi-tiet">Thẻ kho chi tiết</button>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="box-border tabs h-100">
+                        <p class="box-border__title">Tổng hợp bán hàng</p>
+                        @*<button class="btn btn-default w-100" data-bc="cong-no-phai-thu-tra">Công nợ phải thu phải trả</button>*@
+                        <button class="btn btn-default w-100" data-bc="bao-cao-ban-hang">Báo cáo bán hàng</button>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="box-border tabs h-100">
+                        <p class="box-border__title">Tổng hợp khác</p>
+                        @*<button class="btn btn-default" data-bc="so-cskh">Sổ CSKH</button>*@
+                        <!-- <button class="btn btn-default"
+                            data-bc="quan-li-han-the">Quản lí hạn thẻ</button> -->
+                        <button class="btn btn-default" data-bc="thu-chi-chot-ca">Thu-Chi/ Chốt ca</button>
+                        <!-- <button class="btn btn-default"
+                            data-bc="quan-li-serial">Quản lí Serial/IMEI</button> -->
+                        <!-- <button class="btn btn-default"
+                            data-bc="tang-truong-doanh-so">Tăng trường D.số</button> -->
+                        <button class="btn btn-default" data-bc="theo-doi-hang-ton">Theo dõi hàng tồn</button>
+                        <button class="btn btn-default" data-bc="loi-nhuan">Lợi nhuận</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white p-3 mt-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Sổ kho -->
+                    <div class="content-bc" id="sokho">
+
+                    </div>
+
+                    <!-- Tồn kho -->
+                    <div class="content-bc" id="tonkho">
+
+                    </div>
+
+                    <!-- Hết hàng -->
+                    <div class="content-bc" id="hethang">
+
+                    </div>
+
+                    <!-- Thẻ kho chi tiết -->
+                    <div class="content-bc" id="the-kho-chi-tiet">
+
+                    </div>
+
+                    <!-- Công nợ phả thu trả -->
+                    <div class="content-bc" id="cong-no-phai-thu-tra">
+                        <!--<div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="home-tab"
+                                               data-toggle="tab" href="#cn-1" role="tab"
+                                               aria-controls="home" aria-selected="true">
+                                                Công nợ
+                                                phải thu phải trả
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="profile-tab" data-toggle="tab"
+                                               href="#cn-2" role="tab" aria-controls="profile"
+                                               aria-selected="false">
+                                                Công nợ phải thu phải trả chi
+                                                tiết
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="contact-tab" data-toggle="tab"
+                                               href="#cn-3" role="tab" aria-controls="contact"
+                                               aria-selected="false">Phải thu pending</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="contact-tab" data-toggle="tab"
+                                               href="#cn-4" role="tab" aria-controls="contact"
+                                               aria-selected="false">Phải trả pending</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="tab-content mt-4" id="myTabContent">-->
+                        <!-- CN 1 !-->
+                        <!--<div class="tab-pane fade show active" id="cn-1" role="tabpanel"
+                             aria-labelledby="home-tab">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="box-border sidebar-search">
+                                        <p class="box-border__title">Tiêu chí tìm kiếm</p>
+                                        <div class="box-select mt-4 mb-3">
+                                            <p><b>Chi nhánh</b></p>
+                                            <select name="" id="" class="w-100
+                        select-gray">
+                                                <option value="">Test</option>
+                                                <option value="">Test</option>
+                                                <option value="">Test</option>
+                                            </select>
+                                        </div>
+                                        <div class="list-button mt-3">
+                                            <a href="#" class="btn btn-search d-block">
+                                                <img src="../assets/images/btn-search.png"
+                                                     alt="" class="inline"><span class="inline">
+                                                    Tìm
+                                                    kiếm
+                                                </span>
+                                            </a>
+                                            <a href="#" class="btn btn-export mt-1
+                        d-block">
+                                                <img src="../assets/images/loading.png"
+                                                     alt="" class="inline"><span class="inline">Nạp</span>
+                                            </a>
+                                            <a href="#" class="btn btn-export mt-1
+                        d-block">
+                                                <img src="../assets/images/btn-export.png"
+                                                     alt="" class="inline"><span class="inline">Xuất</span>
+                                            </a>
+                                            <a href="#" class="btn btn-print mt-1
+                        d-block">
+                                                <img src="../assets/images/btn-print.png"
+                                                     alt="" class="inline"><span class="inline">In</span>
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="title-color blue">
+                                                Công nợ phải thu,
+                                                phải
+                                                trả
+                                            </p>
+                                            <div class="wrap-height-table-cn">
+                                                <table class="display table"
+                                                       id="table-cnpt-1"
+                                                       style="width:
+                            100%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Khách hàng</th>
+                                                            <th>Tên khách hàng</th>
+                                                            <th>Nhóm KH</th>
+                                                            <th>Tổng nợ(VND)</th>
+                                                            <th>Giới hạn nợ(VND)</th>
+                                                            <th>Vượt giới hạn(VND)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>test</td>
+                                                            <td>test</td>
+                                                            <td>test</td>
+                                                            <td>test</td>
+                                                            <td>test</td>
+                                                            <td>test</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="title-color red">
+                                                Công nợ phải thu,
+                                                phải
+                                                trả
+                                            </p>
+                                            <div class="wrap-height-table-cn">
+                                                <table class="display table"
+                                                       id="table-cnpt-2"
+                                                       style="width:
+                            100%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Khách hàng</th>
+                                                            <th>Tên khách hàng</th>
+                                                            <th>Nhóm KH</th>
+                                                            <th>Tổng nợ(VND)</th>
+                                                            <th>Giới hạn nợ(VND)</th>
+                                                            <th>Vượt giới hạn(VND)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>test</td>
+                                                            <td>test</td>
+                                                            <td>test</td>
+                                                            <td>test</td>
+                                                            <td>test</td>
+                                                            <td>test</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 mt-4">
+                                            <div class="box-kq">
+                                                <p>Phải thu - phải trả = </p>
+                                                <p class="ketqua">- 45000</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+                        <!-- CN 2 !-->
+                        <!--<div class="tab-pane fade" id="cn-2" role="tabpanel"
+                             aria-labelledby="profile-tab">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="box-border sidebar-search">
+                                        <p class="box-border__title">Tiêu chí tìm kiếm</p>
+                                        <div class="box-select mt-4 mb-3">
+                                            <p><b>Chi nhánh</b></p>
+                                            <select name="" id="" class="w-100
+                        select-gray">
+                                                <option value="">Test</option>
+                                                <option value="">Test</option>
+                                                <option value="">Test</option>
+                                            </select>
+                                        </div>
+                                        <div class="box-select mt-3 mb-3">
+                                            <p><b>Khách hàng</b></p>
+                                            <div class="position-relative">
+                                                <select name="" id="" class="col-10 p-0
+                            select-gray">
+                                                    <option value="">Test</option>
+                                                    <option value="">Test</option>
+                                                    <option value="">Test</option>
+                                                </select>
+                                                <span class="search-icon
+                            color-white
+                            absolute"
+                                                      id="button-danh-sach-nv"
+                                                      data-toggle="modal"
+                                                      data-target="#tim-kiem-khach-hang">
+                                                    <i class="fas
+                                fa-search"></i>
+                                                </span>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="list-button mt-3">
+                                            <a href="#" class="btn btn-search d-block">
+                                                <img src="../assets/images/btn-search.png"
+                                                     alt="" class="inline"><span class="inline">
+                                                    Tìm
+                                                    kiếm
+                                                </span>
+                                            </a>
+                                            <a href="#" class="btn btn-export mt-1
+                        d-block">
+                                                <img src="../assets/images/btn-export.png"
+                                                     alt="" class="inline"><span class="inline">Xuất</span>
+                                            </a>
+                                            <a href="#" class="btn btn-print mt-1
+                        d-block">
+                                                <img src="../assets/images/btn-print.png"
+                                                     alt="" class="inline"><span class="inline">In</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="wrap-height-table">
+                                        <table class="table display table-striped"
+                                               style="width: 100%;" id="table_cn_chitiet">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Mã KH</th>
+                                                    <th>Tên KH</th>
+                                                    <th>Nhóm KH</th>
+                                                    <th>Điện thoại</th>
+                                                    <th>Di động</th>
+                                                    <th>Đại diện</th>
+                                                    <th>Ngày lập</th>
+                                                    <th>Số phiếu</th>
+                                                    <th>Lý do</th>
+                                                    <th>Nhân viên</th>
+                                                    <th>Hạn thanh toán</th>
+                                                    <th>Tiền tổng</th>
+                                                    <th>Tổng nợ(VND)</th>
+                                                    <th>Số trả(VND)</th>
+                                                    <th>Ngày công nợ</th>
+                                                    <th>Ghi chú</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>#</td>
+                                                    <td>Test</td>
+                                                    <td>Test</td>
+                                                    <td>Test</td>
+                                                    <td>Test</td>
+                                                    <td>Test</td>
+                                                    <td>Test</td>
+                                                    <td>Test</td>
+                                                    <td>Test</td>
+                                                    <td>Test</td>
+                                                    <td>Test</td>
+                                                    <td>Test</td>
+                                                    <td>Test</td>
+                                                    <td>Test</td>
+                                                    <td>Test</td>
+                                                    <td>Test</td>
+                                                    <td>Test</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+                        <!-- CN 3-->
+                        <!--<div class="tab-pane fade" id="cn-3" role="tabpanel"
+                             aria-labelledby="contact-tab">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="box-border sidebar-search">
+                                        <p class="box-border__title">Tiêu chí tìm kiếm</p>-->
+                        <!--Time-->
+                        <!--<div class="box-border mt-3">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-md-6 pl-0 pr-1">
+                                            <p>Từ ngày</p>
+                                            <input type="text"
+                                                   class="choose-date
+                        w-100">
+                                        </div>
+                                        <div class="col-md-6 pr-0 pl-1">
+                                            <p>Đến ngày</p>
+                                            <input type="text"
+                                                   class="choose-date
+                        w-100">
+                                        </div>
+                                        <div class="col-md-12 mt-2 p-0">
+                                            <select name="" id=""
+                                                    class="select-gray w-100">
+                                                <option value="">Hôm nay</option>
+                                                <option value="">Hôm qua</option>
+                                                <option value="">Hôm kia</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>-->
+                        <!-- Chi nhánh -->
+                        <!--<div class="box-border mt-3">
+                                    <table class="table w-100 table-a">
+                                        <thead>
+                                            <tr>
+                                                <th>Chi nhánh</th>
+                                                <th class="text-center">
+                                                    <input type="checkbox"><span class="ml-1">Chọn</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>C-Dự phòng</td>
+                                                <td class="text-center">
+                                                    <input type="checkbox">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>B-Kho hàng</td>
+                                                <td class="text-center">
+                                                    <input type="checkbox">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>A-Cửa hàng</td>
+                                                <td class="text-center">
+                                                    <input type="checkbox">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="form-check-inline mt-2">
+                                        <label class="form-check-label">
+                                            <input type="checkbox"
+                                                   class="form-check-input
+                        inline" value=""><span class="inline">
+                                                Chọn
+                                                tất
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>-->
+                        <!-- List Button -->
+                        <!--<div class="list-button mt-3">
+                                            <a href="#" class="btn btn-search d-block">
+                                                <img src="../assets/images/btn-search.png"
+                                                     alt="" class="inline"><span class="inline">
+                                                    Tìm
+                                                    kiếm
+                                                </span>
+                                            </a>
+                                            <a href="#" class="btn btn-export mt-1
+                        d-block">
+                                                <img src="../assets/images/btn-export.png"
+                                                     alt="" class="inline"><span class="inline">Xuất</span>
+                                            </a>
+                                            <a href="#" class="btn btn-print mt-1
+                        d-block">
+                                                <img src="../assets/images/btn-print.png"
+                                                     alt="" class="inline"><span class="inline">In</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-10 wrap-table-2">
+                                    <div class="content">
+                                        <p class="title-head">Nội dung</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+                        <!-- CN 4-->
+                        <!--<div class="tab-pane fade" id="cn-4" role="tabpanel"
+                             aria-labelledby="contact-tab">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="box-border sidebar-search">
+                                        <p class="box-border__title">Tiêu chí tìm kiếm</p>-->
+                        <!--Time-->
+                        <!--<div class="box-border mt-3">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-md-6 pl-0 pr-1">
+                                            <p>Từ ngày</p>
+                                            <input type="text"
+                                                   class="choose-date
+                        w-100">
+                                        </div>
+                                        <div class="col-md-6 pr-0 pl-1">
+                                            <p>Đến ngày</p>
+                                            <input type="text"
+                                                   class="choose-date
+                        w-100">
+                                        </div>
+                                        <div class="col-md-12 mt-2 p-0">
+                                            <select name="" id=""
+                                                    class="select-gray w-100">
+                                                <option value="">Hôm nay</option>
+                                                <option value="">Hôm qua</option>
+                                                <option value="">Hôm kia</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>-->
+                        <!-- Chi nhánh -->
+                        <!--<div class="box-border mt-3">
+                                    <table class="table w-100 table-a">
+                                        <thead>
+                                            <tr>
+                                                <th>Chi nhánh</th>
+                                                <th class="text-center">
+                                                    <input type="checkbox"><span class="ml-1">Chọn</span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>C-Dự phòng</td>
+                                                <td class="text-center">
+                                                    <input type="checkbox">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>B-Kho hàng</td>
+                                                <td class="text-center">
+                                                    <input type="checkbox">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>A-Cửa hàng</td>
+                                                <td class="text-center">
+                                                    <input type="checkbox">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="form-check-inline mt-2">
+                                        <label class="form-check-label">
+                                            <input type="checkbox"
+                                                   class="form-check-input
+                        inline" value=""><span class="inline">
+                                                Chọn
+                                                tất
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>-->
+                        <!-- List Button -->
+                        <!--<div class="list-button mt-3">
+                                                    <a href="#" class="btn btn-search d-block">
+                                                        <img src="../assets/images/btn-search.png"
+                                                             alt="" class="inline"><span class="inline">
+                                                            Tìm
+                                                            kiếm
+                                                        </span>
+                                                    </a>
+                                                    <a href="#" class="btn btn-export mt-1
+                                d-block">
+                                                        <img src="../assets/images/btn-export.png"
+                                                             alt="" class="inline"><span class="inline">Xuất</span>
+                                                    </a>
+                                                    <a href="#" class="btn btn-print mt-1
+                                d-block">
+                                                        <img src="../assets/images/btn-print.png"
+                                                             alt="" class="inline"><span class="inline">In</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-10 wrap-table-2">
+                                            <div class="content">
+                                                <p class="title-head">Nội dung</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+                    </div>
+
+                    <!-- Báo cáo bán hàng -->
+                    <div class="content-bc" id="bao-cao-ban-hang">
+
+                    </div>
+
+                    <!-- Sổ CSKH -->
+                    <div class="content-bc" id="so-cskh">
+                        <!--<div class="container-fluid mt-3 wrap-table-2">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="box-border sidebar-search">
+                                        <p class="box-border__title">Tiêu chí tìm kiếm</p>
+                                        <div class="box-select mt-3">
+                                            <p>Chi nhánh</p>
+                                            <select name="" id="" class="w-100
+                        bg-gray
+                        select-gray">
+                                                <option value="">CN 1</option>
+                                                <option value="">CN 2</option>
+                                                <option value="">CN 3</option>
+                                            </select>
+                                        </div>-->
+                        <!-- Nav tabs -->
+                        <!--<div class="box-border mt-3">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-md-6 pl-0 pr-1">
+                                                        <p>Từ ngày</p>
+                                                        <input type="text"
+                                                               class="choose-date
+                                    w-100">
+                                                    </div>
+                                                    <div class="col-md-6 pr-0 pl-1">
+                                                        <p>Đến ngày</p>
+                                                        <input type="text"
+                                                               class="choose-date
+                                    w-100">
+                                                    </div>
+
+                                                    <div class="col-md-12 p-0">
+                                                        <div class="box-select mt-3">
+                                                            <p>Nhân viên thu ngân</p>
+                                                            <select name="" id="" class="w-100
+                                        bg-gray
+                                        select-gray">
+                                                                <option value="">Name 1</option>
+                                                                <option value="">Name 2</option>
+                                                                <option value="">Name 3</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="list-button mt-3">
+                                            <a href="#" class="btn btn-search d-block">
+                                                <img src="../assets/images/btn-search.png"
+                                                     alt="" class="inline"><span class="inline">
+                                                    Tìm
+                                                    kiếm
+                                                </span>
+                                            </a>
+
+                                            <a href="#" class="btn btn-export mt-1
+                        d-block">
+                                                <img src="../assets/images/btn-export.png"
+                                                     alt="" class="inline"><span class="inline">Xuất</span>
+                                            </a>
+                                            <a href="#" class="btn btn-print mt-1
+                        d-block">
+                                                <img src="../assets/images/btn-print.png"
+                                                     alt="" class="inline"><span class="inline">In</span>
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="content">
+                                        <p class="title-head">Nội dung</p>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>-->
+                    </div>
+
+                    <!-- Quản lí hạn thẻ -->
+                    <div class="content-bc" id="quan-li-han-the">
+                        <!--<div class="container-fluid mt-4 wrap-table-2">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="box-border sidebar-search">
+                                        <p class="box-border__title">Tiêu chí tìm kiếm</p>-->
+                        <!-- Nav tabs -->
+                        <!--<ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab"
+                                   href="#grid">Grid</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tree">
+                                    Tree
+                                </a>
+                            </li>
+                        </ul>-->
+                        <!-- Tab panes -->
+                        <!--<div class="tab-content">
+                                            <div class="tab-pane active" id="grid">
+                                                <table class="table w-100 mt-3 table-a">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Chi nhánh</th>
+                                                            <th class="text-center">
+                                                                <input type="checkbox"><span class="ml-1">Chọn</span>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>C-Dự phòng</td>
+                                                            <td class="text-center">
+                                                                <input type="checkbox">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>B-Kho hàng</td>
+                                                            <td class="text-center">
+                                                                <input type="checkbox">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>A-Cửa hàng</td>
+                                                            <td class="text-center">
+                                                                <input type="checkbox">
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <div class="form-check-inline mt-2">
+                                                    <label class="form-check-label">
+                                                        <input type="checkbox"
+                                                               class="form-check-input inline"
+                                                               value=""><span class="inline">
+                                                            Chọn
+                                                            tất
+                                                        </span>
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                            <div class="tab-pane container fade" id="tree">...</div>
+                                        </div>
+
+                                        <div class="list-button mt-3">
+                                            <a href="#" class="btn btn-search d-block">
+                                                <img src="../assets/images/btn-search.png"
+                                                     alt="" class="inline"><span class="inline">
+                                                    Tìm
+                                                    kiếm
+                                                </span>
+                                            </a>
+
+                                            <a href="#" class="btn btn-export mt-1
+                        d-block">
+                                                <img src="../assets/images/btn-export.png"
+                                                     alt="" class="inline"><span class="inline">Xuất</span>
+                                            </a>
+                                            <a href="#" class="btn btn-print mt-1
+                        d-block">
+                                                <img src="../assets/images/btn-print.png"
+                                                     alt="" class="inline"><span class="inline">In</span>
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="content">
+                                        <p class="title-head">Nội dung</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+                    </div>
+
+                    <!-- Thu chi chốt ca -->
+                    <div class="content-bc" id="thu-chi-chot-ca">
+
+                    </div>
+
+                    <!-- Quản lí Serial -->
+                    <div class="content-bc" id="quan-li-serial">
+                        <!--<div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="home-tab"
+                                               data-toggle="tab" href="#s-1" role="tab"
+                                               aria-controls="home" aria-selected="true">
+                                                Chi tiết
+                                                Serial/IMEI
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="profile-tab" data-toggle="tab"
+                                               href="#s-2" role="tab" aria-controls="profile"
+                                               aria-selected="false">
+                                                Chi tiết
+                                                Serial/IMEI 2
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="contact-tab" data-toggle="tab"
+                                               href="#s-3" role="tab" aria-controls="contact"
+                                               aria-selected="false">Serial/IMEI</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="s-1" role="tabpanel"
+                                 aria-labelledby="home-tab">
+                                <div class="container-fluid mt-4 wrap-table-2">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <div class="box-border sidebar-search">
+                                                <p class="box-border__title">Tiêu chí tìm kiếm</p>-->
+                        <!-- Nav tabs -->
+                        <!--<ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab"
+                                   href="#grid">Grid</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab"
+                                   href="#tree">
+                                    Tree
+                                </a>
+                            </li>
+                        </ul>-->
+                        <!-- Tab panes -->
+                        <!--<div class="tab-content">
+                                                <div class="tab-pane active" id="grid">
+                                                    <table class="table w-100 mt-3 table-a">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Chi nhánh</th>
+                                                                <th class="text-center">
+                                                                    <input type="checkbox"><span class="ml-1">Chọn</span>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>C-Dự phòng</td>
+                                                                <td class="text-center">
+                                                                    <input type="checkbox">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>B-Kho hàng</td>
+                                                                <td class="text-center">
+                                                                    <input type="checkbox">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>A-Cửa hàng</td>
+                                                                <td class="text-center">
+                                                                    <input type="checkbox">
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <table class="table w-100 mt-5 table-a">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Mã kho</th>
+                                                                <th class="text-center">Chọn</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Dự phòng</td>
+                                                                <td class="text-center">
+                                                                    <input type="checkbox">
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div class="box-select mt-4 mb-3">
+                                                        <p><b>Chọn nhóm</b></p>
+                                                        <select name="" id="" class="w-100
+                                    select-gray">
+                                                            <option value="">Linh tinh</option>
+                                                            <option value="">Mã hủy</option>
+                                                            <option value="">Phụ tùng xe</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-check-inline mt-2">
+                                                        <label class="form-check-label">
+                                                            <input type="checkbox"
+                                                                   class="form-check-input inline"
+                                                                   value=""><span class="inline">
+                                                                Chọn
+                                                                tất
+                                                            </span>
+                                                        </label>
+                                                    </div>
+
+                                                </div>
+                                                <div class="tab-pane container fade" id="tree">...</div>
+                                            </div>
+
+                                            <div class="box-select mb-3 mt-3">
+                                                <p>Trạng thái EMEI</p>
+                                                <select name="" id="" class="w-100 bg-gray
+                            select-gray">
+                                                    <option value="">Chưa bán</option>
+                                                    <option value="">Đã bán</option>
+                                                    <option value="">Tất cả</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="list-button mt-3">
+                                                <a href="#" class="btn btn-search d-block">
+                                                    <img src="../assets/images/btn-search.png"
+                                                         alt="" class="inline"><span class="inline">
+                                                        Tìm
+                                                        kiếm
+                                                    </span>
+                                                </a>
+
+                                                <a href="#" class="btn btn-export mt-1
+                            d-block">
+                                                    <img src="../assets/images/btn-export.png"
+                                                         alt="" class="inline"><span class="inline">Xuất</span>
+                                                </a>
+                                                <a href="#" class="btn btn-print mt-1
+                            d-block">
+                                                    <img src="../assets/images/btn-print.png"
+                                                         alt="" class="inline"><span class="inline">In</span>
+                                                </a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div class="content">
+                                            <p class="title-head">Nội dung</p>
+                                            <div class="wrap-height-table">
+                                                <table class="display table table-serial">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Ngày nhập</th>
+                                                            <th>Mã hàng</th>
+                                                            <th>IMEI</th>
+                                                            <th>Bảo hành</th>
+                                                            <th>Ngày bán</th>
+                                                            <th>Cấu hình</th>
+                                                            <th>Trạng thái</th>
+                                                            <th>Số phiếu bán</th>
+                                                            <th>Mã KH</th>
+                                                            <th>Tên KH</th>
+                                                            <th>Địa chỉ</th>
+                                                            <th>Điện thoại</th>
+                                                            <th>Mobile</th>
+                                                            <th>Gia hạn lần 1</th>
+                                                            <th>Gia hạn lần 2</th>
+                                                            <th>Gia hạn lần 3</th>
+                                                            <th>Gia hạn lần 4</th>
+                                                            <th>Gia hạn lần 5</th>
+                                                            <th>Ghi chú</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <td>1</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    <td>test</td>
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>500</td>
+                                                            <td>Test</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>Test</td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="s-2" role="tabpanel"
+                             aria-labelledby="profile-tab">
+                            <div class="container-fluid mt-4 wrap-table-2">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="box-border sidebar-search">
+                                            <p class="box-border__title">Tiêu chí tìm kiếm</p>-->
+                        <!-- Nav tabs -->
+                        <!--<ul class="nav nav-tabs">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" data-toggle="tab"
+                                                   href="#grid">Grid</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-toggle="tab"
+                                                   href="#tree">
+                                                    Tree
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                        <div class="box-border mt-5">
+                                            <label class="form-check-label
+                        box-border__title text-dark">
+                                                <input type="checkbox"
+                                                       class="form-check-input" value=""><span class="ml-2">
+                                                    Khoảng
+                                                    thời gian
+                                                </span>
+                                            </label>
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-md-6 pl-0 pr-1">
+                                                        <p>Từ ngày</p>
+                                                        <input type="text"
+                                                               class="choose-date
+                                    w-100">
+                                                    </div>
+                                                    <div class="col-md-6 pr-0 pl-1">
+                                                        <p>Đến ngày</p>
+                                                        <input type="text"
+                                                               class="choose-date
+                                    w-100">
+                                                    </div>
+                                                    <div class="col-md-12 mt-3 p-0">
+                                                        <select name="" id="" class="w-100
+                                    select-gray">
+                                                            <option value="">
+                                                                Thời gian nhập
+                                                                kho
+                                                            </option>
+                                                            <option value="">
+                                                                Thời gian bán
+                                                                IMEI
+                                                            </option>
+                                                            <option value="">
+                                                                Thời hạn bảo
+                                                                hành
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>-->
+                        <!-- Tab panes -->
+                        <!--<div class="tab-content">
+                                                <div class="tab-pane active" id="grid">
+                                                    <table class="table w-100 mt-3 table-a">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Chi nhánh</th>
+                                                                <th class="text-center">
+                                                                    <input type="checkbox"><span class="ml-1">Chọn</span>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>C-Dự phòng</td>
+                                                                <td class="text-center">
+                                                                    <input type="checkbox">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>B-Kho hàng</td>
+                                                                <td class="text-center">
+                                                                    <input type="checkbox">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>A-Cửa hàng</td>
+                                                                <td class="text-center">
+                                                                    <input type="checkbox">
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <table class="table w-100 mt-5 table-a">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Mã kho</th>
+                                                                <th class="text-center">Chọn</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Dự phòng</td>
+                                                                <td class="text-center">
+                                                                    <input type="checkbox">
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div class="box-select mt-4 mb-3">
+                                                        <p><b>Chọn nhóm</b></p>
+                                                        <select name="" id="" class="w-100
+                                    select-gray">
+                                                            <option value="">Linh tinh</option>
+                                                            <option value="">Mã hủy</option>
+                                                            <option value="">Phụ tùng xe</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-check-inline mt-2">
+                                                        <label class="form-check-label">
+                                                            <input type="checkbox"
+                                                                   class="form-check-input inline"
+                                                                   value=""><span class="inline">
+                                                                Chọn
+                                                                tất
+                                                            </span>
+                                                        </label>
+                                                    </div>
+
+                                                </div>
+                                                <div class="tab-pane container fade" id="tree">...</div>
+                                            </div>
+
+                                            <div class="box-select mb-3 mt-3">
+                                                <p>Trạng thái EMEI</p>
+                                                <select name="" id="" class="w-100 bg-gray
+                            select-gray">
+                                                    <option value="">Chưa bán</option>
+                                                    <option value="">Đã bán</option>
+                                                    <option value="">Tất cả</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="list-button mt-3">
+                                                <a href="#" class="btn btn-search d-block">
+                                                    <img src="../assets/images/btn-search.png"
+                                                         alt="" class="inline"><span class="inline">
+                                                        Tìm
+                                                        kiếm
+                                                    </span>
+                                                </a>
+
+                                                <a href="#" class="btn btn-export mt-1
+                            d-block">
+                                                    <img src="../assets/images/btn-export.png"
+                                                         alt="" class="inline"><span class="inline">Xuất</span>
+                                                </a>
+                                                <a href="#" class="btn btn-print mt-1
+                            d-block">
+                                                    <img src="../assets/images/btn-print.png"
+                                                         alt="" class="inline"><span class="inline">In</span>
+                                                </a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div class="content">
+                                            <p class="title-head">Nội dung</p>
+                                            <div class="wrap-height-table">
+                                                <table class="display table table-serial">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>STT</th>
+                                                            <th>Kho</th>
+                                                            <th>Ngày nhập</th>
+                                                            <th>Mã hàng</th>
+                                                            <th>Tên hàng</th>
+                                                            <th>IMEI</th>
+                                                            <th>Bảo hành</th>
+                                                            <th>Số ngày lưu kho</th>
+                                                            <th>Ngày bán</th>
+                                                            <th>Trạng thái</th>
+                                                            <th>Số phiếu bán</th>
+                                                            <th>Mã KH</th>
+                                                            <th>Tên KH</th>
+                                                            <th>Địa chỉ</th>
+                                                            <th>Điện thoại</th>
+                                                            <th>Mobile</th>
+                                                            <th>Gia hạn lần 1</th>
+                                                            <th>Gia hạn lần 2</th>
+                                                            <th>Gia hạn lần 3</th>
+                                                            <th>Giá bán</th>
+                                                            <th>Kiểu bán</th>
+                                                            <th>Cấu hình</th>
+                                                            <th>Ghi chú</th>
+                                                            <th>Số phiếu nhập</th>
+                                                            <th>Lý do nhập</th>
+                                                            <th>Ghi chú phiếu nhập</th>
+                                                            <th>Mã NC</th>
+                                                            <th>Tên NCC</th>
+                                                            <th>MHDSO</th>
+                                                            <th>Vòng đời</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                            <td>Test</td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>500</td>
+                                                            <td>Test</td>
+                                                            <td>0</td>
+                                                            <td>0</td>
+                                                            <td>Test</td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="s-3" role="tabpanel"
+                             aria-labelledby="contact-tab">
+                            <div class="container-fluid mt-4 wrap-table-2">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="box-border sidebar-search">
+                                            <p class="box-border__title">Tiêu chí tìm kiếm</p>-->
+                        <!-- Nav tabs -->
+                        <!--<ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab"
+                                   href="#grid">Grid</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab"
+                                   href="#tree">
+                                    Tree
+                                </a>
+                            </li>
+                        </ul>-->
+                        <!-- Tab panes -->
+                        <!--<div class="tab-content">
+                                                    <div class="tab-pane active" id="grid">
+                                                        <table class="table w-100 mt-3 table-a">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Chi nhánh</th>
+                                                                    <th class="text-center">
+                                                                        <input type="checkbox"><span class="ml-1">Chọn</span>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>C-Dự phòng</td>
+                                                                    <td class="text-center">
+                                                                        <input type="checkbox">
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>B-Kho hàng</td>
+                                                                    <td class="text-center">
+                                                                        <input type="checkbox">
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>A-Cửa hàng</td>
+                                                                    <td class="text-center">
+                                                                        <input type="checkbox">
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+
+                                                        <table class="table w-100 mt-5 table-a">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Mã kho</th>
+                                                                    <th class="text-center">Chọn</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>Dự phòng</td>
+                                                                    <td class="text-center">
+                                                                        <input type="checkbox">
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+
+                                                        <div class="form-check-inline mt-2">
+                                                            <label class="form-check-label">
+                                                                <input type="checkbox"
+                                                                       class="form-check-input inline"
+                                                                       value=""><span class="inline">
+                                                                    Chọn
+                                                                    tất
+                                                                </span>
+                                                            </label>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="tab-pane container fade" id="tree">...</div>
+                                                </div>
+
+                                                <div class="list-button mt-3">
+                                                    <a href="#" class="btn btn-search d-block">
+                                                        <img src="../assets/images/btn-search.png"
+                                                             alt="" class="inline"><span class="inline">
+                                                            Tìm
+                                                            kiếm
+                                                        </span>
+                                                    </a>
+
+                                                    <a href="#" class="btn btn-export mt-1
+                                d-block">
+                                                        <img src="../assets/images/btn-export.png"
+                                                             alt="" class="inline"><span class="inline">Xuất</span>
+                                                    </a>
+                                                    <a href="#" class="btn btn-print mt-1
+                                d-block">
+                                                        <img src="../assets/images/btn-print.png"
+                                                             alt="" class="inline"><span class="inline">In</span>
+                                                    </a>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <div class="content">
+                                                <p class="title-head">Nội dung</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+                    </div>
+
+                    <!-- Tăng trưởng doanh số -->
+                    <div class="content-bc" id="tang-truong-doanh-so">
+                        <!--<div class="container-fluid mt-4 wrap-table-2">
+                            <div class="row mt-4">
+                                <div class="col-md-2">
+                                    <div class="box-border sidebar-search">
+                                        <p class="box-border__title">Tiêu chí tìm kiếm</p>-->
+                        <!-- Nav tabs -->
+                        <!--<ul class="nav nav-tabs">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" data-toggle="tab"
+                                                   href="#grid">Grid</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-toggle="tab"
+                                                   href="#tree">
+                                                    Tree
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                        <div class="box-border mt-3">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-md-6 pl-0 pr-1">
+                                                        <p>Từ ngày</p>
+                                                        <input type="text"
+                                                               class="choose-date
+                                    w-100">
+                                                    </div>
+                                                    <div class="col-md-6 pr-0 pl-1">
+                                                        <p>Đến ngày</p>
+                                                        <input type="text"
+                                                               class="choose-date
+                                    w-100">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="box-select mt-4 mb-3">
+                                            <p><b>Chọn nhóm</b></p>
+                                            <select name="" id="" class="w-100
+                        select-gray">
+                                                <option value="">Linh tinh</option>
+                                                <option value="">Mã hủy</option>
+                                                <option value="">Phụ tùng xe</option>
+                                            </select>
+                                        </div>-->
+                        <!-- Tab panes -->
+                        <!--<div class="tab-content">
+                                            <div class="tab-pane active" id="grid">
+                                                <div class="box-border mt-3">
+                                                    <table class="table w-100 table-a">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Chi nhánh</th>
+                                                                <th class="text-center">
+                                                                    <input type="checkbox"><span class="ml-1">Chọn</span>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>C-Dự phòng</td>
+                                                                <td class="text-center">
+                                                                    <input type="checkbox">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>B-Kho hàng</td>
+                                                                <td class="text-center">
+                                                                    <input type="checkbox">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>A-Cửa hàng</td>
+                                                                <td class="text-center">
+                                                                    <input type="checkbox">
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <table class="table w-100 mt-5 table-a">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Mã kho</th>
+                                                                <th class="text-center">Chọn</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Dự phòng</td>
+                                                                <td class="text-center">
+                                                                    <input type="checkbox">
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <div class="form-check-inline mt-2">
+                                                        <label class="form-check-label">
+                                                            <input type="checkbox"
+                                                                   class="form-check-input
+                                        inline"
+                                                                   value=""><span class="inline">
+                                                                Chọn
+                                                                tất
+                                                            </span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane container fade" id="tree">...</div>
+                                        </div>
+
+                                        <div class="list-button mt-3">
+                                            <a href="#" class="btn btn-search d-block">
+                                                <img src="../assets/images/btn-search.png"
+                                                     alt="" class="inline"><span class="inline">
+                                                    Tìm
+                                                    kiếm
+                                                </span>
+                                            </a>
+
+                                            <a href="#" class="btn btn-export mt-1
+                        d-block">
+                                                <img src="../assets/images/btn-export.png"
+                                                     alt="" class="inline"><span class="inline">Xuất</span>
+                                            </a>
+                                            <a href="#" class="btn btn-print mt-1
+                        d-block">
+                                                <img src="../assets/images/btn-print.png"
+                                                     alt="" class="inline"><span class="inline">In</span>
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-10 pl-0">
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="home-tab"
+                                               data-toggle="tab" href="#tt-1" role="tab"
+                                               aria-controls="home" aria-selected="true">
+                                                Tăng
+                                                trưởng doanh số(Chart)
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="profile-tab" data-toggle="tab"
+                                               href="#tt-2" role="tab" aria-controls="profile"
+                                               aria-selected="false">Tăng trưởng doanh số(Bar)</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="contact-tab" data-toggle="tab"
+                                               href="#tt-3" role="tab" aria-controls="contact"
+                                               aria-selected="false">Tăng trưởng doanh số</a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content mt-3" id="myTabContent">
+                                        <div class="tab-pane fade show active" id="tt-1"
+                                             role="tabpanel" aria-labelledby="home-tab">
+                                            <div class="content">
+                                                <p class="title-head">Nội dung 1</p>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="tt-2" role="tabpanel"
+                                             aria-labelledby="profile-tab">
+                                            <div class="content">
+                                                <p class="title-head">Nội dung 2</p>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="tt-3" role="tabpanel"
+                                             aria-labelledby="contact-tab">
+                                            <div class="content">
+                                                <p class="title-head">Nội dung 3</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+                    </div>
+
+                    <!-- Theo dõi hàng tôn -->
+                    <div class="content-bc" id="theo-doi-hang-ton">
+
+                    </div>
+
+                    <!-- Lợi nhuận -->
+                    <div class="content-bc" id="loi-nhuan">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section myScripts{
+    <script>
+        function SoKho() {
+            return $.ajax({
+                async: false,
+                type: 'GET',
+                url: '/ThongKeTongHop/CheckSoKho',
+                success: function (msg) {
+                    if (msg.status == 1) {
+                        $("#sokho").load("/ThongKeTongHop/SoKho");
+                    }
+                    else {
+                        toast.create({
+                            title: 'Notification!',
+                            text: msg.message,
+                            icon: 'error_outline',
+                            classBackground: 'noti-error',
+                            timeout: 3000
+                        });
+                    }
+                }
+            });
+        }
+
+        function TonKho() {
+            return $.ajax({
+                async: false,
+                type: 'GET',
+                url: '/ThongKeTongHop/CheckTonKho',
+                success: function (msg) {
+                    if (msg.status == 1) {
+                        $("#tonkho").load("/ThongKeTongHop/TonKho");
+                    }
+                    else {
+                        toast.create({
+                            title: 'Notification!',
+                            text: msg.message,
+                            icon: 'error_outline',
+                            classBackground: 'noti-error',
+                            timeout: 3000
+                        });
+                    }
+                }
+            });
+        }
+
+        function HetHang() {
+            return $.ajax({
+                async: false,
+                type: 'GET',
+                url: '/ThongKeTongHop/CheckHetHang',
+                success: function (msg) {
+                    if (msg.status == 1) {
+                        $("#hethang").load("/ThongKeTongHop/HetHang");
+                    }
+                    else {
+                        toast.create({
+                            title: 'Notification!',
+                            text: msg.message,
+                            icon: 'error_outline',
+                            classBackground: 'noti-error',
+                            timeout: 3000
+                        });
+                    }
+                }
+            });
+        }
+
+        function LoiNhuan() {
+            return $.ajax({
+                async: false,
+                type: 'GET',
+                url: '/ThongKeTongHop/CheckLoiNhuan',
+                success: function (msg) {
+                    if (msg.status == 1) {
+                        $("#loi-nhuan").load("/ThongKeTongHop/LoiNhuan");
+                    }
+                    else {
+                        toast.create({
+                            title: 'Notification!',
+                            text: msg.message,
+                            icon: 'error_outline',
+                            classBackground: 'noti-error',
+                            timeout: 3000
+                        });
+                    }
+                }
+            });
+        }
+
+        function BaoCaoBanHang() {
+            return $.ajax({
+                async: false,
+                type: 'GET',
+                url: '/ThongKeTongHop/CheckBaoCaoBanHang',
+                success: function (msg) {
+                    if (msg.status == 1) {
+                        $("#bao-cao-ban-hang").load("/ThongKeTongHop/BaoCaoBanHang");
+                    }
+                    else {
+                        toast.create({
+                            title: 'Notification!',
+                            text: msg.message,
+                            icon: 'error_outline',
+                            classBackground: 'noti-error',
+                            timeout: 3000
+                        });
+                    }
+                }
+            });
+        }
+
+        function ThuChiChotCa() {
+            return $.ajax({
+                async: false,
+                type: 'GET',
+                url: '/ThongKeTongHop/CheckThuChiChotCa',
+                success: function (msg) {
+                    if (msg.status == 1) {
+                        $("#thu-chi-chot-ca").load("/ThongKeTongHop/ThuChiChotCa");
+                    }
+                    else {
+                        toast.create({
+                            title: 'Notification!',
+                            text: msg.message,
+                            icon: 'error_outline',
+                            classBackground: 'noti-error',
+                            timeout: 3000
+                        });
+                    }
+                }
+            });
+        }
+
+        function TheKhoChiTiet() {
+            return $.ajax({
+                async: false,
+                type: 'GET',
+                url: '/ThongKeTongHop/CheckTheKhoChiTiet',
+                success: function (msg) {
+                    if (msg.status == 1) {
+                        $("#the-kho-chi-tiet").load("/ThongKeTongHop/TheKhoChiTiet");
+                    }
+                    else {
+                        toast.create({
+                            title: 'Notification!',
+                            text: msg.message,
+                            icon: 'error_outline',
+                            classBackground: 'noti-error',
+                            timeout: 3000
+                        });
+                    }
+                }
+            });
+        }
+
+        function TheoDoiHangTon() {
+            return $.ajax({
+                async: false,
+                type: 'GET',
+                url: '/ThongKeTongHop/CheckTheoDoiHangTon',
+                success: function (msg) {
+                    if (msg.status == 1) {
+                        $('#theo-doi-hang-ton').load("/ThongKeTongHop/TheoDoiHangTon");
+                    }
+                    else {
+                        toast.create({
+                            title: 'Notification!',
+                            text: msg.message,
+                            icon: 'error_outline',
+                            classBackground: 'noti-error',
+                            timeout: 3000
+                        });
+                    }
+                }
+            });
+        }
+
+        function removeBC(name) {
+            if (name === 'sokho') {
+                $("#sokho").empty();
+            } else if (name === 'tonkho') {
+                $("#tonkho").empty();
+            } else if (name === 'hethang') {
+                $("#hethang").empty();
+            } else if (name === 'the-kho-chi-tiet') {
+                $("#the-kho-chi-tiet").empty();
+            } else if (name === 'cong-no-phai-thu-tra') {
+                $("#cong-no-phai-thu-tra").empty();
+            } else if (name === 'bao-cao-ban-hang') {
+                $("#bao-cao-ban-hang").empty();
+            } else if (name === 'so-cskh') {
+                $("#so-cskh").empty();
+            } else if (name === 'quan-li-han-the') {
+                $("#quan-li-han-the").empty();
+            } else if (name === 'thu-chi-chot-ca') {
+                $("#thu-chi-chot-ca").empty();
+            } else if (name === 'quan-li-serial') {
+                $("#quan-li-serial").empty();
+            } else if (name === 'tang-truong-doanh-so') {
+                $("#tang-truong-doanh-so").empty();
+            } else if (name === 'theo-doi-hang-ton') {
+                $("#theo-doi-hang-ton").empty();
+            } else if (name === 'loi-nhuan') {
+                $("#loi-nhuan").empty();
+            }
+        }
+
+        $('button[data-bc]').on('click', function () {
+
+            var data_bc = $(this).attr('data-bc');
+            var prev = getPrev(data_bc)[0];
+            removeBC(prev);
+
+            if (prev != undefined) {
+                var scripts = document.getElementsByTagName('script');
+                for (var i = 0; i < scripts.length; i++) {
+                    if (scripts[i].className == "js-baocao-chitiet") {
+                        scripts[i].parentNode.removeChild(scripts[i]);
+                        i--;
+                    }
+                }
+            }
+
+            if (data_bc === 'sokho') {
+                SoKho();
+            }
+            else if (data_bc === 'tonkho') {
+                TonKho();
+            }
+            else if (data_bc == 'hethang') {
+                HetHang();
+            }
+            else if (data_bc == 'loi-nhuan') {
+                LoiNhuan();
+            }
+            else if (data_bc == 'bao-cao-ban-hang') {
+                BaoCaoBanHang();
+            }
+            else if (data_bc == 'thu-chi-chot-ca') {
+                ThuChiChotCa();
+            }
+            else if (data_bc == 'the-kho-chi-tiet') {
+                TheKhoChiTiet();
+            }
+            else if (data_bc == 'theo-doi-hang-ton') {
+                TheoDoiHangTon();
+            }
+        });
+
+        let arr = new Array();
+        let remove = new Array();
+        function getPrev(attr) {
+            if (arr.length > 0) {
+                if (arr.length == 1) {
+                    arr.push(attr);
+                    return remove;
+                }
+                else {
+                    remove = arr.splice(1, 1);
+                    arr.push(attr);
+                    return remove;
+                }
+            }
+            else {
+                arr.push(attr);
+                remove.push(attr);
+                return [];
+            }
+        };
+    </script>
+}

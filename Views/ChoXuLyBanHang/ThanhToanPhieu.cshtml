@@ -1,0 +1,631 @@
+﻿
+
+@{
+    ViewBag.Title = "DanhSachPhienKiemHang";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+<link href="~/App_Themes/select2/css/select2.min.css" rel="stylesheet" />
+<style>
+    #table-chi-tiet-phieu-thanh-toan-phieu_filter {
+        display: none;
+    }
+    #sua-vi-tri .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    input[readonly] {
+        background: #ccc
+    }
+
+    #tb-import-vitri input {
+        height: 30px;
+        border-radius: 5px;
+        width: 100%;
+        padding: 5px;
+    }
+    @@media only screen and (min-width:1440px) and (max-width: 2560px) {
+        .wrap-height-table-2 {
+            height: 400px !important
+        }
+    }
+</style>
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link" id="choxuly"
+                           href="~/ChoXuLyBanHang/ChoXuLy" role="tab"
+                           aria-controls="home" aria-selected="false">
+                            Chờ xử lý
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="luuphieu"
+                           href="~/ChoXuLyBanHang/LuuPhieu" role="tab" aria-controls="profile"
+                           aria-selected="false">Lưu phiếu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="cholayhang"
+                           href="~/ChoXuLyBanHang/ChoLayHang" role="tab" aria-controls="profile"
+                           aria-selected="false">Chờ lấy hàng</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" id="thanhtoan"
+                           href="~/ChoXuLyBanHang/ThanhToanPhieu" role="tab" aria-controls="profile"
+                           aria-selected="true">Đã xử lý</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="huyphieu"
+                           href="~/ChoXuLyBanHang/HuyPhieu" role="tab" aria-controls="profile"
+                           aria-selected="false">Hủy phiếu</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="wrap-table__header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box-choose-time" id="date-vitri">
+                        <p class="mr-2">Từ</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_From" data-date-format="mm/dd/yyyy">
+                        <p class="mr-2">Đến</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_To" data-date-format="mm/dd/yyyy">
+
+                        <select id="sl_LoaiHD" class="mr-2">
+                            <option value="">Loại hóa đơn</option>
+                            <option value="0">Hóa đơn bán hàng</option>
+                            <option value="2">Phiếu nhập kho</option>
+                            <option value="1">Hàng bán trả lại</option>
+                        </select>
+
+                        <div class="list-button">
+                            <a href="#" class="btn btn-export
+                            inline" id="btn-search-phienkiemhang">
+                                <img src="/App_Themes/assets/images/btn-search.png" alt="" class="inline"><span class="inline">Tìm kiếm</span>
+                            </a>
+                            <!-- Button In -->
+                            <a href="#" class="btn btn-print
+                            inline" id="btn-in-phieuthanhtoan">
+                                <img src="/App_Themes/assets/images/btn-print.png"
+                                     alt="" class="inline"><span class="inline">In</span>
+                            </a>
+                            <a href="#" class="btn btn-export
+                            inline" id="excel-thanh-toan-phieu">
+                                <img src="/App_Themes/assets/images/btn-export.png"
+                                     alt="" class="inline"><span class="inline">Xuất</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__body">
+            <div class="wrap-height-table">
+                <table class="table display table-striped" style="width: 100%;"
+                       id="table-thanh-toan">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Thời gian</th>
+                            <th>Mã đơn</th>
+                            <th>Tên KH</th>
+                            <th>Ghi chú</th>
+                            <th>Số tiền</th>
+                            <th>Nhân viên</th>
+                            <th>Ghi chú phụ</th>
+                            <th>Loại</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal-them-order">
+        <div class="modal fade default-popup popup-them-order" id="chi-tiet-hoa-don"
+             tabindex="-1"
+             role="dialog"
+             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title title-popup"
+                            id="exampleModalLongTitle">
+                            Xem chi tiết phiếu bán hàng
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    @*Thêm/Sửa Order*@
+                    <div class="modal-body">
+                        <div class="container-fluid mt-3">
+                            <div class="wrap-box-border bg-white position-relative
+                            mt-3">
+                                <p class="title-special">Chi tiết phiếu</p>
+                                <div id="qrcode"></div>
+                                <div class="box-border p-2" style="border: none;">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="wrap-height-table-2">
+                                                <table border="1" class="display table
+                                                table-striped" style="width: 100%;"
+                                                       id="table-chi-tiet-phieu-thanh-toan-phieu">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Mã hàng</th>
+                                                            <th>Tên hàng</th>
+                                                            <th>Số lượng</th>
+                                                            <th>Đơn vị</th>
+                                                            <th>Đơn giá</th>
+                                                            <th>Thành tiền</th>
+                                                            <th>Ghi chú</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">
+                            Đóng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section myScripts{
+    <script src="~/App_Themes/select2/js/select2.full.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(document).keydown(async function (e) {
+
+                if (e.which == 113) {
+                    e.preventDefault();
+                    $('#choxuly')[0].click();
+                }
+                else if (e.which == 114) {
+                    e.preventDefault();
+                    $('#luuphieu')[0].click();
+                }
+                else if (e.which == 115) {
+                    e.preventDefault();
+                    $('#thanhtoan')[0].click();
+                }
+                else if (e.which == 117) {
+                    e.preventDefault();
+                    $('#btn-in-phieuthanhtoan').click();
+                }
+                else if (e.which == 120) {
+                    e.preventDefault();
+                    $('#table-thanh-toan_filter label input').focus();
+                }
+                else if (e.which == 121) {
+                    e.preventDefault();
+                    $('#huyphieu')[0].click();
+                }
+            })
+            $('input[name="chooseDate_From"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            $('input[name="chooseDate_To"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            let tbThanhToanPhieu_filterValues = {};
+            let tbThanhToan = $('#table-thanh-toan').DataTable({
+                serverSide: true,
+                bFilter: false,
+                bInfo: false,
+                ajax: function (data, callback, settings) {
+                    tbThanhToanPhieu_filterValues.draw = data.draw;
+                    tbThanhToanPhieu_filterValues.start = data.start;
+                    tbThanhToanPhieu_filterValues.length = data.length;
+                    tbThanhToanPhieu_filterValues.order = data.order[0].column;
+                    tbThanhToanPhieu_filterValues.dir = data.order[0].dir;
+                    tbThanhToanPhieu_filterValues.search = data.search["value"];
+                    tbThanhToanPhieu_filterValues.FromDate = $('#date-vitri input[name="chooseDate_From"]').val();
+                    tbThanhToanPhieu_filterValues.ToDate = $('#date-vitri input[name="chooseDate_To"]').val();
+                    $.ajax({
+                        url: '/ChoXuLyBanHang/LoadDataThanhToanPhieu',
+                        method: 'GET',
+                        data: tbThanhToanPhieu_filterValues,
+                        success: function (msg) {
+                            if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                return false;
+                            }
+                            else if (msg.status == 3) {
+                                if (tbThanhToanPhieu_filterValues.draw != 1) {
+                                    toast.create({
+                                        title: 'Notification',
+                                        text: msg.message,
+                                        icon: 'error-outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                    return false;
+                                }
+                            }
+                        }
+                    }).done(callback, () => { });
+                },
+                "order": [[1, "desc"]],
+                columnDefs: [
+                    {
+                        "targets": 0,
+                        "data": null
+                    },
+                    {
+                        "targets": 1,
+                        "data": "NGAYTHANHTOAN"
+                    },
+                    {
+                        "targets": 2,
+                        "data": "BHDCODE"
+                    },
+                    {
+                        "targets": 3,
+                        "data": "KHTEN"
+                    },
+                    {
+                        "targets": 4,
+                        "data": "DIENGIAI"
+                    },
+                    {
+                        "targets": 5,
+                        "data": "TONGTIEN",
+                        render: function (data) {
+                            return data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+                        }
+                    },
+                    {
+                        "targets": 6,
+                        "data": "NHANVIENTHAOTAC"
+                    },
+                    {
+                        "targets": 7,
+                        "data": "GHICHUPHU"
+                    },
+                    {
+                        "targets": 8,
+                        "data": "LOAI",
+                        render: function (data, type, row) {
+                            if (data == "NH") {
+                                return '<a type="button" class="btn btn-warning text-white mr-1 btn-custom">NH</a>';
+                            } else if (data == "TH") {
+                                return '<a type="button" class="btn btn-danger text-white mr-1 btn-custom" >TH</a> ';
+                            } else {
+                                return '<a type="button" class="btn btn-success text-white mr-1 btn-custom">BH</a>';
+                            }
+
+                        }
+                    },
+                    {
+                        "targets": 9,
+                        "data": "BHDID",
+                        render: function (data, type, row) {
+                            return '<a type="button" id="print-xephang" value="' + data + '" class="btn btn-success text-white mr-1">Chờ xử lý</a>';
+                        }
+                    },
+                    {
+                        "targets": [0, 8],
+                        "orderable": false
+                    }
+                ],
+                fnCreatedRow: function (nRow, data, iDataIndex) {
+                    $(nRow).attr('data-id', data.BHDID);
+                    $(nRow).attr('data-type', data.LOAI);
+                },
+                "fnRowCallback": function (nRow, data, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                },
+                scrollX: true,
+                scrollResize: true,
+                scrollY: 100,
+                scrollCollapse: true,
+
+                paging: true,
+                searching: true,
+                pageLength: 10,
+                lengthChange: false,
+
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 50
+                },
+            });
+
+            //Search ngày -> ngày
+            $('#btn-search-phienkiemhang').click(function () {
+                tbThanhToanPhieu_filterValues.FromDate = $('#date-vitri input[name="chooseDate_From"]').val();
+                tbThanhToanPhieu_filterValues.ToDate = $('#date-vitri input[name="chooseDate_To"]').val();
+                tbThanhToanPhieu_filterValues.Loai = $('#sl_LoaiHD option:selected').val();
+                tbThanhToan.columns.adjust().draw();
+            });
+
+            //Click
+            $(document).on('click', '#table-thanh-toan tbody tr', function () {
+                $(this).addClass('selected');
+                $('#table-thanh-toan tbody tr').not(this).removeClass('selected');
+            });
+
+            $('#table-thanh-toan tbody').on('click', 'a[type="button"]', function () {
+                var id = $(this).attr('value');
+                var type = $(this).closest('tr').attr('data-type');
+
+                if (confirm('Bạn chắc chắn muốn chuyển qua chờ xử lý cho đơn này không?')) {
+                    $.ajax({
+                        async: true,
+                        method: 'POST',
+                        url: '/ChoXuLyBanHang/XuLyPhieuThanhToan',
+                        data: { "BHDID": id, "TrangThai": 1, "Type": type },
+                        success: function (msg) {
+                            if (msg.status == 1) {
+                                tbThanhToan.columns.adjust().draw();
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'check',
+                                    classBackground: 'noti-success',
+                                    timeout: 3000
+                                });
+                            }
+                            else if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                            }
+                            else if (msg.status == 3) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                            }
+                        }
+                    });
+                }
+            });
+
+            $('#btn-in-phieuthanhtoan').click(function () {
+                let id = $('#table-thanh-toan tbody tr.selected').attr('data-id');
+                let type = $('#table-thanh-toan tbody tr.selected').attr('data-type');
+                if (id == undefined) {
+                    toast.create({
+                        title: 'Thông Báo!',
+                        text: 'Hãy chọn một đơn hàng',
+                        icon: 'error_outline',
+                        classBackground: 'noti-error',
+                        timeout: 3000
+                    })
+                }
+                else {
+
+                    $.ajax({
+                        method: "GET",
+                        url: "/ChoXuLyBanHang/CheckRoleInThanhToan",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (msg) {
+                            if (msg.status == 1) {
+
+
+                                var link = '';
+                                if (type == "TH") {
+                                    link = '/BanHang/InHoaDonBanTra?bhtid=' + id;
+                                } else if (type == "NH") {
+                                    link = '/PhieuNhapKho/Print?mhdid=' + id;
+                                } else {
+                                    link = '/BanHang/InThanhToanXepHangBanHang?bhdid=' + id;
+                                }
+                                window.open(link);
+                            }
+                            else if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                            }
+                            else if (msg.status == 3) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                location.reload();
+                            }
+                        }
+                    })
+                }
+            })
+
+            //Double Click
+            $(document).on('dblclick', '#table-thanh-toan tbody tr', function () {
+                var id = $(this).attr('data-id');
+                var type = $(this).attr('data-type');
+                if (tbCTThanhToan_filterValues.BHDID !== id) {
+                    tbCTThanhToan_filterValues.BHDID = id;
+                    tbCTThanhToan_filterValues.Type = type;
+                    tbCTThanhToan_filterValues.statusDraw++;
+                    tbCTThanhToan.draw();
+                }
+                $('#chi-tiet-hoa-don').modal();
+            });
+            $('#chi-tiet-hoa-don').on('shown.bs.modal', function () {
+                tbCTThanhToan.columns.adjust();
+            });
+            //#Region Load Ban Hang
+            var tbCTThanhToan_filterValues = {};
+            tbCTThanhToan_filterValues.statusDraw = 0;
+            var tbCTThanhToan = $('#table-chi-tiet-phieu-thanh-toan-phieu').DataTable({
+                serverSide: true,
+                bFilter: false,
+                "ordering": false,
+                bInfo: false,
+                ajax: function (data, callback, settings) {
+                    if (tbCTThanhToan_filterValues.statusDraw > 0) {
+                        tbCTThanhToan_filterValues.draw = data.draw;
+                        tbCTThanhToan_filterValues.search = data.search["value"];
+                        tbCTThanhToan_filterValues.start = data.start;
+                        tbCTThanhToan_filterValues.length = data.length;
+                        $.ajax({
+                            url: '/ChoXuLyBanHang/LoadDataCTThanhToanPhieu',
+                            method: 'GET',
+                            data: tbCTThanhToan_filterValues,
+                            success: function (msg) {
+                                if (msg.status == 2) {
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'error_outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                } else if (msg.status == 3) {
+                                    if (tbCTThanhToan_filterValues.draw != 1) {
+                                        toast.create({
+                                            title: 'Notification!',
+                                            text: msg.message,
+                                            icon: 'error_outline',
+                                            classBackground: 'noti-error',
+                                            timeout: 3000
+                                        });
+                                        location.reload();
+                                    }
+                                }
+                            },
+                        }).done(callback, () => {
+                        });
+                    }
+                },
+                fnCreatedRow: function (nRow, data, iDataIndex) {
+                    $(nRow).attr('data-id', data.MDID);
+                },
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                    return nRow;
+                },
+                columns: [
+                    { data: null },
+                    { data: "MHCODE" },
+                    { data: "MHTEN" },
+                    {
+                        data: "SOLUONG",
+                        render: function (data, type, full, meta) {
+                            return data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+                        }
+                    },
+                    { data: "DONVI" },
+                    {
+                        data: "DONGIA",
+                        render: function (data, type, full, meta) {
+                            return data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+                        }
+                    },
+                    {
+                        data: "THANHTIEN",
+                        render: function (data, type, full, meta) {
+                            return data.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+                        }
+                    },
+                    { data: "GHICHU" },
+                ],
+                scrollY: 350,
+                scrollX: true,
+                searching: "true",
+                paging: true,
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 100,
+                },
+            });
+            //end
+
+            //#Region Excel Thanh Toan Phieu
+            $('#excel-thanh-toan-phieu').click(function () {
+                $.ajax({
+                    method: "GET",
+                    url: "/ChoXuLyBanHang/CheckRoleXuatTTP",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {   
+                        if (msg.status == 1) {
+                            var link = `/ChoXuLyBanHang/ExcelThanhToanPhieu?` + serialize(tbThanhToanPhieu_filterValues) + ``;
+                            window.open(link)
+                        }
+                        else if (msg.status == 2) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                        }
+                        else if (msg.status == 3) {
+                            toast.create({
+                                title: 'Notification!',
+                                text: msg.message,
+                                icon: 'error_outline',
+                                classBackground: 'noti-error',
+                                timeout: 3000
+                            });
+                            location.reload();
+                        }
+                    }
+                })
+            });
+            //End
+
+            //#endregion
+        });
+        serialize = function (obj) {
+            var str = [];
+            for (var p in obj)
+                if (obj.hasOwnProperty(p)) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+            return str.join("&");
+        }
+        function delay(fn, ms) {
+            let timer = 0
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(fn.bind(this, ...args), ms || 0)
+            }
+        }
+    </script>
+}

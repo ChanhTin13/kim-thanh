@@ -1,0 +1,98 @@
+﻿
+<div class="modal fade default-popup popup-danh-sach-khach-hang"  id="btn-nhap-bh" tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                    Import Đơn hàng từ file Excel
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body import-excel-nhapkho">
+                <div class="container-fluid wrap-table-2 table-mat-hang p-0">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="wrap-height-table-2 bg-white p-2 mt-2 border">
+                                <table class="table display table-striped" id="table-import-bh" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên hàng</th>
+                                            <th>Số lượng</th>
+                                            <th>Đơn vị</th>
+                                            <th>Đơn giá VND</th>
+                                            <th>Thuế</th>
+                                            <th>CK%</th>
+                                            <th>Ghi chú</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-2 pl-0 sidebar-search">
+                            <div class="box-border mt-4">
+                                <p class="box-border__title bg-gray">Import giá Excel</p>
+                                <p>Tìm excel sheets để nhập</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <input type="file" id="FileUploadBH" style="display: none" />
+                                    <select name="" id="" class="col-10 h-100">
+                                    </select>
+                                    <button id="btnFileUploadBH" class="btn btn-default ">
+                                        <img src="/App_Themes/assets/images/paste-excel.png"
+                                             alt="">
+                                    </button>
+                                </div>
+                                <div class="list-button mt-2">
+                                    @*<a id="btn-nap-file-excel" href="#" class="btn   btn-search d-block">
+                                            <img src="/App_Themes/assets/images/loading.png" alt=""
+                                                 class="inline"><span class="inline">
+                                                Nạp lại từ
+                                                Excel
+                                            </span>
+                                        </a>*@
+                                    <a id="btn-create-file-excel" href="#" class="btn btn-search d-block">
+                                        <img src="/App_Themes/assets/images/btn-export.png" alt=""
+                                             class="inline"><span class="inline">
+                                            Tạo mẫu nhập
+                                            liệu
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="list-button list-button-last mt-3">
+                                <p> <u>Chú ý</u>: Khi import hệ thống sẽ không import những dòng trên excel có số lượng = 0 và những mặt hàng nào bị trùng hệ thống sẽ tự động tăng số lượng </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-ghi-import-bh" type="button" class="btn btn-primary">Lưu</button>
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

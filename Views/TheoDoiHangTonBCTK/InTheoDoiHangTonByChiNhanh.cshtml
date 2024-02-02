@@ -1,0 +1,163 @@
+﻿@using KimThanh.Controllers
+@model TheoDoiHangTonBCTKController.PrintChiNhanh
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>In Theo Dõi Hàng Tồn</title>
+    <meta http-equiv="Cache-control" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
+    <meta name="robots" content="noodp,noydir" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="og:site_name" content="" />
+    <meta name="description" content=" " />
+    <meta name="keywords" content="" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="" />
+    <meta property="og:description" content="" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/fonts/Averta/font.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/scss/style.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/fontawesome/css/all.css" />
+    <style>
+        body {
+            font-family: "Times New Roman";
+        }
+    </style>
+</head>
+<body>
+    <main class="wrapper">
+        <div>
+            <div class="note__header">
+                <div class="note__header--title">
+                    <h2 class="title">In Theo Dõi Hàng Tồn Theo Chi Nhánh</h2>
+                </div>
+            </div>
+            <div class="note__body">
+                <div class="note__body--table">
+                    <div class="wrap-height-table table-responsive">
+                        <table class="table-pnk display"
+                               id="table-phieu-xuat-kho"
+                               style="width: 100%">
+                            @if (Model != null)
+                            {
+                                if (Model.MonthOrWeek)
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên hàng</th>
+                                            <th>SL 01-07</th>
+                                            <th>SL 08-14</th>
+                                            <th>SL 15-22</th>
+                                            <th>SL 23-30</th>
+                                            <th>SL > 30</th>
+                                            <th>Tổng SL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+
+                                            int STT = 0;
+                                            var cul = new System.Globalization.CultureInfo("vi-VN");
+                                            foreach (var item in Model.DeTailWeek)
+                                            {
+                                                <tr>
+                                                    <td>@(++STT)</td>
+                                                    <td>@item.MHCODE</td>
+                                                    <td>@item.MHTEN</td>
+                                                    <td style="color: #00c853">@String.Format(cul, "{0:N0}", item.SL0107)</td>
+                                                    <td>@String.Format(cul, "{0:N0}", item.SL0814)</td>
+                                                    <td style="color: #ffa000">@String.Format(cul, "{0:N0}", item.SL1522)</td>
+                                                    <td style="color: #ef6c00">@String.Format(cul, "{0:N0}", item.SL2330)</td>
+                                                    <td style="color: #ff1744">@String.Format(cul, "{0:N0}", item.SL30N)</td>
+                                                    <td>@String.Format(cul, "{0:N0}", item.TONGSL)</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="3">@String.Format(cul, "{0:N0}", Model.DeTailWeek[0].TotalRow);</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model.DeTailWeek[0].SLT0107)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model.DeTailWeek[0].SLT0814)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model.DeTailWeek[0].SLT1522)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model.DeTailWeek[0].SLT2330)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model.DeTailWeek[0].SLT30N)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model.DeTailWeek[0].SLT)</th>
+                                        </tr>
+                                    </tfoot>
+                                }
+                                else
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên hàng</th>
+                                            <th>SL 01-30</th>
+                                            <th>SL 31-60</th>
+                                            <th>SL 61-90</th>
+                                            <th>SL 91-120</th>
+                                            <th>SL > 120</th>
+                                            <th>Tổng SL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+
+                                            int STT = 0;
+                                            var cul = new System.Globalization.CultureInfo("vi-VN");
+                                            foreach (var item in Model.DeTailMonth)
+                                            {
+                                                <tr>
+                                                    <td>@(++STT)</td>
+                                                    <td>@item.MHCODE</td>
+                                                    <td>@item.MHTEN</td>
+                                                    <td style="color: #00c853">@String.Format(cul, "{0:N0}", item.SL0130)</td>
+                                                    <td>@String.Format(cul, "{0:N0}", item.SL3160)</td>
+                                                    <td style="color: #ffa000">@String.Format(cul, "{0:N0}", item.SL6190)</td>
+                                                    <td style="color: #ef6c00">@String.Format(cul, "{0:N0}", item.SL91120)</td>
+                                                    <td style="color: #ff1744">@String.Format(cul, "{0:N0}", item.SL120N)</td>
+                                                    <td>@String.Format(cul, "{0:N0}", item.TONGSL)</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="3">@String.Format(cul, "{0:N0}", Model.DeTailMonth[0].TotalRow)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model.DeTailMonth[0].SLT0130)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model.DeTailMonth[0].SLT3160)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model.DeTailMonth[0].SLT6190)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model.DeTailMonth[0].SLT91120)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model.DeTailMonth[0].SLT120N)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model.DeTailMonth[0].SLT)</th>
+                                        </tr>
+                                    </tfoot>
+                                }
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script type="text/javascript" src="/App_Themes/js/moment.js"></script>
+    <script src="~/App_Themes/js/jquery.js"></script>
+    @*<script type="text/javascript" src="js/jquery-3.2.1.slim.min.js"></script>
+        <script type="text/javascript" src="js/popper.min.js"></script>
+        <script type="text/javascript" src="../js/bootstrap.min.js"></script>*@
+    <script>
+
+        $(document).ready(function () {
+            window.print();
+        })
+    </script>
+</body>
+</html>

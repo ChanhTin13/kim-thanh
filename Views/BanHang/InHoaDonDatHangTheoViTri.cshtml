@@ -1,0 +1,152 @@
+﻿
+@using KimThanh.Controllers
+@model  BanHangController.PrintTheoViTri
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In Hóa Đơn</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .all {
+            width: 650px;
+            margin: auto;
+        }
+
+        .body-bill {
+            padding-top: 115px;
+            margin-top: 30px;
+            font-size: 18px;
+        }
+
+            .body-bill .product {
+                margin-bottom: 10px;
+                padding-left: 25px;
+            }
+
+                .body-bill .product .id-main {
+                    font-weight: bold;
+                    text-align: left;
+                }
+
+                .body-bill .product table {
+                    width: 100%;
+                }
+
+        .body-bill .product table tr {
+                        height: 20px;
+                    }
+
+        .w-50 {
+            width: 50%;
+        }
+
+        .w-10 {
+            width: 10%;
+            text-align: right;
+        }
+
+        .w-15 {
+            width: 15%;
+            text-align: right;
+        }
+        .bottom-td {
+            padding-bottom: 30px
+        }
+
+        .row {
+            display: flex;
+        }
+        .mg-a{
+            margin:auto;
+        }
+        .w-125px {
+            width: 125px;
+            text-align: right;
+        }
+
+        .w-70px {
+            width: 70px;
+            text-align: right;
+        }
+        
+        .w-50px {
+            width: 50px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="bill-qv">
+        <div class="all">
+            <div class="body-bill">
+                <input type="hidden" value="@Model.CHITIET.BHDCODE" id="BHDCODE" />
+                <div class="product">
+                    
+                    <div>
+                        @{
+                            var Index = 0;
+                            var cul = new System.Globalization.CultureInfo("vi-VN");
+                            foreach (var item in Model.DataTheoViTris)
+                            {
+                                if (Model.SoViTri == Index)
+                                {
+                                    <div class="row">
+                                        <div class="id-main" style="white-space: nowrap;">@Model.CHITIET.BHDCODE - @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")</div>
+                                        <div style="display:list-item" id="barCodeBHDCODE"></div>
+                                    </div>
+                                }
+                                else if (string.IsNullOrEmpty(item.MHCODE))
+                                {
+                                    <div style="height:40px!important">
+
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="row mg-a">
+                                        <div style="text-align: left;width:255px;flex:1;">@item.MHTEN</div>
+                                        <div class="w-50px">@item.DONVI</div>
+                                        <div class="w-50px">@String.Format(cul, "{0:N0}", item.SOLUONG)</div>
+                                        <div class="w-125px">@String.Format(cul, "{0:N0}", Convert.ToDouble(item.DONGIA))</div>
+                                        <div class="w-125px">@String.Format(cul, "{0:N0}", Convert.ToDouble(item.THANHTIEN))</div>
+                                    </div>
+                                }
+                                Index++;
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="/App_Themes/js/moment.js"></script>
+    <script src="~/App_Themes/js/jquery.js"></script>
+    <script src="~/PageScript/MatHang/jquery-barcode.js"></script>
+    <script src="~/App_Themes/js/qrcode.js"></script>
+    <script>
+        $(document).ready(function () {
+            InBarCode($('#BHDCODE').val());
+            window.print();
+        })
+        //#region BarCode
+        //In barCode
+        function InBarCode(value) {
+            $("#barCodeBHDCODE").barcode(
+                value,
+                "code128",
+                { barWidth: 2, barHeight: 20 }
+            );
+        }
+        //#endregion
+    </script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+﻿
+
+
+@{
+    ViewBag.Title = "LuanChuyenHang";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+<style>
+    .select2-container--default {
+        width: 300px !important
+    }
+</style>
+<link href="~/App_Themes/select2/css/select2.min.css" rel="stylesheet" />
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="wrap-table__button">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="list-button text-left">
+                        <button id="btn-create-file-excel" class="btn btn-default ">
+                            <img src="/App_Themes/assets/images/paste-excel.png"
+                                 alt=""> kiểm tra
+                        </button>
+                        <select id="sl-nhomhang" multiple="multiple">
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div hidden class="box-choose-time" id="date-vitri">
+                        <p class="mr-2">Từ</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_From" data-date-format="mm/dd/yyyy">
+                        <p class="mr-2">Đến</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_To" data-date-format="mm/dd/yyyy">
+
+                        <button class="btn btn-trans" id="btn-search-vitri">
+                            <img src="../App_Themes/assets/images/loading.png" alt="" class="inline">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrap-table__body">
+            <div class="wrap-height-table">
+                <table class="table display table-striped" style="width: 100%;"
+                       id="table-luanchuyenhang">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Ngày tạo</th>
+                            <th>Mã NV yêu cầu</th>
+                            <th>Số lượng mã hàng</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+@section myScripts{
+    <script>
+        $(document).ready(function () {
+            $('input[name="chooseDate_From"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            $('input[name="chooseDate_To"]').val(moment(new Date()).format('DD/MM/yyyy'));
+            let fdate = moment(new Date()).format('DD/MM/yyyy');
+            let tdate = moment(new Date()).format('DD/MM/yyyy');
+
+            var tblLuanChuyenHang_filterValues = {};
+            var table_luanchuyenhang = $('#table-luanchuyenhang').DataTable({
+                serverSide: true,
+                bFilter: false,
+                bInfo: false,
+                "order": [[1, "desc"]],
+                ajax: function (data, callback, settings) {
+                    tblLuanChuyenHang_filterValues.draw = data.draw;
+                    tblLuanChuyenHang_filterValues.search = data.search["value"];
+                    tblLuanChuyenHang_filterValues.fdate = fdate;
+                    tblLuanChuyenHang_filterValues.tdate = tdate;
+                    tblLuanChuyenHang_filterValues.start = data.start;
+                    tblLuanChuyenHang_filterValues.length = data.length;
+                    tblLuanChuyenHang_filterValues.order = data.order[0].column;
+                    tblLuanChuyenHang_filterValues.dir = data.order[0].dir;
+
+                    $.ajax({
+                        url: '/TonKhoMin/LoadDataLuanChuyenHang',
+                        method: 'GET',
+                        data: tblLuanChuyenHang_filterValues,
+                        success: function (msg) {
+                            console.log(msg.data);
+                            if (msg.status == 2) {
+                                toast.create({
+                                    title: 'Notification!',
+                                    text: msg.message,
+                                    icon: 'error_outline',
+                                    classBackground: 'noti-error',
+                                    timeout: 3000
+                                });
+                                return false;
+                            } else if (msg.status == 3) {
+                                if (tblLuanChuyenHang_filterValues.draw != 1) {
+                                    toast.create({
+                                        title: 'Notification!',
+                                        text: msg.message,
+                                        icon: 'error_outline',
+                                        classBackground: 'noti-error',
+                                        timeout: 3000
+                                    });
+                                    location.reload();
+                                    return false;
+                                }
+                            }
+                        },
+                    }).done(callback, () => {
+
+                    });
+                },
+                columnDefs: [
+                    {
+                        "targets": [0],
+                        "orderable": false
+                    },
+                ],
+                columns: [
+                    { "data": null },
+                    { "data": "NgayTaoString" },
+                    { "data": "NGUOITAO" },
+                    { "data": "SOLUONGMAHANG" },
+                ],
+                fnCreatedRow: function (nRow, data, iDataIndex) {
+                    $(nRow).attr('data-id', data.ID);
+
+                },
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    var info = $(this).DataTable().page.info();
+                    $("td:nth-child(1)", nRow).html(info.start + iDisplayIndex + 1);
+                    return nRow;
+                },
+                scroller: {
+                    loadingIndicator: true,
+                    displayBuffer: 15
+                },
+                // scrollY: '300px',
+                scrollResize: true,
+                scrollY: 100,
+                scrollCollapse: true,
+                bInfo: false,
+                paging: true,
+                searching: true,
+                pageLength: 5,
+                lengthChange: false,
+                orderCellsTop: true
+            });
+
+            $('#btn-create-file-excel').click(function () {
+                if (confirm('Bạn có muốn kiếm hàng ?')) {
+                    let ListID = $("#sl-nhomhang").val();
+                    //var arrStr = encodeURIComponent(JSON.stringify(ListID));
+                    var link = `/TonKhoMin/ExportLuanChuyenHang/?ListNH=` + ListID.toString()
+                    window.open(link)
+                    table_luanchuyenhang.columns.adjust().draw();
+                }
+            });
+
+            LoadNH().then(function (e) {
+                $("#sl-nhomhang").empty();
+                $.each(e.data, function (key, value) {
+                    console.log(value);
+                    $('#sl-nhomhang')
+                        .append($("<option></option>")
+                            .attr("value", value.ID)
+                            .text(value.MHLTEN));
+                });
+                $("#sl-nhomhang").select2();
+            });
+
+            function LoadNH() {
+                return $.ajax({
+                    type: 'GET',
+                    url: '/TonKhoMin/LoadNhomHang',
+                    success: function (res) {
+                        console.log(res);
+                        return res;
+                    }
+                });
+            }
+        });
+        serialize = function (obj) {
+            var str = [];
+            for (var p in obj)
+                if (obj.hasOwnProperty(p)) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+            return str.join("&");
+        }
+        function delay(fn, ms) {
+            let timer = 0
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(fn.bind(this, ...args), ms || 0)
+            }
+        }
+    </script>
+}

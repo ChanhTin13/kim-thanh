@@ -1,0 +1,1063 @@
+﻿
+@{
+    ViewBag.Title = "BaoCao";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+<style>
+    @@media only screen and (min-width:1020px) and (max-width:1439px) {
+        .sidebar-search {
+            width: 150%;
+        }
+
+        .custom {
+            padding-left: 6%;
+        }
+    }
+    @@media only screen and (max-width:768px) {
+        .sidebar-search {
+            width: 200%;
+        }
+
+        .custom {
+            padding-left: 12%;
+        }
+    }
+    .table-nv tbody tr.selected td:nth-child(3) {
+        color: #ffffff;
+    }
+
+    .table-nv tbody tr.selected td:nth-child(2) {
+        color: #ffffff;
+    }
+
+    .was-validated input:required:valid, input:required.is-valid {
+        border-color: #15af76;
+        background-image: url('/App_themes/assets/images/btn-tick.png');
+        background-repeat: no-repeat;
+        background-position: right calc(.375em + .23438rem) center;
+    }
+
+    .was-validated input:required:invalid {
+        border-color: #ff0000;
+        background-image: url(/App_themes/assets/images/error-form.png);
+        background-repeat: no-repeat;
+        background-position: right calc(.375em + 0.1rem) center;
+    }
+
+    .pull-left {
+        float: left !important;
+    }
+
+    .pull-right {
+        float: right !important;
+    }
+
+    #table-phieu-chuyen-kho tbody tr.selected td:nth-child(1) {
+        color: #000000;
+    }
+
+    .disabled-chuyen-kho {
+        pointer-events: none;
+        opacity: 0.4;
+    }
+
+    select[name="slNguoiDeNghi"] + .select2-container--default {
+        width: 80% !important;
+    }
+
+    select[name="slSRXuat"] + .select2-container--default {
+        width: 59% !important;
+    }
+
+    select[name="slKhoXuat"] + .select2-container--default {
+        width: 59% !important;
+    }
+
+    select[name="slSRNhap"] + .select2-container--default {
+        width: 59% !important;
+    }
+
+    select[name="slKhoNhap"] + .select2-container--default {
+        width: 59% !important;
+    }
+
+    #myTabContent .select2-container--default {
+        width: 100% !important;
+    }
+</style>
+<main class="wrapper bg-white">
+    <div class="container-fluid mt-4 wrap-table-2">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#bc-chuyenkho-1" role="tab" aria-controls="home" aria-selected="true">
+                            BC chuyển kho chi tiết
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#bc-chuyenkho-2" role="tab" aria-controls="profile" aria-selected="false">
+                            BC chuyển kho nhóm theo mặt hàng
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="bc-chuyenkho-1" role="tabpanel" aria-labelledby="home-tab">
+                <div class="row mt-4">
+                    <div class="col-md-2">
+                        <div class="box-border sidebar-search" id="search-bao-cao">
+                            <p class="box-border__title">Tiêu chí tìm kiếm</p>
+                            <div class="box-border mt-3">
+                                <label class="form-check-label ml-2 box-border__title text-dark">
+                                    <span class="ml-2">Khoảng thời gian</span>
+                                </label>
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-md-6 pl-0 pr-1">
+                                            <p>Từ ngày</p>
+                                            <input type="text" class="datetimepicker w-100 date-only" name="fromBCChuyenKho">
+                                        </div>
+                                        <div class="col-md-6 pr-0 pl-1">
+                                            <p>Đến ngày</p>
+                                            <input type="text" class="datetimepicker w-100 date-only" name="toBCChuyenKho">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-select mt-2">
+                                <p><b>Chi nhánh</b></p>
+                                <select name="slShowRoom" class="w-100"></select>
+                            </div>
+                            <div class="box-select mt-2">
+                                <p>Tr.thái phiếu chuyển kho</p>
+                                <select name="slStatusBCChuyenKho" id="" class="w-100 select-gray">
+                                    <option value="0">Đang chờ xác nhận (pending)</option>
+                                    <option value="1">Đã xác nhận (verified && approved) </option>
+                                    <option value="2">Tất cả</option>
+                                </select>
+                            </div>
+
+                            <div class="list-button mt-3">
+                                <a href="#" class="btn btn-search d-block" id="btn-search-bao-cao">
+                                    <img src="../App_Themes/assets/images/btn-search.png" alt="" class="inline">
+                                    <span class="inline">Tìm kiếm</span>
+                                </a>
+                                <a href="#" class="btn btn-export mt-1 d-block" id="btn-export-bao-cao">
+                                    <img src="../App_Themes/assets/images/btn-export.png" alt="" class="inline">
+                                    <span class="inline">Xuất</span>
+                                </a>
+                                <a href="#" class="btn btn-print mt-1 d-block">
+                                    <img src="../App_Themes/assets/images/btn-print.png" alt="" class="inline">
+                                    <span class="inline">In</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-10 custom">
+                        <div class="content">
+                            <p class="title-head">Nội dung</p>
+                        </div>
+                        <div class="content-tab">
+                            <div class="wrap-height-table-2">
+                                <table class="table display" style="width: 100%;" id="table-bao-cao-chuyen-kho">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Đã xác nhận</th>
+                                            <th>Số phiếu</th>
+                                            <th>Ngày chứng từ</th>
+                                            <th>CN xuất</th>
+                                            <th>CN nhập</th>
+                                            <th>Kho xuất</th>
+                                            <th>Kho nhập</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên hàng</th>
+                                            <th>SL xuất</th>
+                                            <th>SL nhập</th>
+                                            <th>Đơn giá</th>
+                                            <th>Thành tiền</th>
+                                            <th>Diễn giải</th>
+                                            <th>User lập phiếu</th>
+                                            <th>User xác nhận</th>
+                                            <th>Thủ kho nhập</th>
+                                            <th>Thủ kho xuất</th>
+                                            <th>Ngày tạo</th>
+                                            <th>Ngày xác nhận</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="bc-chuyenkho-2" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="row mt-4">
+                    <div class="col-md-2">
+                        <div class="box-border sidebar-search" id="search-bao-cao-mat-hang">
+                            <p class="box-border__title">Tiêu chí tìm kiếm</p>
+                            <div class="box-border mt-3">
+                                <label class="form-check-label ml-2 box-border__title text-dark">
+                                    <span class="ml-2">Khoảng thời gian</span>
+                                </label>
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-md-6 pl-0 pr-1">
+                                            <p>Từ ngày</p>
+                                            <input type="text" class="datetimepicker w-100 date-only" name="fromBCChuyenKho">
+                                        </div>
+                                        <div class="col-md-6 pr-0 pl-1">
+                                            <p>Đến ngày</p>
+                                            <input type="text" class="datetimepicker w-100 date-only" name="toBCChuyenKho">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-border mt-3">
+                                <label class="form-check-label ml-2 box-border__title text-dark">
+                                    <span class="ml-2">Chọn nhóm</span>
+                                </label>
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-md-4 pl-0 pr-1">
+                                            <span>Tất cả</span>
+                                            <input type="radio" name="NhomHang" id="checkAll" value="0" checked>
+                                        </div>
+                                        <div class="col-md-6 pr-0 pl-1">
+                                            <span>Chọn nhóm</span>
+                                            <input type="radio" name="NhomHang" id="checkChoose" value="1">
+                                        </div>
+                                        <div class="col-md-2 pr-0 pl-1 dropdown" id="dropdown-tree-mathang" style="display:none;">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <div class="box-dia-chi box-info" id="nhomHang">
+                                                    <div class="content mt-2" id="jstree"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="box-select mt-2">
+                                <p>Chi nhánh xuất</p>
+                                <select name="slSRXuat" id="" class="w-100"></select>
+                            </div>
+
+                            <div class="box-select mt-2">
+                                <p><b>Kho xuất</b></p>
+                                <select name="slKhoXuat" id="" class="w-100"></select>
+                            </div>
+
+                            <div class="box-select mt-2">
+                                <p>Chi nhánh nhập</p>
+                                <select name="slSRNhap" id="" class="w-100"></select>
+                            </div>
+
+
+                            <div class="box-select mt-2">
+                                <p><b>Kho nhập</b></p>
+                                <select name="slKhoNhap" id="" class="w-100"></select>
+                            </div>
+
+                            <div class="box-select mt-2">
+                                <p>Tr.thái phiếu chuyển kho</p>
+                                <select name="slStatus-BaoCao-ChuyenKho-MatHang" id="" class="w-100 select-gray">
+                                    <option value="0">Đang chờ xác nhận (pending)</option>
+                                    <option value="1">Đã xác nhận (verified && approved) </option>
+                                    <option value="2">Tất cả</option>
+                                </select>
+                            </div>
+
+                            <div class="list-button mt-3">
+                                <a href="#" class="btn btn-search d-block" id="btn-search-bao-cao-mat-hang">
+                                    <img src="../App_Themes/assets/images/btn-search.png" alt="" class="inline">
+                                    <span class="inline">Tìm kiếm</span>
+                                </a>
+
+                                <a href="#" class="btn btn-export mt-1 d-block" id="btn-export-bao-cao-mat-hang">
+                                    <img src="../App_Themes/assets/images/btn-export.png" alt="" class="inline">
+                                    <span class="inline">Xuất</span>
+                                </a>
+                                <a href="#" class="btn btn-print mt-1 d-block">
+                                    <img src="../App_Themes/assets/images/btn-print.png" alt="" class="inline">
+                                    <span class="inline">In</span>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-10 custom">
+                        <div class="content">
+                            <p class="title-head">Nội dung</p>
+                        </div>
+                        <div class="content-tab">
+                            <div class="wrap-height-table-2">
+                                <table class="table display"
+                                       style="width: 100%;"
+                                       id="table-bao-cao-chuyen-kho-mat-hang">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên hàng</th>
+                                            <th>Đơn vị tính</th>
+                                            <th>SL nhập</th>
+                                            <th>SL xuất</th>
+                                            <th>Đơn giá</th>
+                                            <th>Thành tiền</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Thêm/Sửa phiếu chuyển kho-->
+    <div class="modal fade default-popup popup-them-order" id="them-phieu-chuyen-kho"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">Thêm/Sửa phiếu chuyển kho</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="list-button text-left">
+                                    <a href="#" class="btn btn-save inline" id="btn-save-ct-chuyen-kho">
+                                        <img src="../App_Themes/assets/images/btn-save.png" alt="" class="inline">
+                                        <span class="inline">Ghi</span>
+                                    </a>
+                                    <a href="#" class="btn btn-print inline" id="btn-print-ct-chuyen-kho">
+                                        <img src="../App_Themes/assets/images/btn-print.png" alt="" class="inline">
+                                        <span class="inline">In</span>
+                                    </a>
+                                    <a href="#" class="btn btn-export inline" id="btn-export-ct-phieu-kho">
+                                        <img src="../App_Themes/assets/images/btn-export.png" alt="" class="inline">
+                                        <span class="inline">Xuất</span>
+                                    </a>
+                                    <a href="#" class="btn btn-export inline" id="btn-import-ct-phieu-kho">
+                                        <img src="../App_Themes/assets/images/btn-import-2.png" alt="" class="inline">
+                                        <span class="inline">Nhập</span>
+                                    </a>
+                                    <a href="#" class="btn btn-question inline">
+                                        <img src="../App_Themes/assets/images/question.png" alt="" class="inline">
+                                        <span class="inline">Hỏi</span>
+                                    </a>
+                                    <a href="#" class="btn btn-close inline">
+                                        <img src="../App_Themes/assets/images/btn-close.png" alt="" class="inline">
+                                        <span class="inline">Đóng</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-fluid mt-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="box-border">
+                                    <form action="" class="default-form">
+                                        <div class="row">
+                                            <input type="hidden" name="idPhieuChuyenKho" />
+                                            <div class="col-md-12 pr-5">
+                                                <div class="form-group">
+                                                    <label for="">Người đề nghị</label>
+                                                    <select name="slNguoiDeNghi" id="" class="col-9 p-0 select2">
+                                                        <option value="0">---Chọn người đề nghị---</option>
+                                                    </select>
+                                                    <span class="search-icon color-white absolute right-30" id="btn-nhan-vien-ct-chuyen-kho">...</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="">Thủ kho xuất</label>
+                                                    <input type="text" class="col-7 p-0" name="thuKhoXuatPhieuChuyenKho">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Chi nhánh xuất</label>
+                                                    <select name="slSRXuat" id="" class="col-7 p-0"></select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Kho xuất</label>
+                                                    <select name="slKhoXuat" id="" class="col-7 p-0"></select>
+                                                    <button type="button" class="btn btn-success" id="btn-all-kho-xuat">✓</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 pl-0 pr-5">
+                                                <div class="form-group">
+                                                    <label for="">Thủ kho nhập</label>
+                                                    <input type="text" class="col-7 p-0" name="thuKhoNhapPhieuChuyenKho">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Chi nhánh nhập</label>
+                                                    <select name="slSRNhap" id="" class="col-7 p-0 select2"></select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Kho nhập</label>
+                                                    <select name="slKhoNhap" id="" class="col-7 p-0 select2"></select>
+                                                    <button type="button" class="btn btn-success" id="btn-all-kho-nhap">✓</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 pr-5">
+                                                <div class="form-group">
+                                                    <label for="">Diễn giải</label>
+                                                    <textarea name="dienGiaiPhieuChuyenKho" id="" class="w-100 mt-2 col-10"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="row" style="padding-top: 2rem;">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="">Lý do xuất</label>
+                                            <select name="slLyDoXuatChuyenKho" id="" class="col-7 p-0 select2">
+                                                <option value="0">---Chọn lý do xuất---</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="">Lý do nhập</label>
+                                            <select name="slLyDoNhapChuyenKho" id="" class="col-7 p-0 select2">
+                                                <option value="0">---Chọn lý do nhập---</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box-border h-100">
+                                    <form action="" class="default-form">
+                                        <div class="form-group">
+                                            <label for="">Số phiếu</label>
+                                            <input style="background: #dddddd;" readonly type="text" class="col-7 p-0" name="soPhieuChuyenKho">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Ngày</label>
+                                            <input type="text" required class="datepicker datetimepicker date-only choose-date col-7 p-0" name="ngayChuyenKho">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Ca làm việc</label>
+                                            <select name="slCaLamViecChuyenKho" id="" class="col-7 p-0"></select>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="box-trang-thai disabled-chuyen-kho" id="form-check-chuyen-kho">
+                                    <p class="title"><b>Thủ kho nhập xác nhận</b></p>
+                                    <div class="form-check mt-2">
+                                        <label class="form-check-label">
+                                            <input type="checkbox" name="checkApprovedChuyenKho" id="" class="form-check-input" value=""><span>
+                                                Xác nhận đã nhập đủ hàng
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-fluid mt-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box-border pb-2 pt-2 bg-white">
+                                    <div class="row">
+                                        <div class="col-md-10 d-flex align-items-center">
+                                            <div class="box-row-under">
+                                                <div class="wrap-search box-form ml-5 w-100 position-relative">
+                                                    <p class="title-nau mr-2">Mã hàng</p>
+                                                    <!--Input Search-->
+                                                    <input type="text" placeholder="Tìm kiếm..." class="pl-2 click-to-show-table" style="width: 250px;" id="global_filter">
+                                                    <!-- Table -->
+                                                    <div class="table-search big">
+                                                        <div class="wrap-height-table-2">
+                                                            <table class="table display table-striped" id="table-search-mahang-chuyen-kho" width="100%">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>#</th>
+                                                                        <th>Mã hàng</th>
+                                                                        <th>Tên hàng </th>
+                                                                        <th>Alias</th>
+                                                                        <th>Mô tả</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody></tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div>
+                                                            <div class="table-search__footer text-right">
+                                                                <button type="button" class="btn btn-primary" id="btn-selected-search-mat-hang"> Chọn </button>
+                                                                <button type="button" class="btn btn-primary" id="btn-selected-and-exit-search-mat-hang"> Chọn và thoát </button>
+                                                                <button type="button" class="btn btn-secondary btn-out-table-search"> Thoát </button>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <ul class="list-icon-button mb-0">
+                                                    <li title="Nhập nhanh mặt hàng theo Barcode(Color/size)" data-toggle="modal" data-target="#tim-kiem-mat-hang"><img src="../App_Themes/assets/images/typing.png" alt=""></li>
+                                                    <li title="Kiểm tra hàng xuất" data-toggle="modal" data-target="#tim-kiem-mat-hang"><img src="../App_Themes/assets/images/search-nhanh.png" alt=""></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 d-flex justify-content-start align-items-center">
+                                            <div class="list-button">
+                                                <a href="#" class="btn btn-tick inline disabled-chuyen-kho" data-toggle="modal" data-target="#danh-sach-khuyen-mai"><img src="../App_Themes/assets/images/btn-tick.png" alt="" class="inline"><span class="inline">Chuyển kho nhanh</span></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wrap-box-border bg-white position-relative mt-3">
+                            <div class="box-border p-2" style="border: none;">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="wrap-height-table-2">
+                                            <table class="display table table-striped" style="width: 100%;" id="table-ct-chuyen-kho">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Mã hàng</th>
+                                                        <th>Tên hàng</th>
+                                                        <th>Kho xuất</th>
+                                                        <th>Kho nhập</th>
+                                                        <th>Số lượng</th>
+                                                        <th>Đơn vị</th>
+                                                        <th>Đơn giá</th>
+                                                        <th>Check</th>
+                                                        <th>Ghi chú</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danh mục nhân viên -->
+    <div class="modal fade default-popup popup-danhsach-nv" id="danh-sach-nv"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Danh
+                        mục nhân viên
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="ql-user user-table wrap-table-pq">
+                                    <div class="user-table__header">
+                                        <div class="row justify-content-end">
+                                            <div class="col-md-7">
+                                                <div class="list-button text-left">
+                                                    <a href="#" class="btn btn-add inline" id="btn-insert-nhan-vien">
+                                                        <img src="~/App_Themes/assets/images/btn-add.png"
+                                                             alt="" class="inline">
+                                                        <span class="inline">Thêm</span>
+                                                    </a>
+                                                    <a href="#" class="btn btn-fix inline" id="btn-update-nhan-vien">
+                                                        <img src="~/App_Themes/assets/images/btn-fix.png"
+                                                             alt="" class="inline"><span class="inline">Sửa</span>
+                                                    </a>
+                                                    <a href="#" class="btn btn-del inline" id="btn-delete-nhan-vien">
+                                                        <img src="~/App_Themes/assets/images/btn-del.png"
+                                                             alt="" class="inline"><span class="inline">Xóa</span>
+                                                    </a>
+                                                    <a href="#" class="btn btn-export inline" id="btn-export-nhan-vien">
+                                                        <img src="~/App_Themes/assets/images/btn-export.png"
+                                                             alt="" class="inline"><span class="inline">Xuất</span>
+                                                    </a>
+                                                    <a href="@Url.Action("Index","NhanVien")" class="btn btn-import inline">
+                                                        <img src="~/App_Themes/assets/images/btn-import.png"
+                                                             alt="" class="inline"><span class="inline">Nạp</span>
+                                                    </a>
+                                                    <a href="#excel-nhanvien" data-toggle="modal" class="btn btn-export inline">
+                                                        <img src="/App_Themes/assets/images/btn-import-2.png"
+                                                             alt="" class="inline"><span class="inline">Nhập</span>
+                                                    </a>
+                                                    @*<a href="#" class="btn btn-print inline" id="btn-print-nhan-vien">
+                                                            <img src="~/App_Themes/assets/images/btn-print.png"
+                                                                 alt="" class="inline"><span class="inline">In</span>
+                                                        </a>
+                                                        <a href="http://htsoft.vn/phan-mem-quan-ly/index.htm" class="btn btn-question inline" target="_blank">
+                                                            <img src="~/App_Themes/assets/images/question.png"
+                                                                 alt="" class="inline"><span class="inline">Hỏi</span>
+                                                        </a>*@
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="wrap-height-table">
+                                        <table class="table display nowrap row-border order-column table-striped table-fixed table-nv" style="width:100%" id="table-nv">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Mã NV</th>
+                                                    <th>Tên NV</th>
+                                                    <th>Địa chỉ</th>
+                                                    <th>Điện thoại</th>
+                                                    <th>Ngày sinh</th>
+                                                    <th>Giới tính</th>
+                                                    <th>Chức vụ</th>
+                                                    <th>Mức lương</th>
+                                                    <th>CMTND</th>
+                                                    <th>Theo dõi</th>
+                                                    <th>Người QL</th>
+                                                    <th>Ghi chú</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Thêm nhân viên -->
+    <div class="modal fade default-popup popup-them-nv" id="them-nhan-vien" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">Thêm/sửa nhân viên</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <form class="form-2-col" id="staff-info">
+                                    <input type="hidden" name="idNV" />
+                                    <div class="form-row">
+                                        <label for="">Mã NV</label>
+                                        <input type="text" name="maNV" required>
+                                        <div id="msg-staff"></div>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="">Tên NV</label>
+                                        <input type="text" name="tenNV" required>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="">Ngày sinh</label>
+                                        <input type="text" class="datetimepicker datepicker date-only" name="ngaySinhNV">
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="">Giới tính</label>
+                                        <select name="slGioiTinhNV">
+                                            <option value="1">Nam</option>
+                                            <option value="2">Nữ</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="">Chức vụ</label>
+                                        <input type="text" name="chucVuNV">
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="">Lương</label>
+                                        <input type="text" data-type="currency" name="luongNV">
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="">Số CMND</label>
+                                        <input type="text" data-type="number" name="soCMNDNV">
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="">Địa chỉ</label>
+                                        <input type="text" name="diaChiNV">
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="">Điện thoại</label>
+                                        <input type="text" data-type="number" name="dienThoaiNV">
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="">Di động</label>
+                                        <input type="text" data-type="number" name="diDongNV">
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="">Email</label>
+                                        <input type="text" name="emailNV">
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="">Làm việc tại CN</label>
+                                        <select name="slShowRoom">
+                                            <option value="0">--Chọn chi nhánh--</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="">Nhóm</label>
+                                        <select name="slNhomNhanVien">
+                                            <option value="0">--Chọn nhóm nhân viên--</option>
+                                        </select>
+                                        <span class="search-icon" id="btn-nhom-nhan-vien">
+                                            <i class="fas fa-search"></i>
+                                        </span>
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="">Quê quán</label>
+                                        <input type="text" name="queQuanNV">
+                                    </div>
+                                    <div class="form-row">
+                                        <label for="">Gia đình</label>
+                                        <input type="text" name="giaDinhNV">
+                                    </div>
+                                    @*<div class="form-row">
+                                            <label for="">Theo dõi</label>
+                                            <input type="checkbox" class="editor-active" name="cbFollow" />
+                                        </div>*@
+                                </form>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="box-up-img text-center">
+                                    <h2>Up ảnh cá nhân tại đây</h2>
+                                    <div class="avatar-upload">
+                                        <div class="avatar-edit">
+                                            <input type='file' id="imageUpload"
+                                                   accept=".png, .jpg, .jpeg" />
+                                            <label for="imageUpload">
+                                                <i class="fas fa-cloud-upload-alt"></i>
+                                            </label>
+                                        </div>
+                                        <div class="avatar-preview">
+                                            <div id="imagePreview"
+                                                 style="background-image: url('../App_Themes/assets/images/rose.jpg');">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-row mr-auto">
+                        <label for="">Theo dõi</label>
+                        <input type="checkbox" class="editor-active" name="theoDoiNV" />
+                    </div>
+                    <button type="button" class="btn btn-primary" id="btn-save-nhan-vien">Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Danh mục nhóm nhân viên -->
+    <div class="modal fade default-popup popup-them-nhom-nv" id="them-nhom-nv" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle"> Danh mục nhóm nhân viên </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-button text-left">
+                        <a href="#" class="btn btn-add inline" id="btn-insert-nhom-nhan-vien">
+                            <img src="~/App_Themes/assets/images/btn-add.png" alt=""
+                                 class="inline"> <span class="inline">Thêm</span>
+                        </a>
+                        <a href="#" class="btn btn-fix inline" id="btn-update-nhom-nhan-vien" style="font-weight:500;">
+                            <img src="~/App_Themes/assets/images/btn-fix.png"
+                                 alt="" class="inline"><span class="inline">Sửa</span>
+                        </a>
+                        <a href="#" class="btn btn-fix inline" id="btn-delete-nhom-nhan-vien">
+                            <img src="~/App_Themes/assets/images/btn-del.png" alt=""
+                                 class="inline"><span class="inline">Xóa</span>
+                        </a>
+                        <a href="#" class="btn btn-fix inline" id="btn-export-nhom-nhan-vien">
+                            <img src="~/App_Themes/assets/images/btn-export.png" alt=""
+                                 class="inline"><span class="inline">Xuất</span>
+                        </a>
+                    </div>
+                    <div class="wrap-height-table">
+                        <table class="table dislay" id="table-nhom-nv">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nhóm NV</th>
+                                    <th>Mô tả</th>
+                                    <th>Hoa Hồng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Thêm nhóm nhân viên -->
+    <div class="modal fade form-add-group-user default-popup" id="form-add-group-user" tabindex="-1" role="dialog" aria-labelledby="form-add-group-user" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLabel"> Thêm/sửa nhóm nhân viên </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="idNhomNhanVien" value="" />
+                    <div>
+                        <div class="form-group">
+                            <label for="group-staff-name" class="col-form-label">Tên nhóm user:</label>
+                            <input type="text" name="tenNhomNhanVien" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="group-staff-note" class="col-form-label">Ghi chú:</label>
+                            <textarea name="ghiChuNhomNhanVien" cols="30" rows="3" class="form-control" style="width: 60%;font-size: 12px;"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="group-staff-commission" class="col-form-label">Hoa hồng: </label>
+                            <input type="text" name="commissionNhomNhanVien" class="form-control" data-type="currency">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn-save-nhom-nhan-vien">Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade default-popup popup-danh-sach-khach-hang" id="excel-nhanvien" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Import nhân viên
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid wrap-table-2 table-mat-hang p-0">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="wrap-height-table-2 bg-white p-2 mt-2 border" style="max-height: 250px;">
+                                    <p class="title-special">Danh sách nhân viên chưa tồn tại trong hệ thống</p>
+                                    <div class="box-border p-2" style="border: none;">
+                                        <table class="table display table-striped" style="width: 100%;" id="table-nhan-vien-chua-co">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Mã NV</th>
+                                                    <th>Tên NV</th>
+                                                    <th>Địa chỉ</th>
+                                                    <th>Điện thoại</th>
+                                                    <th>Ngày sinh</th>
+                                                    <th>Giới tính</th>
+                                                    <th>Chức vụ</th>
+                                                    <th>Mức lương</th>
+                                                    <th>CMTND</th>
+                                                    <th>Theo dõi</th>
+                                                    <th>Người QL</th>
+                                                    <th>Ghi chú</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="form-inline" style="margin-top: .5rem !important;">
+                                    <span>Số bản ghi: </span> <span class="ml-5 count-new-nhan-vien">0</span>
+                                    @*<button type="button" class="btn btn-primary" style="margin-left: 15%;" disabled>Ghi thêm mới</button>*@
+                                    <div class="ml-auto">
+                                        <button type="button" class="btn btn-primary btn-save-nhan-vien-excel" value="0" disabled="disabled">Ghi thêm mới</button>
+                                        @*<button type="button" class="btn btn-primary">Export</button>
+                                            <button type="button" class="btn btn-primary">Validate</button>*@
+                                    </div>
+                                </div>
+
+                                <div class="wrap-height-table-2 bg-white p-2 mt-2 border" style="max-height: 250px;">
+                                    <p class="title-special">Danh sách nhân viên đã tồn tại trong hệ thống</p>
+                                    <div class="box-border p-2" style="border: none;">
+                                        <table class="table display table-striped" style="width: 100%;" id="table-nhan-vien-da-co">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Mã NV</th>
+                                                    <th>Tên NV</th>
+                                                    <th>Địa chỉ</th>
+                                                    <th>Điện thoại</th>
+                                                    <th>Ngày sinh</th>
+                                                    <th>Giới tính</th>
+                                                    <th>Chức vụ</th>
+                                                    <th>Mức lương</th>
+                                                    <th>CMTND</th>
+                                                    <th>Theo dõi</th>
+                                                    <th>Người QL</th>
+                                                    <th>Ghi chú</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="form-inline" style="margin-top: .5rem !important;">
+                                    <span>Số bản ghi: </span> <span class="ml-5 count-old-nhan-vien">0</span>
+                                    @*<button type="button" class="btn btn-primary" style="margin-left: 15%;" disabled>Ghi sửa thông tin</button>*@
+                                    <div class="ml-auto">
+                                        <button type="button" class="btn btn-primary btn-save-nhan-vien-excel" value="1" disabled="disabled">Ghi sửa thông tin</button>
+                                        @*<button type="button" class="btn btn-primary">Export</button>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer mt-2">
+                        <div class="w-100">
+                            <span>Tìm Excel Sheets để nhập</span>
+                            <select name="slExcel-nhanvien" id="" class="w-25"></select>
+                            <input type="file" name="excelNhanVien" style="display: none">
+                            <button id="btn-import-nhan-vien" class="btn btn-default">
+                                <span class="inline">Tìm file export</span>
+                            </button>
+                        </div>
+
+                        <button type="button" id="btn-reset-nhan-vien-excel" class="btn btn-primary">Refrersh</button>
+                        <button type="button" class="btn btn-primary" id="btn-create-nhan-vien-excel">Tạo template</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Popup check xác nhận đủ hàng-->
+    <div class="modal fade active default-popup" id="popup-duyet-chuyen-kho" data-backdrop="static" data-keyboard="false"
+         tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle" style="font-weight: bold">
+                        Confirmation
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body position-relative" style="padding-bottom:1.3rem;">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="wrap-form-login default-form">
+                                    <div class="needs-validation">
+                                        <div class="form-group">
+                                            <label>Hệ thống yêu cầu bạn nhập Account xác nhận</label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">User</label>
+                                            <input type="text" class="col-7 p-0" name="userIDDuyetChuyenKho" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Mật khẩu của bạn</label>
+                                            <input type="password" class="col-7 p-0" name="passwordDuyetChuyenKho">
+                                        </div>
+                                        <div class="action-login mt-4">
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <button id="btn-duyet-chuyen-kho" type="button" class="btn btn-primary">Đồng ý</button>
+                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Hoãn</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>
+@section MyScripts{
+    <script src="~/PageScript/NhanVien/nhanvien.js"></script>
+    <script src="~/PageScript/ChuyenKho/baocao.js"></script>
+}

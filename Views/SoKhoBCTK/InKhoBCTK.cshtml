@@ -1,0 +1,845 @@
+﻿@using KimThanh.Controllers
+@using System.Data
+@using System.Text
+@using MB.Extensions
+@{
+    var cul = new System.Globalization.CultureInfo("vi-VN");
+}
+@model List<SoKhoBCTKController.PrintKhoBCTK>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>In Kho BCTK</title>
+    <meta http-equiv="Cache-control" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
+    <meta name="robots" content="noodp,noydir" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="og:site_name" content="" />
+    <meta name="description" content=" " />
+    <meta name="keywords" content="" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="" />
+    <meta property="og:description" content="" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/fonts/Averta/font.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/scss/style.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/fontawesome/css/all.css" />
+    <style>
+        /*table th {
+            white-space: normal;
+        }*/
+        /*        .custom {
+            width: unset;
+        }*/
+        /*span {
+            display: block;
+            width: 150px;
+            word-wrap: break-word;
+        }*/
+/*        @@media print {
+            .printEl {
+                width: 15in;
+            }*/
+            /*            table th:nth-child(3) {
+                display: block;
+                page-break-inside: avoid;
+                margin: 4px 0 4px 0;
+            }*/
+        }
+
+        table {
+            width: 100%;
+            table-layout: fixed;
+        }
+        body {
+            font-family: "Times New Roman";
+        }
+    </style>
+</head>
+<body>
+    <main class="wrapper printEl">
+        <div class="">
+            <div class="note__header">
+                <div class="note__header--title">
+                    <h2 class="title">In Kho BCTK </h2>
+                    <p class="number">@ViewBag.content</p>
+                </div>
+            </div>
+            <div class="note__body">
+                <div class="note__body--table">
+                    <div class="wrap-height-table table-responsive">
+                        <table class="table-pnk display"
+                               id="table-phieu-xuat-kho"
+                               style="width: 100%">
+                            @if (Model != null)
+                            {
+                                if (ViewBag.type == 0)
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th style="width:13%;">Mã hàng</th>
+                                            <th style="white-space:normal; width:20%;">Tên hàng</th>
+                                            <th>Tồn đầu</th>
+                                            <th>Nhập</th>
+                                            <th>Nhập lại</th>
+                                            <th>Nhập nội bộ</th>
+                                            <th>Xuất nội bộ</th>
+                                            <th>Xuất bán</th>
+                                            <th>Xuất trả</th>
+                                            <th>Tồn cuối</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+
+                                            int STT = 0;
+                                            foreach (var item in Model[0].DeTail)
+                                            {
+                                                <tr>
+                                                    <td>@(++STT)</td>
+                                                    <td>@item.MHCODE</td>
+                                                    <td>@item.MHTEN</td>
+                                                    <td class="pagebreak">@item.TongSLTONDAU</td>
+                                                    <td>@item.TongSLMua</td>
+                                                    <td>@item.TongSLBANTRALAI </td>
+                                                    <td>@item.TongSLNHAPNOIBO</td>
+                                                    <td>@item.TongSLXUATNOIBO</td>
+                                                    <td>@item.TongSLBAN</td>
+                                                    <td>@item.TongSLMUATRALAI</td>
+                                                    <td style="color:red;">@item.TongSLTONCUOI</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th style="text-align:center;" colspan="3">@Model[0].FooterRow[0].TotalRow</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model[0].FooterRow[0].TongSLALLTONDAU)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model[0].FooterRow[0].TongSLALLMUA)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model[0].FooterRow[0].TongSLALLBANTRALAI)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model[0].FooterRow[0].TongSLALLNHAPNOIBO)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model[0].FooterRow[0].TongSLALLXUATNOIBO)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model[0].FooterRow[0].TongSLALLBAN)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model[0].FooterRow[0].TongSLALLMUATRALAI)</th>
+                                            <th>@String.Format(cul, "{0:N0}", Model[0].FooterRow[0].TongSLALLTONCUOI)</th>
+                                        </tr>
+                                    </tfoot>
+                                }
+                                else if (ViewBag.type == 1)
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên mặt hàng</th>
+                                            @foreach (var item in Model[0].ListKho)
+                                            {
+                                                <th>@("" + item.KHOTEN + " - Tồn đầu")</th>
+                                                <th>@("" + item.KHOTEN + " - Nhập")</th>
+                                                <th>@("" + item.KHOTEN + " - Nhập lại")</th>
+                                                <th>@("" + item.KHOTEN + " - Nhập nội bộ")</th>
+                                                <th>@("" + item.KHOTEN + " - Xuất nội bộ")</th>
+                                                <th>@("" + item.KHOTEN + " - Xuất bán")</th>
+                                                <th>@("" + item.KHOTEN + " - Xuất trả")</th>
+                                                <th>@("" + item.KHOTEN + " - Tồn cuối")</th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int STT = 0;
+
+                                            foreach (DataRow dr in Model[0].DeTailRow.Rows)
+                                            {
+                                                <tr>
+                                                    <td>@(++STT)</td>
+                                                    <td>@dr["MHCODE"]</td>
+                                                    <td>@dr["MHTEN"]</td>
+                                                    @foreach (var item in Model[0].ListKho)
+                                                    {
+                                                        <td>@dr["SLTONDAU-" + item.KHOID + ""].ToString()</td>
+                                                        <td>@dr["SLMUA-" + item.KHOID + ""].ToString()</td>
+                                                        <td>@dr["SLBANTRALAI-" + item.KHOID + ""].ToString()</td>
+                                                        <td>@dr["SLNHAPNOIBO-" + item.KHOID + ""].ToString()</td>
+                                                        <td>@dr["SLXUATNOIBO-" + item.KHOID + ""].ToString()</td>
+                                                        <td>@dr["SLBAN-" + item.KHOID + ""].ToString()</td>
+                                                        <td>@dr["SLMUATRALAI-" + item.KHOID + ""].ToString()</td>
+                                                        <td style="color:red;">@dr["SLTONCUOI-" + item.KHOID + ""].ToString()</td>
+                                                    }
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            @{
+                                                var dr1 = Model[0].DeTailRow.Rows[0];
+                                                <th colspan="3">@dr1["totalRow"].ToString()</th>
+                                                foreach (var item in Model[0].ListKho)
+                                                {
+                                                    <th>@dr1["TongSL-SLTONDAU-" + item.KHOID + ""].ToString()</th>
+                                                    <th>@dr1["TongSL-SLMUA-" + item.KHOID + ""].ToString()</th>
+                                                    <th>@dr1["TongSL-SLBANTRALAI-" + item.KHOID + ""].ToString()</th>
+                                                    <th>@dr1["TongSL-SLNHAPNOIBO-" + item.KHOID + ""].ToString()</th>
+                                                    <th>@dr1["TongSL-SLXUATNOIBO-" + item.KHOID + ""].ToString()</th>
+                                                    <th>@dr1["TongSL-SLBAN-" + item.KHOID + ""].ToString()</th>
+                                                    <th>@dr1["TongSL-SLMUATRALAI-" + item.KHOID + ""].ToString()</th>
+                                                    <th style="color:red;">@dr1["TongSL-SLTONCUOI-" + item.KHOID + ""].ToString()</th>
+                                                }
+                                            }
+                                        </tr>
+                                    </tfoot>
+                                }
+                                else if (ViewBag.type == 2)
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th style="width:10%;">Mã hàng</th>
+                                            <th>Tên mặt hàng</th>
+                                            @foreach (var item in Model[0].ListKho)
+                                            {
+                                                <th>@("" + item.KHOTEN + " - Tồn đầu")</th>
+                                                <th>@("" + item.KHOTEN + " - Nhập")</th>
+                                                <th>@("" + item.KHOTEN + " - Nhập lại")</th>
+                                                <th>@("" + item.KHOTEN + " - Nhập nội bộ")</th>
+                                                <th>@("" + item.KHOTEN + " - Xuất nội bộ")</th>
+                                                <th>@("" + item.KHOTEN + " - Xuất bán")</th>
+                                                <th>@("" + item.KHOTEN + " - Xuất trả")</th>
+                                                <th>@("" + item.KHOTEN + " - Tồn cuối")</th>
+                                            }
+                                            <th>Tồn đầu</th>
+                                            <th>Nhập</th>
+                                            <th>Nhập lại</th>
+                                            <th>Nhập nội bộ</th>
+                                            <th>Xuất nội bộ</th>
+                                            <th>Xuất bán</th>
+                                            <th>Xuất trả</th>
+                                            <th>Tồn cuối</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int STT = 0;
+
+                                            foreach (DataRow dr in Model[0].DeTailRow.Rows)
+                                            {
+                                                <tr>
+                                                    <td>@(++STT)</td>
+                                                    <td><span>@dr["MHCODE"]</span></td>
+                                                    <td>@dr["MHTEN"]</td>
+                                                    @foreach (var item in Model[0].ListKho)
+                                                    {
+                                                        <td>@dr["SLTONDAU-" + item.KHOID + ""].ToString()</td>
+                                                        <td>@dr["SLMUA-" + item.KHOID + ""].ToString()</td>
+                                                        <td>@dr["SLBANTRALAI-" + item.KHOID + ""].ToString()</td>
+                                                        <td>@dr["SLNHAPNOIBO-" + item.KHOID + ""].ToString()</td>
+                                                        <td>@dr["SLXUATNOIBO-" + item.KHOID + ""].ToString()</td>
+                                                        <td>@dr["SLBAN-" + item.KHOID + ""].ToString()</td>
+                                                        <td>@dr["SLMUATRALAI-" + item.KHOID + ""].ToString()</td>
+                                                        <td style="color:red; white-space:normal">@dr["SLTONCUOI-" + item.KHOID + ""].ToString()</td>
+                                                    }
+                                                    <td>@dr["TongSLTONDAU"].ToString()</td>
+                                                    <td>@dr["TongSLMUA"].ToString()</td>
+                                                    <td>@dr["TongSLBANTRALAI"].ToString()</td>
+                                                    <td>@dr["TongSLNHAPNOIBO"].ToString()</td>
+                                                    <td>@dr["TongSLXUATNOIBO"].ToString()</td>
+                                                    <td>@dr["TongSLBAN"].ToString()</td>
+                                                    <td>@dr["TongSLMUATRALAI"].ToString()</td>
+                                                    <td style="color:red; white-space:normal">@dr["TongSLTONCUOI"].ToString()</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            @{
+                                                var dr1 = Model[0].DeTailRow.Rows[0];
+                                                <th style="text-align:center" colspan="3">@dr1["totalRow"].ToString()</th>
+                                                foreach (var item in Model[0].ListKho)
+                                                {
+                                                    <th>@String.Format(cul, "{0:N0}", Convert.ToDecimal(dr1["TongSL-SLTONDAU-" + item.KHOID + ""].ToString()))</th>
+                                                    <th>@dr1["TongSL-SLMUA-" + item.KHOID + ""].ToString()</th>
+                                                    <th>@dr1["TongSL-SLBANTRALAI-" + item.KHOID + ""].ToString()</th>
+                                                    <th>@dr1["TongSL-SLNHAPNOIBO-" + item.KHOID + ""].ToString()</th>
+                                                    <th>@dr1["TongSL-SLXUATNOIBO-" + item.KHOID + ""].ToString()</th>
+                                                    <th>@dr1["TongSL-SLBAN-" + item.KHOID + ""].ToString()</th>
+                                                    <th>@dr1["TongSL-SLMUATRALAI-" + item.KHOID + ""].ToString()</th>
+                                                    <th style="color:red;">@String.Format(cul, "{0:N0}", Convert.ToDecimal(dr1["TongSL-SLTONCUOI-" + item.KHOID + ""].ToString()))</th>
+                                                }
+                                                <th>@String.Format(cul, "{0:N0}", Convert.ToDecimal(dr1["TongSLALLTONDAU"].ToString()))</th>
+                                                <th>@String.Format(cul, "{0:N0}", Convert.ToDecimal(dr1["TongSLALLMUA"].ToString()))</th>
+                                                <th>@String.Format(cul, "{0:N0}", Convert.ToDecimal(dr1["TongSLALLBANTRALAI"].ToString()))</th>
+                                                <th>@String.Format(cul, "{0:N0}", Convert.ToDecimal(dr1["TongSLALLNHAPNOIBO"].ToString()))</th>
+                                                <th>@String.Format(cul, "{0:N0}", Convert.ToDecimal(dr1["TongSLALLXUATNOIBO"].ToString()))</th>
+                                                <th>@String.Format(cul, "{0:N0}", Convert.ToDecimal(dr1["TongSLALLBAN"].ToString()))</th>
+                                                <th>@String.Format(cul, "{0:N0}", Convert.ToDecimal(dr1["TongSLALLMUATRALAI"].ToString()))</th>
+                                                <th style="color:red;">@String.Format(cul, "{0:N0}", Convert.ToDecimal(dr1["TongSLALLTONCUOI"].ToString()))</th>
+                                            }
+                                        </tr>
+                                    </tfoot>
+                                }
+                                else if (ViewBag.type == 3)
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên mặt hàng</th>
+                                            @foreach (var item in Model[0].ListKho)
+                                            {
+                                                <th>@("" + item.KHOTEN + " - Tồn đầu")</th>
+                                                <th>@("" + item.KHOTEN + " - Xuất bán")</th>
+                                            }
+                                            <th>Tồn đầu</th>
+                                            <th>Xuất bán</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int STT = 0;
+
+                                            foreach (DataRow dr in Model[0].DeTailRow.Rows)
+                                            {
+                                                <tr>
+                                                    <td>@(++STT)</td>
+                                                    <td>@dr["MHCODE"]</td>
+                                                    <td>@dr["MHTEN"]</td>
+                                                    @foreach (var item in Model[0].ListKho)
+                                                    {
+                                                        <td>@dr["SLTONDAU-" + item.KHOID + ""].ToString()</td>
+                                                        <td>@dr["SLBAN-" + item.KHOID + ""].ToString()</td>
+                                                    }
+                                                    <td>@dr["TongSLTONDAU"].ToString()</td>
+                                                    <td>@dr["TongSLBAN"].ToString()</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            @{
+                                                var dr1 = Model[0].DetailFooterRow.Rows[0];
+                                                <th colspan="3" style="text-align:center;">@String.Format(cul, "{0:N0}", Convert.ToInt32(dr1["totalRow"]))</th>
+                                                foreach (var item in Model[0].ListKho)
+                                                {
+                                                    <th>@String.Format(cul, "{0:N0}", Convert.ToInt32(dr1["TongSL-SLTONDAU-" + item.KHOID + ""]))</th>
+                                                    <th>@String.Format(cul, "{0:N0}", Convert.ToInt32(dr1["TongSL-SLBAN-" + item.KHOID + ""]))</th>
+                                                }
+                                                <th>@String.Format(cul, "{0:N0}", Convert.ToInt32(dr1["TongSLALLTONDAU"]))</th>
+                                                <th>@String.Format(cul, "{0:N0}", Convert.ToInt32(dr1["TongSLALLBAN"]))</th>
+                                            }
+                                        </tr>
+                                    </tfoot>
+                                }
+                                else if (ViewBag.type == 4)
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên mặt hàng</th>
+                                            @foreach (var item in Model[0].ListKho)
+                                            {
+                                                <th>@("" + item.KHOTEN + " - Tồn đầu")</th>
+                                            }
+                                            <th>Tồn đầu</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int STT = 0;
+
+                                            foreach (DataRow dr in Model[0].DeTailRow.Rows)
+                                            {
+                                                <tr>
+                                                    <td>@(++STT)</td>
+                                                    <td>@dr["MHCODE"]</td>
+                                                    <td>@dr["MHTEN"]</td>
+                                                    @foreach (var item in Model[0].ListKho)
+                                                    {
+                                                        <td>@dr["SLTONDAU-" + item.KHOID + ""].ToString()</td>
+                                                    }
+                                                    <td>@dr["TongSLTONDAU"].ToString()</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            @{
+                                                var dr1 = Model[0].DetailFooterRow.Rows[0];
+                                                <th colspan="3">@dr1["totalRow"].ToString()</th>
+                                                foreach (var item in Model[0].ListKho)
+                                                {
+                                                    <th>@dr1["TongSL-SLTONDAU-" + item.KHOID + ""].ToString()</th>
+                                                }
+                                                <th>@dr1["TongSLALLTONDAU"].ToString()</th>
+                                            }
+                                        </tr>
+                                    </tfoot>
+                                }
+                                else if (ViewBag.type == 6)
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên mặt hàng</th>
+                                            @foreach (var item in Model[0].ListKho)
+                                            {
+                                                <th>@("" + item.KHOTEN + " - Nhập lại")</th>
+                                            }
+                                            <th>Nhập lại</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int STT = 0;
+
+                                            foreach (DataRow dr in Model[0].DeTailRow.Rows)
+                                            {
+                                                <tr>
+                                                    <td>@(++STT)</td>
+                                                    <td>@dr["MHCODE"]</td>
+                                                    <td>@dr["MHTEN"]</td>
+                                                    @foreach (var item in Model[0].ListKho)
+                                                    {
+                                                        <td>@dr["SLBANTRALAI-" + item.KHOID + ""].ToString()</td>
+                                                    }
+                                                    <td>@dr["TongSLBANTRALAI"].ToString()</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            @{
+                                                var dr1 = Model[0].DetailFooterRow.Rows[0];
+                                                <th colspan="3" style="text-align:center">@String.Format(cul, "{0:N0}", Convert.ToInt32(dr1["totalRow"]))</th>
+                                                foreach (var item in Model[0].ListKho)
+                                                {
+                                                    <th>@dr1["TongSL-SLBANTRALAI-" + item.KHOID + ""].ToString()</th>
+                                                }
+                                                <th>@dr1["TongSLALLBANTRALAI"].ToString()</th>
+                                            }
+                                        </tr>
+                                    </tfoot>
+                                }
+                                else if (ViewBag.type == 5)
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên mặt hàng</th>
+                                            @foreach (var item in Model[0].ListKho)
+                                            {
+                                                <th>@("" + item.KHOTEN + " - Nhập")</th>
+                                            }
+                                            <th>Nhập</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int STT = 0;
+
+                                            foreach (DataRow dr in Model[0].DeTailRow.Rows)
+                                            {
+                                                <tr>
+                                                    <td>@(++STT)</td>
+                                                    <td>@dr["MHCODE"]</td>
+                                                    <td>@dr["MHTEN"]</td>
+                                                    @foreach (var item in Model[0].ListKho)
+                                                    {
+                                                        <td>@dr["SLMUA-" + item.KHOID + ""].ToString()</td>
+                                                    }
+                                                    <td>@dr["TongSLMUA"].ToString()</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            @{
+                                                var dr1 = Model[0].DetailFooterRow.Rows[0];
+                                                <th colspan="3" style="text-align:center">@String.Format(cul, "{0:N0}", Convert.ToInt32(dr1["totalRow"]))</th>
+                                                foreach (var item in Model[0].ListKho)
+                                                {
+                                                    <th>@dr1["TongSL-SLMUA-" + item.KHOID + ""].ToString()</th>
+                                                }
+                                                <th>@dr1["TongSLALLMUA"].ToString()</th>
+                                            }
+                                        </tr>
+                                    </tfoot>
+                                }
+                                else if (ViewBag.type == 6)
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên mặt hàng</th>
+                                            @foreach (var item in Model[0].ListKho)
+                                            {
+                                                <th>@("" + item.KHOTEN + " - Nhập lại")</th>
+                                            }
+                                            <th>Nhập lại</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int STT = 0;
+
+                                            foreach (DataRow dr in Model[0].DeTailRow.Rows)
+                                            {
+                                                <tr>
+                                                    <td>@(++STT)</td>
+                                                    <td>@dr["MHCODE"]</td>
+                                                    <td>@dr["MHTEN"]</td>
+                                                    @foreach (var item in Model[0].ListKho)
+                                                    {
+                                                        <td>@dr["SLBANTRALAI-" + item.KHOID + ""].ToString()</td>
+                                                    }
+                                                    <td>@dr["TongSLBANTRALAI"].ToString()</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            @{
+                                                var dr1 = Model[0].DetailFooterRow.Rows[0];
+                                                <th colspan="3" style="text-align:center">@String.Format(cul, "{0:N0}", Convert.ToInt32(dr1["totalRow"]))</th>
+                                                foreach (var item in Model[0].ListKho)
+                                                {
+                                                    <th>@dr1["TongSL-SLBANTRALAI-" + item.KHOID + ""].ToString()</th>
+                                                }
+                                                <th>@dr1["TongSLALLBANTRALAI"].ToString()</th>
+                                            }
+                                        </tr>
+                                    </tfoot>
+                                }
+                                else if (ViewBag.type == 7)
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên mặt hàng</th>
+                                            @foreach (var item in Model[0].ListKho)
+                                            {
+                                                <th>@("" + item.KHOTEN + " - Nhập nội bộ")</th>
+                                            }
+                                            <th>Nhập nội bộ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int STT = 0;
+
+                                            foreach (DataRow dr in Model[0].DeTailRow.Rows)
+                                            {
+                                                <tr>
+                                                    <td>@(++STT)</td>
+                                                    <td>@dr["MHCODE"]</td>
+                                                    <td>@dr["MHTEN"]</td>
+                                                    @foreach (var item in Model[0].ListKho)
+                                                    {
+                                                        <td>@dr["SLNHAPNOIBO-" + item.KHOID + ""].ToString()</td>
+                                                    }
+                                                    <td>@dr["TongSLNHAPNOIBO"].ToString()</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            @{
+                                                var dr1 = Model[0].DetailFooterRow.Rows[0];
+                                                <th colspan="3" style="text-align:center">@String.Format(cul, "{0:N0}", Convert.ToInt32(dr1["totalRow"]))</th>
+                                                foreach (var item in Model[0].ListKho)
+                                                {
+                                                    <th>@dr1["TongSL-SLNHAPNOIBO-" + item.KHOID + ""].ToString()</th>
+                                                }
+                                                <th>@dr1["TongSLALLNHAPNOIBO"].ToString()</th>
+                                            }
+                                        </tr>
+                                    </tfoot>
+                                }
+                                else if (ViewBag.type == 8)
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên mặt hàng</th>
+                                            @foreach (var item in Model[0].ListKho)
+                                            {
+                                                <th>@("" + item.KHOTEN + " - Xuất nội bộ")</th>
+                                            }
+                                            <th>Xuất nội bộ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int STT = 0;
+
+                                            foreach (DataRow dr in Model[0].DeTailRow.Rows)
+                                            {
+                                                <tr>
+                                                    <td>@(++STT)</td>
+                                                    <td>@dr["MHCODE"]</td>
+                                                    <td>@dr["MHTEN"]</td>
+                                                    @foreach (var item in Model[0].ListKho)
+                                                    {
+                                                        <td>@dr["SLXUATNOIBO-" + item.KHOID + ""].ToString()</td>
+                                                    }
+                                                    <td>@dr["TongSLXUATNOIBO"].ToString()</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            @{
+                                                var dr1 = Model[0].DetailFooterRow.Rows[0];
+                                                <th colspan="3" style="text-align:center">@String.Format(cul, "{0:N0}", Convert.ToInt32(dr1["totalRow"]))</th>
+                                                foreach (var item in Model[0].ListKho)
+                                                {
+                                                    <th>@dr1["TongSL-SLXUATNOIBO-" + item.KHOID + ""].ToString()</th>
+                                                }
+                                                <th>@dr1["TongSLALLXUATNOIBO"].ToString()</th>
+                                            }
+                                        </tr>
+                                    </tfoot>
+                                }
+                                else if (ViewBag.type == 9)
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên mặt hàng</th>
+                                            @foreach (var item in Model[0].ListKho)
+                                            {
+                                                <th>@("" + item.KHOTEN + " - Xuất bán")</th>
+                                            }
+                                            <th>Xuất bán</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int STT = 0;
+
+                                            foreach (DataRow dr in Model[0].DeTailRow.Rows)
+                                            {
+                                                <tr>
+                                                    <td>@(++STT)</td>
+                                                    <td>@dr["MHCODE"]</td>
+                                                    <td>@dr["MHTEN"]</td>
+                                                    @foreach (var item in Model[0].ListKho)
+                                                    {
+                                                        <td>@dr["SLBAN-" + item.KHOID + ""].ToString()</td>
+                                                    }
+                                                    <td>@dr["TongSLBAN"].ToString()</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            @{
+                                                var dr1 = Model[0].DetailFooterRow.Rows[0];
+                                                <th colspan="3" style="text-align:center">@String.Format(cul, "{0:N0}", Convert.ToInt32(dr1["totalRow"]))</th>
+                                                foreach (var item in Model[0].ListKho)
+                                                {
+                                                    <th>@dr1["TongSL-SLBAN-" + item.KHOID + ""].ToString()</th>
+                                                }
+                                                <th>@dr1["TongSLALLBAN"].ToString()</th>
+                                            }
+                                        </tr>
+                                    </tfoot>
+                                }
+                                else if (ViewBag.type == 10)
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên mặt hàng</th>
+                                            @foreach (var item in Model[0].ListKho)
+                                            {
+                                                <th>@("" + item.KHOTEN + " - Xuất trả")</th>
+                                            }
+                                            <th>Xuất trả</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int STT = 0;
+
+                                            foreach (DataRow dr in Model[0].DeTailRow.Rows)
+                                            {
+                                                <tr>
+                                                    <td>@(++STT)</td>
+                                                    <td>@dr["MHCODE"]</td>
+                                                    <td>@dr["MHTEN"]</td>
+                                                    @foreach (var item in Model[0].ListKho)
+                                                    {
+                                                        <td>@dr["SLMUATRALAI-" + item.KHOID + ""].ToString()</td>
+                                                    }
+                                                    <td>@dr["TongSLMUATRALAI"].ToString()</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            @{
+                                                var dr1 = Model[0].DetailFooterRow.Rows[0];
+                                                <th colspan="3" style="text-align:center">@String.Format(cul, "{0:N0}", Convert.ToInt32(dr1["totalRow"]))</th>
+                                                foreach (var item in Model[0].ListKho)
+                                                {
+                                                    <th>@dr1["TongSL-SLMUATRALAI-" + item.KHOID + ""].ToString()</th>
+                                                }
+                                                <th>@dr1["TongSLALLMUATRALAI"].ToString()</th>
+                                            }
+                                        </tr>
+                                    </tfoot>
+                                }
+                                else if (ViewBag.type == 11)
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên mặt hàng</th>
+                                            @foreach (var item in Model[0].ListKho)
+                                            {
+                                                <th>@("" + item.KHOTEN + " - Tồn cuối")</th>
+                                            }
+                                            <th>Tồn cuối</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int STT = 0;
+
+                                            foreach (DataRow dr in Model[0].DeTailRow.Rows)
+                                            {
+                                                <tr>
+                                                    <td>@(++STT)</td>
+                                                    <td>@dr["MHCODE"]</td>
+                                                    <td>@dr["MHTEN"]</td>
+                                                    @foreach (var item in Model[0].ListKho)
+                                                    {
+                                                        <td style="color:red;">@dr["SLTONCUOI-" + item.KHOID + ""].ToString()</td>
+                                                    }
+                                                    <td style="color:red;">@dr["TongSLTONCUOI"].ToString()</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            @{
+                                                var dr1 = Model[0].DetailFooterRow.Rows[0];
+                                                <th colspan="3" style="text-align:center">@String.Format(cul, "{0:N0}", Convert.ToInt32(dr1["totalRow"]))</th>
+                                                foreach (var item in Model[0].ListKho)
+                                                {
+                                                    <th>@dr1["TongSL-SLTONCUOI-" + item.KHOID + ""].ToString()</th>
+                                                }
+                                                <th style="color:red;">@dr1["TongSLALLTONCUOI"].ToString()</th>
+                                            }
+                                        </tr>
+                                    </tfoot>
+                                }
+                                else if (ViewBag.type == 12)
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên mặt hàng</th>
+                                            @foreach (var item in Model[0].ListKho)
+                                            {
+                                                <th>@("" + item.KHOTEN + " - Xuất bán")</th>
+                                                <th>@("" + item.KHOTEN + " - Tồn cuối")</th>
+                                            }
+                                            <th>Xuất bán</th>
+                                            <th>Tồn cuối</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int STT = 0;
+
+                                            foreach (DataRow dr in Model[0].DeTailRow.Rows)
+                                            {
+                                                <tr>
+                                                    <td>@(++STT)</td>
+                                                    <td>@dr["MHCODE"]</td>
+                                                    <td>@dr["MHTEN"]</td>
+                                                    @foreach (var item in Model[0].ListKho)
+                                                    {
+                                                        <td>@dr["SLBAN-" + item.KHOID + ""].ToString()</td>
+                                                        <td style="color:red;">@dr["SLTONCUOI-" + item.KHOID + ""].ToString()</td>
+                                                    }
+                                                    <td>@dr["TongSLBAN"].ToString()</td>
+                                                    <td style="color:red;">@dr["TongSLTONCUOI"].ToString()</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            @{
+                                                var dr1 = Model[0].DetailFooterRow.Rows[0];
+                                                <th colspan="3" style="text-align:center">@String.Format(cul, "{0:N0}", Convert.ToInt32(dr1["totalRow"]))</th>
+                                                foreach (var item in Model[0].ListKho)
+                                                {
+                                                    <th>@dr1["TongSL-SLBAN-" + item.KHOID + ""].ToString()</th>
+                                                    <th style="color:red;">@dr1["TongSL-SLTONCUOI-" + item.KHOID + ""].ToString()</th>
+                                                }
+                                                <th>@dr1["TongSLALLBAN"].ToString()</th>
+                                                <th style="color:red;">@dr1["TongSLALLTONCUOI"].ToString()</th>
+                                            }
+                                        </tr>
+                                    </tfoot>
+                                }
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script type="text/javascript" src="/App_Themes/js/moment.js"></script>
+    <script src="~/App_Themes/js/jquery.js"></script>
+    <script>
+        $(document).ready(async function () {
+            window.print();
+        })
+    </script>
+</body>
+</html>

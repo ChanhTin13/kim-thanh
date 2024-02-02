@@ -1,0 +1,667 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+<style>
+    /*    .fixed-2-column tbody tr td:nth-child(2) {
+        color: #212529;
+    }
+
+    .fixed-2-column tbody tr td:nth-child(3) {
+        color: #212529;
+    }*/
+
+    .table tr.selected td {
+        color: white !important;
+    }
+
+    .customWidth {
+        width: 100% !important;
+    }
+
+    #them-kho .select2-container--default {
+        width: 80% !important
+    }
+</style>
+
+
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ql-khohang user-table wrap-table-pq">
+                    <div class="user-table__header">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="list-button text-left">
+                                    <a href="#" class="btn inline" id="btn-insert-kho-hang">
+                                        <img src="/App_Themes/assets/images/btn-add.png"
+                                             alt="" class="inline">
+                                        <span class="inline">Thêm</span>
+                                    </a>
+                                    <a href="#" class="btn inline" id="btn-update-kho-hang">
+                                        <img src="/App_Themes/assets/images/btn-fix.png"
+                                             alt="" class="inline"><span class="inline">Sửa</span>
+                                    </a>
+                                    <a href="#" class="btn inline" id="btn-delete-kho-hang">
+                                        <img src="/App_Themes/assets/images/btn-del.png"
+                                             alt="" class="inline"><span class="inline">Xóa</span>
+                                    </a>
+                                    <a href="#" class="btn inline" id="btn-reset-kho-hang">
+                                        <img src="/App_Themes/assets/images/btn-import.png"
+                                             alt="" class="inline"><span class="inline">Nạp</span>
+                                    </a>
+                                    <a href="#excel-khohang" data-toggle="modal" class="btn btn-export inline">
+                                        <img src="/App_Themes/assets/images/btn-import-2.png"
+                                             alt="" class="inline"><span class="inline">Nhập</span>
+                                    </a>
+                                    @*<a href="#" class="btn inline" id="btn-print-kho-hang">
+            <img src="/App_Themes/assets/images/btn-print.png"
+                 alt="" class="inline"><span class="inline">In</span>
+        </a>*@
+                                    <a href="#" class="btn btn-export inline" id="btn-export-kho-hang">
+                                        <img src="/App_Themes/assets/images/paste-excel.png" alt="" class="inline">
+                                        <span class="inline">Excel</span>
+                                    </a>
+                                    @*<a href="#" class="btn inline disabled">
+            <img src="/App_Themes/assets/images/question.png"
+                 alt="" class="inline"><span class="inline">Hỏi</span>
+        </a>*@
+
+                                    @*<a href="#" class="btn btn-close inline disabled">
+            <img src="/App_Themes/assets/images/btn-close.png"
+                 alt="" class="inline"><span class="inline">Đóng</span>
+        </a>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wrap-height-table">
+                        <table class="table display nowrap table-striped row-border
+                        order-column fixed-2-column"
+                               id="table-khohang" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Mã kho</th>
+                                    <th>Showroom/chi nhánh</th>
+                                    <th>Tên kho</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Theo dõi</th>
+                                    <th>Kho mặc định</th>
+                                    <th>Ghi chú</th>
+                                    <th>Path địa chỉ</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade default-popup popup-them-kho" id="them-kho" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">Kho</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <div class="box-border">
+                                    <p class="box-border__title bg-gray">
+                                        Thông tin
+                                        kho
+                                    </p>
+                                    <form action="" class="default-form
+                                    form-them-kho">
+                                        <input type="hidden" name="idKho" />
+                                        <div class="form-group">
+                                            <label for="">Mã kho</label>
+                                            <input type="text" name="maKho" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Tên kho</label>
+                                            <input type="text" name="tenKho" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Địa chỉ</label>
+                                            <input type="text" name="diaChiKho">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Chi nhánh</label>
+                                            <select name="slShowRoomKho"></select>
+                                            <span class="search-icon absolute right-30" id="btn-showroom">
+                                                <i class="fas fa-search"></i>
+                                            </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Vị trí địa lí</label>
+                                            <input type="hidden" name="idDiaChiKho">
+                                            <input type="text" name="pathDiaChiKho" disabled>
+                                            <span class="search-icon absolute right-30" id="btn-dia-chi">
+                                                <i class="fas fa-search"></i>
+                                            </span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Ghi chú</label>
+                                            <input type="text" name="ghiChuKho">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Kho mặc định</label>
+                                            <input type="checkbox" name="khoMacDinh">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-row mr-auto">
+                        <label for="">Theo dõi</label>
+                        <input type="checkbox" name="theoDoiKho">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="btn-save-kho-hang">Lưu</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade default-popup popup-danh-sach-chi-nhanh"
+         id="danh-sach-chi-nhanh" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Danh
+                        sách chi nhánh
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="ql-user user-table wrap-table-pq">
+                                    <div class="user-table__header">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="list-button text-left">
+                                                    <a href="#" class="btn inline" id="btn-insert-chi-nhanh">
+                                                        <img src="/App_Themes/assets/images/btn-add.png"
+                                                             alt="" class="inline">
+                                                        <span class="inline">Thêm</span>
+                                                    </a>
+                                                    <a href="#" class="btn inline" id="btn-update-chi-nhanh">
+                                                        <img src="/App_Themes/assets/images/btn-fix.png"
+                                                             alt="" class="inline"><span class="inline">Sửa</span>
+                                                    </a>
+                                                    <a href="#" class="btn inline" id="btn-delete-chi-nhanh">
+                                                        <img src="/App_Themes/assets/images/btn-del.png"
+                                                             alt="" class="inline"><span class="inline">Xóa</span>
+                                                    </a>
+                                                    <a href="#" class="btn inline" id="btn-reset-chi-nhanh">
+                                                        <img src="/App_Themes/assets/images/btn-import.png"
+                                                             alt="" class="inline"><span class="inline">Nạp</span>
+                                                    </a>
+                                                    @*<a href="#" class="btn btn-send-email inline disabled">
+                                                            <img src="/App_Themes/assets/images/btn-note.png"
+                                                                 alt="" class="inline"><span class="inline">Notes</span>
+                                                        </a>*@
+                                                    @*<a href="#" class="btn inline" id="btn-print-chi-nhanh">
+                                                            <img src="/App_Themes/assets/images/btn-print.png"
+                                                                 alt="" class="inline"><span class="inline">In</span>
+                                                        </a>*@
+                                                    <a href="#" class="btn inline" id="btn-export-chi-nhanh">
+                                                        <img src="/App_Themes/assets/images/paste-excel.png"
+                                                             alt="" class="inline"><span class="inline">Excel</span>
+                                                    </a>
+                                                    <a href="#excel-chinhanh" data-toggle="modal" class="btn btn-export inline">
+                                                        <img src="/App_Themes/assets/images/btn-import-2.png"
+                                                             alt="" class="inline"><span class="inline">Nhập</span>
+                                                    </a>
+                                                    @*<a href="#" class="btn btn-export inline disabled">
+                                                            <img src="/App_Themes/assets/images/nhapkh.png"
+                                                                 alt="" class="inline"><span class="inline">Nhập KHCS</span>
+                                                        </a>*@
+
+                                                    @*<a href="#" class="btn btn-close inline disabled">
+                                                            <img src="/App_Themes/assets/images/btn-close.png"
+                                                                 alt="" class="inline"><span class="inline">Đóng</span>
+                                                        </a>*@
+                                                    @*<a href="#" class="btn inline disabled">
+                                                            <img src="/App_Themes/assets/images/question.png"
+                                                                 alt="" class="inline"><span class="inline">Hỏi</span>
+                                                        </a>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="wrap-height-table">
+                                        <table class="table display nowrap table-striped row-border
+                        order-column fixed-2-column table-chinhanh"
+                                               id="table-chinhanh" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Tên chi nhánh</th>
+                                                    <th>Mô tả</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thêm chi nhánh -->
+    <div class="modal fade default-popup popup-them-chi-nhanh" id="them-chi-nhanh"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Chi nhánh
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <div class="box-border">
+                                    <p class="box-border__title bg-gray"> Thông tin chi nhánh</p>
+                                    <input type="hidden" name="idChiNhanh" />
+                                    <div class="form-group">
+                                        <label for="">Tên chi nhánh</label>
+                                        <input type="text" name="tenChiNhanh" required="" style="width: 100%;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Mô tả</label>
+                                        <textarea name="moTaChiNhanh" cols="30" rows="3" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-primary" id="btn-save-chi-nhanh">Lưu</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Thoát
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade default-popup" id="danh-sach-dia-chi" tabindex="-1"
+         role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Địa
+                        chỉ
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="list-button bg-gray text-left">
+                                    <a href="#" class="btn inline" id="btn-insert-dia-chi">
+                                        <img src="/App_Themes/assets/images/btn-add.png"
+                                             alt="" class="inline">
+                                        <span class="inline">Thêm</span>
+                                    </a>
+                                    <a href="#" class="btn inline" id="btn-update-dia-chi">
+                                        <img src="/App_Themes/assets/images/btn-fix.png"
+                                             alt="" class="inline"><span class="inline">Sửa</span>
+                                    </a>
+                                    <a href="#" class="btn inline" id="btn-delete-dia-chi">
+                                        <img src="/App_Themes/assets/images/btn-del.png"
+                                             alt="" class="inline"><span class="inline">Xóa</span>
+                                    </a>
+                                    <a href="#" class="btn inline disabled" id="btn-save-dia-chi">
+                                        <img src="/App_Themes/assets/images/btn-save.png"
+                                             alt="" class="inline"><span class="inline">Ghi</span>
+                                    </a>
+                                    <a href="#" class="btn inline" id="btn-reset-dia-chi">
+                                        <img src="/App_Themes/assets/images/btn-import.png"
+                                             alt="" class="inline"><span class="inline">Nạp</span>
+                                    </a>
+                                    <a href="#" class="btn inline" id="btn-prev-dia-chi">
+                                        <img src="~/App_Themes/assets/images/btn-close.png"
+                                             alt="" class="inline"><span class="inline">Hoàn</span>
+                                    </a>
+                                    @*<a href="#" class="btn inline" id="btn-print-dia-chi">
+                                            <img src="/App_Themes/assets/images/btn-print.png"
+                                                 alt="" class="inline"><span class="inline">In</span>
+                                        </a>*@
+                                    <a href="#" class="btn inline" id="btn-export-dia-chi">
+                                        <img src="/App_Themes/assets/images/paste-excel.png"
+                                             alt="" class="inline"><span class="inline">Excel</span>
+                                    </a>
+                                    @*<a href="#" class="btn inline disabled">
+                                            <img src="/App_Themes/assets/images/question.png"
+                                                 alt="" class="inline"><span class="inline">Hỏi</span>
+                                        </a>
+                                        <a href="#" class="btn btn-fix inline disabled">
+                                            <img src="/App_Themes/assets/images/btn-close.png"
+                                                 alt="" class="inline"><span class="inline">Đóng</span>
+                                        </a>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="body_in">
+                        <div class="row mt-3">
+                            <div class="col-md-2">
+                                <div class="box-dia-chi box-info">
+                                    <p class="title-head">Danh mục địa chỉ</p>
+                                    <div class="content mt-2" id="jstree">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <form action=""
+                                      class="form-add" id="form-them-diachi">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="">Mã địa chỉ</label>
+                                                <input type="text" name="maDiaChi" disabled required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Mã rút gọn</label>
+                                                <input type="text" name="maRutGon" disabled>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Tên địa chỉ</label>
+                                                <input type="text" name="tenDiaChi" disabled required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Alias</label>
+                                                <input type="text" name="aliasDiaChi" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="">Mô tả</label>
+                                                <textarea name="moTaDiaChi" cols="30" rows="1" disabled></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Ghi chú</label>
+                                                <textarea name="ghiChuDiaChi" id="" cols="30" rows="1" disabled></textarea>
+                                            </div>
+                                            <input type="hidden" name="parentIDDiachi" disabled />
+                                            <input type="hidden" name="idDiaChi" disabled />
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="box-title list-button d-flex">
+                                    <p class="title-head inline" id="title-dia-chi">Địa chỉ</p>
+                                    @*<a href="#" class="btn btn-watch binline" data-toggle="modal" data-target=".bd-example-modal-sm">
+                                            <img src="/App_Themes/assets/images/btn-watch.png"
+                                                 alt="" class="inline">Xem
+                                        </a>*@
+                                </div>
+                                <div class="wrap-height-table">
+                                    <table class="table display" id="table-dia-chi">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Mã địa chỉ</th>
+                                                <th>Tên địa chỉ</th>
+                                                <th>Mã ngắn</th>
+                                                <th>Path</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Nhập excel-->
+    <div class="modal fade default-popup popup-danh-sach-khach-hang" id="excel-chinhanh" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Import chi nhánh
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid wrap-table-2 table-mat-hang p-0">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="wrap-height-table-2 bg-white p-2 mt-2 border" style="max-height: 250px;">
+                                    <p class="title-special">Danh sách chi nhánh chưa tồn tại trong hệ thống</p>
+                                    <div class="box-border p-2" style="border: none;">
+                                        <table class="table display table-striped" style="width: 100%;" id="table-chi-nhanh-chua-co">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Tên chi nhánh</th>
+                                                    <th>Ghi chú</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="form-inline" style="margin-top: .5rem !important;">
+                                    <span>Số bản ghi: </span> <span class="ml-5 count-new-chi-nhanh">0</span>
+                                    @*<button type="button" class="btn btn-primary" style="margin-left: 15%;" disabled>Ghi thêm mới</button>*@
+                                    <div class="ml-auto">
+                                        <button type="button" class="btn btn-primary btn-save-chi-nhanh-excel" value="0" disabled="disabled">Ghi thêm mới</button>
+                                        @*<button type="button" class="btn btn-primary">Export</button>
+                                            <button type="button" class="btn btn-primary">Validate</button>*@
+                                    </div>
+                                </div>
+
+                                <div class="wrap-height-table-2 bg-white p-2 mt-2 border" style="max-height: 250px;">
+                                    <p class="title-special">Danh sách chi nhánh đã tồn tại trong hệ thống</p>
+                                    <div class="box-border p-2" style="border: none;">
+                                        <table class="table display table-striped" style="width: 100%;" id="table-chi-nhanh-da-co">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Tên chi nhánh</th>
+                                                    <th>Ghi chú</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="form-inline" style="margin-top: .5rem !important;">
+                                    <span>Số bản ghi: </span> <span class="ml-5 count-old-chi-nhanh">0</span>
+                                    @*<button type="button" class="btn btn-primary" style="margin-left: 15%;" disabled>Ghi sửa thông tin</button>*@
+                                    <div class="ml-auto">
+                                        <button type="button" class="btn btn-primary btn-save-chi-nhanh-excel" value="1" disabled="disabled">Ghi sửa thông tin</button>
+                                        @*<button type="button" class="btn btn-primary">Export</button>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer mt-2">
+                        <div class="w-100">
+                            @*<p>Tìm Excel Sheets để nhập</p>
+                                <select name="slExcel" id=""></select>
+                                <input type=file name="excelMatHang" style="display: none">
+                                <button id="btn-import-mat-hang-excel" class="btn btn-default ">
+                                    <img src="~/App_Themes/assets/images/paste-excel.png" alt=""
+                                         class="inline"><span class="inline">Import</span>
+                                </button>*@
+
+                            <span>Tìm Excel Sheets để nhập</span>
+                            <select name="slExcel-chinhanh" id="" class="w-25"></select>
+                            <input type="file" name="excelChiNhanh" style="display: none">
+                            <button id="btn-import-chi-nhanh" class="btn btn-default">
+                                <span class="inline">Tìm file export</span>
+                            </button>
+                        </div>
+
+                        <button type="button" id="btn-reset-chi-nhanh-excel" class="btn btn-primary">Refrersh</button>
+                        <button type="button" class="btn btn-primary" id="btn-create-chi-nhanh-excel">Tạo template</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade default-popup popup-danh-sach-khach-hang" id="excel-khohang" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Import kho hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid wrap-table-2 table-mat-hang p-0">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="wrap-height-table-2 bg-white p-2 mt-2 border" style="max-height: 250px;">
+                                    <p class="title-special">Danh sách kho hàng chưa tồn tại trong hệ thống</p>
+                                    <div class="box-border p-2" style="border: none;">
+                                        <table class="table display table-striped" style="width: 100%;" id="table-kho-hang-chua-co">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Mã kho</th>
+                                                    <th>Showroom/chi nhánh</th>
+                                                    <th>Tên kho</th>
+                                                    <th>Địa chỉ</th>
+                                                    <th>Theo dõi</th>
+                                                    <th>Kho mặc định</th>
+                                                    <th>Ghi chú</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="form-inline" style="margin-top: .5rem !important;">
+                                    <span>Số bản ghi: </span> <span class="ml-5 count-new-kho-hang">0</span>
+                                    @*<button type="button" class="btn btn-primary" style="margin-left: 15%;" disabled>Ghi thêm mới</button>*@
+                                    <div class="ml-auto">
+                                        <button type="button" class="btn btn-primary btn-save-kho-hang-excel" value="0" disabled="disabled">Ghi thêm mới</button>
+                                        @*<button type="button" class="btn btn-primary">Export</button>
+                                            <button type="button" class="btn btn-primary">Validate</button>*@
+                                    </div>
+                                </div>
+
+                                <div class="wrap-height-table-2 bg-white p-2 mt-2 border" style="max-height: 250px;">
+                                    <p class="title-special">Danh sách kho hàng đã tồn tại trong hệ thống</p>
+                                    <div class="box-border p-2" style="border: none;">
+                                        <table class="table display table-striped" style="width: 100%;" id="table-kho-hang-da-co">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Mã kho</th>
+                                                    <th>Showroom/chi nhánh</th>
+                                                    <th>Tên kho</th>
+                                                    <th>Địa chỉ</th>
+                                                    <th>Theo dõi</th>
+                                                    <th>Kho mặc định</th>
+                                                    <th>Ghi chú</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="form-inline" style="margin-top: .5rem !important;">
+                                    <span>Số bản ghi: </span> <span class="ml-5 count-old-kho-hang">0</span>
+                                    @*<button type="button" class="btn btn-primary" style="margin-left: 15%;" disabled>Ghi sửa thông tin</button>*@
+                                    <div class="ml-auto">
+                                        <button type="button" class="btn btn-primary btn-save-kho-hang-excel" value="1" disabled="disabled">Ghi sửa thông tin</button>
+                                        @*<button type="button" class="btn btn-primary">Export</button>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer mt-2">
+                        <div class="w-100">
+                            <span>Tìm Excel Sheets để nhập</span>
+                            <select name="slExcel-khohang" id="" class="w-25"></select>
+                            <input type="file" name="excelKhoHang" style="display: none">
+                            <button id="btn-import-kho-hang" class="btn btn-default">
+                                <span class="inline">Tìm file export</span>
+                            </button>
+                        </div>
+
+                        <button type="button" id="btn-reset-kho-hang-excel" class="btn btn-primary">Refrersh</button>
+                        <button type="button" class="btn btn-primary" id="btn-create-kho-hang-excel">Tạo template</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section myScripts{
+    <script src="~/PageScript/ChiNhanh/ChiNhanhJS.js"></script>
+    <script src="~/PageScript/DiaChi/diachi.js"></script>
+    <script src="~/PageScript/KhoHang/khohang.js"></script>
+}

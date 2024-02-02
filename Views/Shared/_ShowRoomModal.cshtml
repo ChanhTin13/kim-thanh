@@ -1,0 +1,116 @@
+﻿@using KimThanh.Models
+@using KimThanh.Database
+@{
+
+    if (Session["SHOWROOMID"] == null && Session["UID"] != null)
+    {
+        tblUSER user = QuanLyUser.getbyId(Session["UID"].ToString());
+        List<sp_LoadSHOWROOMByUserRole_Result> dsKho = ShowRoom.getListByUserId(user.USERID);
+        <style>
+            .invalid-message {
+                display: none;
+                width: 100%;
+                margin-top: .25rem;
+                font-size: 80%;
+                color: #dc3545;
+            }
+        </style>
+
+        <div class="modal fade active default-popup" id="popup-chon-chi-nhanh" data-backdrop="static" data-keyboard="false"
+             tabindex="-1"
+             role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style=" display: flex; flex-flow: column;">
+                        <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                            Chọn chi nhánh làm việc
+                        </h5>
+                        @*<p style="white-space: pre-line; color: white;">
+                            Để tránh rủi ro, nhầm lẫn, hệ thống quy địnnh tại 1 phiên làm việc 1 user chỉ được thao tác trên dữ liệu của 1 chi nhánh
+                            (ngoại trừ khi xem báo cáo).
+                            Vì vậy, hãy chọn 1 chi nhánh cho phiên làm việc này
+                            (Form này chỉ xuất hiện khi bạn được phân quyền vào nhiều hơn 1 chi nhánh)
+                        </p>*@
+                    </div>
+                    <div class="modal-body position-relative" style="padding-bottom:1.3rem;">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="wrap-form-login">
+                                        <div class="needs-validation">
+                                            <div class="form-group">
+                                                <label for="txt-userId-login" style="font-size:15px">Chi nhánh:</label>
+                                                <select name="ddl-select-showroom" style="font-size:15px;height:30px" type="text" class="form-control">
+                                                    @foreach (var item in dsKho)
+                                                    {
+                                                        <option value="@item.SRID">@item.TEN</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            @{
+                                                string dis = "";
+                                                if (dsKho.Count == 0)
+                                                {
+                                                    dis = "disabled";
+                                                    <div class="invalid-message" style="display: block; font-size: 100%">
+                                                        Chưa có kho nào được phân quyền cho bạn.<br />
+                                                        Hãy liên hệ với người quản lý để được cấp quyền truy cập nhập vào ít nhất một kho.
+                                                        Vui lòng bấm vào <a href="@Url.Action("SignOut", "Login", new { area = "" })">đây</a> để đăng xuất...
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="invalid-message"></div>
+                                                }
+                                            }
+                                            <div class="action-login mt-4">
+                                                <div class="row">
+                                                    <div class="col-md-12 text-center">
+                                                        <button type="button" class="btn btn-primary btn-select-showroom" @dis>
+                                                            Chọn
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $('#popup-chon-chi-nhanh').modal();
+                $('#popup-chon-chi-nhanh').modal({ backdrop: 'static', keyboard: false })
+            });
+            $('#popup-chon-chi-nhanh').on('hidden.bs.modal', function () {
+                $('#popup-chon-chi-nhanh').modal();
+            });
+            $('.btn-select-showroom').click(function () {
+                let chinhanh = $('select[name="ddl-select-showroom"]').val();                
+                $.ajax({
+                    type: "POST",
+                    url: "/Login/SelectShowRoom",
+                    data: '{SRID: "' + chinhanh + '"}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                        if (msg.rs) {
+                            location.reload();
+                        } else {
+                            $('.invalid-message').html(msg.message);
+                            $('.invalid-message').css({ "display": "block" });
+                        }
+                    },
+                    error: function (xmlhttprequest, textstatus, errorthrow) {
+                        console.log("load fails");
+                    }
+                });
+            });
+
+        </script>
+    }
+}

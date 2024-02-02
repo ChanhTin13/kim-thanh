@@ -1,0 +1,145 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<style>
+    #them-ly-do .select2-container--default{
+        width: 70% !important;
+    }
+</style>
+
+<main class="wrapper">
+    <!--Danh mục lý do-->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ql-user user-table wrap-table-pq">
+                    <div class="user-table__header">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="list-button text-left">
+                                    <a href="#" class="btn btn-add inline" id="btn-insert-ly-do">
+                                        <img src="~/App_Themes/assets/images/btn-add.png"
+                                             alt="" class="inline">
+                                        <span class="inline">Thêm</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline" id="btn-update-ly-do">
+                                        <img src="~/App_Themes/assets/images/btn-fix.png"
+                                             alt="" class="inline"><span class="inline">Sửa</span>
+                                    </a>
+                                    <a href="#" class="btn btn-del inline" id="btn-delete-ly-do">
+                                        <img src="~/App_Themes/assets/images/btn-del.png"
+                                             alt="" class="inline"><span class="inline">Xóa</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline" id="btn-reset-ly-do">
+                                        <img src="~/App_Themes/assets/images/btn-import.png"
+                                             alt="" class="inline"><span class="inline">Nạp</span>
+                                    </a>
+                                    <a href="#" class="btn btn-fix inline" id="btn-export-ly-do">
+                                        <img src="~/App_Themes/assets/images/btn-export.png" alt=""
+                                             class="inline"><span class="inline">Xuất</span>
+                                    </a>
+                                    @*<a href="#" class="btn btn-question inline">
+                                        <img src="~/App_Themes/assets/images/question.png"
+                                             alt="" class="inline"><span class="inline">Hỏi</span>
+                                    </a>
+                                    <a href="#" class="btn btn-close inline">
+                                        <img src="~/App_Themes/assets/images/btn-close.png"
+                                             alt="" class="inline"><span class="inline">Đóng</span>
+                                    </a>*@
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="wrap-height-table">
+                        <table class="table display nowrap table-striped row-border
+                                 order-column" id="table-lydo" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Thuộc module</th>
+                                    <th>Mã lý do</th>
+                                    <th>Lý do</th>
+                                    <th>Kiểu hệ thống</th>
+                                    <th>Line Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Thêm lý do -->
+    <div class="modal fade default-popup" id="them-ly-do" tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Lý
+                        do
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-5">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box-border mt-2">
+                                    <p class="box-border__title bg-gray">Thông tin</p>
+                                    <form action="" class="default-form
+                                    form-them-ngan-hang form-them-ly-do">
+                                        <input type="hidden" name="id-lydo" required/>
+                                        <div class="form-group">
+                                            <label for="">Thuộc</label>
+                                            <select name="slModule" required>
+                                            </select>
+                                        </div><div class="form-group">
+                                            <label for="">Mã lý do</label>
+                                            <input type="text" name="code-lydo" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Lý do</label>
+                                            <input type="text" name="name-lydo" required>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label">
+                                                <input type="checkbox"
+                                                       class="form-check-input"
+                                                       value="" name="isLineType"> Là
+                                                line type
+                                            </label>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn-save-ly-do">Lưu</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Thoát
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section myScripts{
+    <script src="~/PageScript/LyDo/lydo.js"></script>
+}

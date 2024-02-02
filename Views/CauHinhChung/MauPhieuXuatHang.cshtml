@@ -1,0 +1,149 @@
+﻿
+@{
+    ViewBag.Title = "MauPhieuXuatHang";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="/App_Themes/export/css/fonts/Averta/font.css" />
+<link rel="stylesheet" type="text/css" href="/App_Themes/export/scss/style.css" />
+<link rel="stylesheet" type="text/css" href="/App_Themes/export/css/fontawesome/css/all.css" />
+<style>
+    body .wrapper {
+        font-family: "Times New Roman";
+    }
+
+    .table-pnk {
+        font-size: 180.50% !important;
+    }
+
+    #square {
+        max-width: 66%;
+        border: 1px solid #212529;
+        padding: 10px;
+        margin: 2px;
+    }
+
+    #square2 {
+        max-width: 35%;
+        border: 1px solid #212529;
+        margin-left: 32%;
+    }
+
+    @@media print {
+        thead, tfoot {
+            display: table-row-group;
+        }
+    }
+    .wrapper {
+        height: auto !important;
+        margin-top: 100px;
+        margin-bottom: 18px;
+    }
+        .wrapper .wrap-height-table {
+            height:auto!important;
+        }
+</style>
+<main class="wrapper">
+    <div>
+        <div class="note__header">
+            <div class="note__header--time">
+                @*<img src="/App_Themes/export/images/qrcode.png" alt="img-qrcode" class="img-qrcode" />*@
+                <div></div>
+                <div style="margin-left: 1%;" class="detail">
+                    <p class="text-time">
+                        <span style="font-size: 130.50%" class="date">@DateTime.Now.ToString("dd/MM/yyyy")</span>
+                    </p>
+                    <p>
+                        <span style="font-size: 130.50%" class="clock">@DateTime.Now.ToString("HH:mm")</span>
+                    </p>
+                    <p style="font-size: 180.50%" class="text-code" id="bhdcode">AA000000</p>
+                </div>
+            </div>
+            <div class="note__header--title">
+                <h2 style="font-size:250.25%;" class="title">Phiếu Xuất Hàng</h2>
+            </div>
+            <div class="note__header--box">
+                <p style="font-size: 200.50%" class="text"><b style="font-size:116%"> Duyệt bởi Admin</b></p>
+                <p style="font-size: 180.50%" class="code">@DateTime.Now.ToString("dd/MM/yyyy")</p>
+            </div>
+        </div>
+        <div class="note__body">
+            <div class="note__body--header">
+                <div class="left">
+                    <p style="font-size: 130.50%;text-align:center;" id="square"><b>A-KH</b></p>
+                    <p style="font-size: 130.50%" class="des">Khách hàng: <b style="font-size:116%">Khách hàng A</b></p>
+                </div>
+                <div class="right">
+                    <p style="font-size: 130.50%" class="name">NV bán hàng: <b style="font-size:116%">nhanvien1</b></p>
+                </div>
+            </div>
+            <div class="note__body--table">
+                <div class="wrap-height-table table-responsive">
+                    <table class="table-pnk display"
+                           id="table-phieu-xuat-kho"
+                           style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th style="width:1%;">STT</th>
+                                <th style="width:30%;">Tên hàng</th>
+                                <th style="width:5%;">ĐVT</th>
+                                <th style="width:5%;">SL</th>
+                                <th style="width:8%;">Đơn giá</th>
+                                <th style="width:12%;">Thành tiền</th>
+                                <th style="width:20%; min-width:20%;max-width:40%;">Ghi chú</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var cul = new System.Globalization.CultureInfo("vi-VN");
+                                for (int i = 0; i < 5; i++)
+                                {
+                                    <tr>
+                                        <td>@(i + 1)</td>
+                                        <td style="text-align: left;">Mặt hàng @(i + 1)</td>
+                                        <td>Cái</td>
+                                        <td style="text-align:right;">@String.Format(cul, "{0:N0}", 100)</td>
+                                        <td style="text-align: right;">@String.Format(cul, "{0:N0}", 1000000)</td>
+                                        <td style="text-align:right;">@String.Format(cul, "{0:N0}", 100000000)</td>
+                                        <td style="white-space:normal; text-align: left;"></td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th style="font-size: 120%;" colspan="3">Tổng SL</th>
+                                <th style="font-size:140.25%;text-align:right ">@String.Format(cul, "{0:N0}", 500)</th>
+                                <th style="font-size: 120%;">Tổng tiền</th>
+                                <th style="font-size:140.25%; text-align:right " colspan="2">@String.Format(cul, "{0:N0}", 500000000)</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="note__footer">
+            <textarea style="font-size: 180.50%; min-height:200px;" name="txt-mauphieuxuathang">
+                
+            </textarea>
+            <div class="note__footer--row">
+                <div class="box">
+                    <p style="font-size: 125.50%" class="sign-name">Khách hàng</p>
+                </div>
+                <div class="box">
+                    <p style="font-size: 125.50%" class="sign-name">Thu ngân</p>
+                </div>
+            </div>
+        </div>
+        <div>
+            <a href="javascript:;" class="btn inline btn-info" id="btn-save-mauphieuxuathang" style="color: black; float: right; padding: 8px 12px;">
+                <img src="/App_Themes/assets/images/btn-save.png"
+                     alt="" class="inline" style="margin-right:5px;"><span class="inline"> Lưu</span>
+            </a>
+        </div>
+    </div>
+</main>
+
+@section myScripts{
+    <script src="~/PageScript/CauHinhChung/MauPhieuXuatHang.js"></script>
+}

@@ -1,0 +1,199 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+<main class="wrapper">
+    <div class="container-fluid wrap-table-2 table-mat-hang p-0">
+        <div class="table-nhom-kh">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="box-dia-chi box-info">
+                        <p class="title-head">Danh mục nhóm hàng</p>
+                        <div class="content mt-2" id="jstree"></div>
+                    </div>
+                </div>
+                <div class="col-md-8 pl-0">
+                    <div class="box-title list-button d-flex">
+                        <p class="title-head inline" id="title">Nhóm hàng</p>
+                    </div>
+                    <div class="wrap-height-table-2 bg-white p-2 mt-2 border">
+                        <table class="table display table-striped table-tinh-gia-ban" id="table-tinh-gia-ban">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Mã hàng</th>
+                                    <th>Tên hàng</th>
+                                    <th>Tỉ suất lợi nhuận</th>
+                                    <th>Giá bán lẻ</th>
+                                    <th>Giá bán buôn</th>
+                                    <th>Giá nhập</th>
+                                    <th>Giá bán 1</th>
+                                    <th>Giá bán 2</th>
+                                    <th>Giá bán 3</th>
+                                    <th>Giá bán 4</th>
+                                    <th>Giá bán 5</th>
+                                    <th>Giá bán 6</th>
+                                    <th>Giá bán 7</th>
+                                    <th>Giá bán 8</th>
+                                    <th>Số lượng</th>
+                                    <th><input type="checkbox" name="checkbox-all" value="" />Chọn</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-5">
+                            <p class="title-head">Mặt hàng được chọn để tính giá</p>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="box-button w-100 d-flex justify-content-end align-items-center">
+                                <p class="text-center font-weight-bold">
+                                    <span style="color: #ea8c00">Chú ý: đơn vị tiền là VND</span>
+                                    <br>
+                                    <span style="color: blue;"> Để đặt giá = 0, hãy nhập số 0,1(không phết một) </span>
+                                </p>
+                                <button class="btn btn-default btn-up-down ml-5" id="btn-next-all">
+                                    <i class="fas fa-angle-double-down"></i>
+                                </button>
+                                <button class="btn btn-default btn-up-down ml-1" id="btn-prev-all">
+                                    <i class="fas fa-angle-double-up"></i>
+                                </button>
+                                <button class="btn btn-default btn-up-down ml-5" id="btn-next">
+                                    <i class="fal fa-angle-down"></i>
+                                </button>
+                                <button class="btn btn-default btn-up-down ml-1" id="btn-prev">
+                                    <i class="fal fa-angle-up"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wrap-height-table-2 bg-white p-2 mt-2 border">
+                        <table class="table display table-striped table-duoc-chon" id="table-duoc-chon">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Mã hàng</th>
+                                    <th>Tên hàng</th>
+                                    <th>Tỉ suất lợi nhuận</th>
+                                    <th>Giá bán lẻ</th>
+                                    <th>Giá bán buôn</th>
+                                    <th>Giá nhập</th>
+                                    <th>Giá bán lẻ mới</th>
+                                    <th>Giá bán buôn mới</th>
+                                    <th>Giá bán 1 mới</th>
+                                    <th>Giá bán 2 mới</th>
+                                    <th>Giá bán 3 mới</th>
+                                    <th>Giá bán 4 mới</th>
+                                    <th>Giá bán 5 mới</th>
+                                    <th>Giá bán 6 mới</th>
+                                    <th>Giá bán 7 mới</th>
+                                    <th>Giá bán 8 mới</th>
+                                    <th>Số lượng</th>
+                                    <th><input type="checkbox" name="checkbox-all" value="" />Chọn</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-2 pl-0 sidebar-search">
+                    <div class="box-border" id="tinh-gia">
+                        <p class="box-border__title bg-gray">Phương thức tính giá</p>
+                        <p class="mb-2">Tăng thêm theo</p>
+                        <div class="form-check mb-1">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input" value="loi-nhuan" name="tang-them-theo" checked><span class="mr-1"> Cột tỉ lệ suất lợi nhuận </span>
+                            </label>
+                        </div>
+                        <div class="form-check mb-1 d-flex justify-content-between align-items-center">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input" value="ti-le" name="tang-them-theo"><span class="mr-1">Tỉ lệ </span>
+                            </label>
+                            <input type="number" step="3" class="col-7 p-0 ti-le" id="ti-le" disabled >
+                        </div>
+                        <div class="form-check mb-1 d-flex justify-content-between align-items-center">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input" value="so-tien" name="tang-them-theo"><span class="mr-1">Số tiền</span>
+                            </label>
+                            <input type="number" step="3000" class="col-7 p-0 so-tien" id="so-tien" disabled>
+                        </div>
+                        <div class="box-select mb-3 mt-3">
+                            <p>Dựa trên giá</p>
+                            <select name="slBefore" id="slBefore" class="w-100 bg-gray select-gray">
+                                <option value="GIABANLE">Giá bán lẻ</option>
+                                <option value="GIABANBUON">Giá bán buôn</option>
+                                @*<option value="GIABAN1">Giá bán 1</option>
+                                <option value="GIABAN2">Giá bán 2</option>
+                                <option value="GIABAN3">Giá bán 3</option>
+                                <option value="GIABAN4">Giá bán 4</option>
+                                <option value="GIABAN5">Giá bán 5</option>
+                                <option value="GIABAN6">Giá bán 6</option>
+                                <option value="GIABAN7">Giá bán 7</option>
+                                <option value="GIABAN8">Giá bán 8</option>*@
+                                <option value="GIANHAP">Giá nhập</option>
+                            </select>
+                        </div>
+                        <div class="box-select mb-3 mt-3 list-button">
+                            <p>Để tính giá</p>
+                            <select name="slAfter" id="slAfter" class="w-100 bg-gray select-gray">
+                                <option value="GIABANLEMOI">Giá bán lẻ</option>
+                                <option value="GIABANBUONMOI">Giá bán buôn</option>
+                                <option value="GIABAN1MOI">Giá bán 1</option>
+                                <option value="GIABAN2MOI">Giá bán 2</option>
+                                <option value="GIABAN3MOI">Giá bán 3</option>
+                                <option value="GIABAN4MOI">Giá bán 4</option>
+                                <option value="GIABAN5MOI">Giá bán 5</option>
+                                <option value="GIABAN6MOI">Giá bán 6</option>
+                                <option value="GIABAN7MOI">Giá bán 7</option>
+                                <option value="GIABAN8MOI">Giá bán 8</option>
+                            </select>
+                            <a href="#" class="btn mt-3 btn-search d-block" id="btn-tinh">
+                                <img src="../App_Themes/assets/images/cal.png" alt="" class="inline"><span class="inline">Tính giá bán</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="box-border mt-4">
+                        <p class="box-border__title bg-gray">Import giá Excel</p>
+                        <p>Tìm excel sheets để nhập</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <select name="" id="" class="col-10 h-100"></select>
+                            <button class="btn btn-default">
+                                <img src="../App_Themes/assets/images/paste-excel.png" alt="">
+                            </button>
+                        </div>
+                        <div class="list-button mt-2">
+                            <a href="#" class="btn btn-search d-block">
+                                <img src="../App_Themes/assets/images/loading.png" alt="" class="inline"><span class="inline"> Nạp lại từ Excel </span>
+                            </a>
+                            <a href="#" class="btn btn-search d-block">
+                                <img src="../App_Themes/assets/images/btn-export.png" alt="" class="inline"><span class="inline"> Tạo mẫu nhập liệu </span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="list-button list-button-last mt-3">
+                        <a href="#" class="btn btn-search d-block" id="btn-save">
+                            <img src="../App_Themes/assets/images/btn-save.png" alt="" class="inline"><span class="inline"> Ghi </span>
+                        </a>
+                        <a href="#" class="btn btn-export mt-1 d-block dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="../App_Themes/assets/images/btn-export.png" alt="" class="inline"><span class="inline">Xuất</span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" id="export-mat-hang">Xuất mặt hàng hiện có</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" id="export-duoc-chon">Xuất mặt hàng được chọn để tính giá</a>
+                        </div>
+                        <a href="#" class="btn btn-print mt-1 d-block">
+                            <img src="../App_Themes/assets/images/btn-close.png" alt="" class="inline"><span class="inline">Đóng</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@section MyScripts{
+    <script src="~/PageScript/TinhGiaBan/tinhgiaban.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+}

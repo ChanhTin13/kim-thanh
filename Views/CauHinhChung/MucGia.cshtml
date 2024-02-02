@@ -1,0 +1,456 @@
+﻿
+@{
+    ViewBag.Title = "MucGia";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+<link href="~/App_Themes/select2/css/select2.min.css" rel="stylesheet" />
+<style>
+    .select2-container--default {
+        width: 58.333333% !important
+    }
+
+    #them-popup .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    #sua-popup .form-group > input {
+        height: 30px;
+        border-radius: 5px;
+        padding-left: 8px !important;
+    }
+
+    input[readonly] {
+        background: #ccc
+    }
+
+    #tb-import-vitri input {
+        height: 30px;
+        border-radius: 5px;
+        width: 100%;
+        padding: 5px;
+    }
+</style>
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="wrap-table__button">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="list-button text-left">
+                        <a href="javascript:;" class="btn btn-add inline" data-toggle="modal"
+                           data-target="#them-popup">
+                            <img src="../App_Themes/assets/images/btn-add.png" alt=""
+                                 class="inline">
+                            <span class="inline">Thêm</span>
+                        </a>
+                        <a href="javascript:;" class="btn btn-fix btn-edit inline" data-toggle="modal"
+                           data-target="#form-add-group-user">
+                            <img src="../App_Themes/assets/images/btn-fix.png" alt=""
+                                 class="inline"><span class="inline">Sửa</span>
+                        </a>
+                        <a href="javascript:;" class="btn btn-del btn-delete inline">
+                            <img src="../App_Themes/assets/images/btn-del.png" alt=""
+                                 class="inline"><span class="inline">Xóa</span>
+                        </a>
+                        <a href="javascript:;" class="btn btn-import btn-refresh inline">
+                            <img src="../App_Themes/assets/images/btn-import.png" alt=""
+                                 class="inline"><span class="inline">Nạp</span>
+                        </a>
+                        <a href="javascript:;" class="btn btn-export-mucgia inline">
+                            <img src="../App_Themes/assets/images/btn-export.png" alt=""
+                                 class="inline"><span class="inline">Xuất</span>
+                        </a>
+                        <a href="#" class="btn btn-export
+                                        inline" id="import-excel">
+                            <img src="/App_Themes/assets/images/btn-import-2.png"
+                                 alt="" class="inline"><span class="inline">Nhập</span>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div class="wrap-table__header">
+            <div class="row">
+                <div class="col-md-12">
+                    <div hidden class="box-choose-time" id="date-vitri">
+                        <p class="mr-2">Từ</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_From" data-date-format="mm/dd/yyyy">
+                        <p class="mr-2">Đến</p>
+                        <input class="mr-2 datetimepicker date-only" name="chooseDate_To" data-date-format="mm/dd/yyyy">
+
+                        <button class="btn btn-trans" id="btn-search-vitri">
+                            <img src="../App_Themes/assets/images/loading.png" alt="" class="inline">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+        <div class="wrap-table__body">
+            <div class="wrap-height-table">
+                <table class="table display dataTable" 
+                       id="main-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Mã hàng</th>
+                            <th>Tên hàng</th>
+                            <th>Số lượng 1</th>
+                            <th>Mức giá 1</th>
+                            <th>Số lượng 2</th>
+                            <th>Mức giá 2</th>
+                            <th>Số lượng 3</th>
+                            <th>Mức giá 3</th>
+                            <th>Số lượng 4</th>
+                            <th>Mức giá 4</th>
+                            <th>Số lượng 5</th>
+                            <th>Mức giá 5</th>
+                            <th>Số lượng 6</th>
+                            <th>Mức giá 6</th>
+                            <th>Số lượng 7</th>
+                            <th>Mức giá 7</th>
+                            <th>Ngày cập nhật</th>
+                            <th>Người cập nhật</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- nhập file excel-->
+<div class="modal fade default-popup popup-danh-sach-khach-hang"
+     id="model-import-excel" tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                    Import mức giá file Excel
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body import-excel">
+                <div class="container-fluid wrap-table-2 table-mat-hang p-0">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="wrap-height-table-2 bg-white p-2 mt-2 border">
+                                <table class="table display table-striped" id="table-import" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Mã hàng</th>
+                                            <th>Tên hàng</th>
+                                            <th>Số lượng 1</th>
+                                            <th>Mức giá 1</th>
+                                            <th>Số lượng 2</th>
+                                            <th>Mức giá 2</th>
+                                            <th>Số lượng 3</th>
+                                            <th>Mức giá 3</th>
+                                            <th>Số lượng 4</th>
+                                            <th>Mức giá 4</th>
+                                            <th>Số lượng 5</th>
+                                            <th>Mức giá 5</th>
+                                            <th>Số lượng 6</th>
+                                            <th>Mức giá 6</th>
+                                            <th>Số lượng 7</th>
+                                            <th>Mức giá 7</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-2 pl-0 sidebar-search">
+                            <div class="box-border mt-4">
+                                <p class="box-border__title bg-gray">Import Excel</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <input type="file" id="FileUpload" style="display: none" />
+                                    <select name="" id="" class="col-10 h-100">
+                                    </select>
+                                    <button id="btnFileUpload" class="btn btn-default ">
+                                        <img src="/App_Themes/assets/images/paste-excel.png"
+                                             alt="">
+                                    </button>
+                                </div>
+                                <div class="list-button mt-2">
+                                    <a id="btn-create-file-excel" href="#" class="btn btn-search d-block">
+                                        <img src="/App_Themes/assets/images/btn-export.png" alt=""
+                                             class="inline"><span class="inline">
+                                            Tạo mẫu nhập
+                                            liệu
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-save-import" type="button" class="btn btn-primary">Lưu</button>
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade default-popup popup-them-mat-hang" data-keyboard="true" data-backdrop="static" id="them-popup"
+     tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                    Mức giá
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="default-form">
+                                <div class="form-group">
+                                    <label for="">Mặt hàng</label>
+                                    <select id="sl-mathang" name="sl-mathang" class="col-7 p-0">
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Số lượng 1</label>
+                                    <input name="txt-soluong1" data-type="currency" class="col-7 p-0" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Số lượng 2</label>
+                                    <input name="txt-soluong2" data-type="currency" class="col-7 p-0" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Số lượng 3</label>
+                                    <input name="txt-soluong3" data-type="currency" class="col-7 p-0" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Số lượng 4</label>
+                                    <input name="txt-soluong4" data-type="currency" class="col-7 p-0" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Số lượng 5</label>
+                                    <input name="txt-soluong5" data-type="currency" class="col-7 p-0" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Số lượng 6</label>
+                                    <input name="txt-soluong6" data-type="currency" class="col-7 p-0" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Số lượng 7</label>
+                                    <input name="txt-soluong7" data-type="currency" class="col-7 p-0" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="default-form">
+                                <div class="form-group">
+                                    <label for="">&emsp;</label>
+                                    <input readonly class="col-7 p-0" style="background: white; border: white;" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="">Giá bán 1</label>
+                                    <input name="txt-giaban1" readonly class="col-7 p-0" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Giá bán 2</label>
+                                    <input name="txt-giaban2" readonly class="col-7 p-0" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Giá bán 3</label>
+                                    <input name="txt-giaban3" readonly class="col-7 p-0" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Giá bán 4</label>
+                                    <input name="txt-giaban4" readonly class="col-7 p-0" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Giá bán 5</label>
+                                    <input name="txt-giaban5" readonly class="col-7 p-0" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Giá bán 6</label>
+                                    <input name="txt-giaban6" readonly class="col-7 p-0" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Giá bán 7</label>
+                                    <input name="txt-giaban7" readonly class="col-7 p-0" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-save-add">Lưu</button>
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade default-popup popup-them-mat-hang" id="sua-popup" data-keyboard="true" data-backdrop="static"
+     tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                    Mức giá
+                </h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="default-form">
+                                <div class="form-group">
+                                    <label for="">Mã mặt hàng</label>
+                                    <input id="mathang-edit" readonly name="mathang-edit" class="col-7 p-0" />
+                                    <input type="hidden" name="mhid-edit" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Số lượng 1</label>
+                                    <input name="txt-edit-soluong1" data-type="currency" class="col-7 p-0" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Số lượng 2</label>
+                                    <input name="txt-edit-soluong2" data-type="currency" class="col-7 p-0" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Số lượng 3</label>
+                                    <input name="txt-edit-soluong3" data-type="currency" class="col-7 p-0" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Số lượng 4</label>
+                                    <input name="txt-edit-soluong4" data-type="currency" class="col-7 p-0" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Số lượng 5</label>
+                                    <input name="txt-edit-soluong5" data-type="currency" class="col-7 p-0" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Số lượng 6</label>
+                                    <input name="txt-edit-soluong6" data-type="currency" class="col-7 p-0" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Số lượng 7</label>
+                                    <input name="txt-edit-soluong7" data-type="currency" class="col-7 p-0" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="default-form">
+                                <div class="form-group">
+                                    <label for="">Tên mặt hàng</label>
+                                    <input id="mathangname-edit" readonly name="mathangname-edit" class="col-7 p-0" />
+                                    <input type="hidden" name="mhid-edit" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Giá bán 1</label>
+                                    <input name="txt-edit-giaban1" readonly class="col-7 p-0" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Giá bán 2</label>
+                                    <input name="txt-edit-giaban2" readonly class="col-7 p-0" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Giá bán 3</label>
+                                    <input name="txt-edit-giaban3" readonly class="col-7 p-0" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Giá bán 4</label>
+                                    <input name="txt-edit-giaban4" readonly class="col-7 p-0" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Giá bán 5</label>
+                                    <input name="txt-edit-giaban5" readonly class="col-7 p-0" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Giá bán 6</label>
+                                    <input name="txt-edit-giaban6" readonly class="col-7 p-0" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">Giá bán 7</label>
+                                    <input name="txt-edit-giaban7" readonly class="col-7 p-0" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-edit-save">Lưu</button>
+                <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section myScripts{
+    <script src="~/App_Themes/select2/js/select2.full.min.js"></script>
+    <script src="~/PageScript/CauHinhChung/MucGia.js"></script>
+}

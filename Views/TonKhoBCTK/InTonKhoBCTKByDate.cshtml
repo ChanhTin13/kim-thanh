@@ -1,0 +1,117 @@
+﻿@using KimThanh.Controllers
+@using KimThanh.ModelsView
+@model List<Mona_sp_LoadTKTonkhoXMLWithMHL_by_tdt>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>In Tồn Kho BCTK Theo Ngày</title>
+    <meta http-equiv="Cache-control" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
+    <meta name="robots" content="noodp,noydir" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="og:site_name" content="" />
+    <meta name="description" content=" " />
+    <meta name="keywords" content="" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="" />
+    <meta property="og:description" content="" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/fonts/Averta/font.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/scss/style.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/fontawesome/css/all.css" />
+    <style>
+        body {
+            font-family: "Times New Roman";
+        }
+    </style>
+</head>
+<body>
+    <main class="wrapper">
+        <div>
+            <div class="note__header">
+                <div class="note__header--title">
+                    <h2 class="title">In Tồn Kho BCTK Theo Ngày</h2>
+                </div>
+            </div>
+            <div class="note__body">
+                <div class="note__body--table">
+                    <div class="wrap-height-table table-responsive">
+                        <table class="table-pnk display"
+                               id="table-phieu-xuat-kho"
+                               style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Kho</th>
+                                    <th>Mã hàng</th>
+                                    <th>Tên hàng</th>
+                                    <th>Alias</th>
+                                    <th>Số lượng</th>
+                                    <th>Đơn giá</th>
+                                    <th>Thành tiền</th>
+                                    <th>Đơn vị</th>
+                                </tr>
+                            </thead>
+                            @if (Model != null)
+                            {
+                                <tbody>
+                                    @{
+
+                                        int STT = 0;
+                                        var cul = new System.Globalization.CultureInfo("vi-VN");
+                                        foreach (var item in Model)
+                                        {
+                                            var sl = (int)item.SOLUONG;
+                                            var dongia = (double)item.GIABINHQUAN;
+                                            var thanhtien = (double)item.Thanhtien;
+                                            <tr>
+                                                <td>@(++STT)</td>
+                                                <td>@item.KHOCODE</td>
+                                                <td>@item.MHCODE</td>
+                                                <td>@item.MHTEN</td>
+                                                <td>@item.MATCHCODE</td>
+                                                <td style="color:red;">@String.Format(cul, "{0:N0}", sl)</td>
+                                                <td>@String.Format(cul, "{0:N0}", dongia)</td>
+                                                <td>@String.Format(cul, "{0:N0}", thanhtien)</td>
+                                                <td>@item.DONVI</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="2"></th>
+                                        <th>@Model[0].TotalRow</th>
+                                        <th colspan="2"></th>
+                                        <th>@String.Format(cul, "{0:N0}", Model[0].TongSoLuong)</th>
+                                        <th>@String.Format(cul, "{0:N0}", Model[0].TongDongia)</th>
+                                        <th>@String.Format(cul, "{0:N0}", Model[0].TongThanhtien)</th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            }
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script type="text/javascript" src="/App_Themes/js/moment.js"></script>
+    <script src="~/App_Themes/js/jquery.js"></script>
+    @*<script type="text/javascript" src="js/jquery-3.2.1.slim.min.js"></script>
+        <script type="text/javascript" src="js/popper.min.js"></script>
+        <script type="text/javascript" src="../js/bootstrap.min.js"></script>*@
+    <script>
+
+        $(document).ready(function () {
+            window.print();
+        })
+    </script>
+</body>
+</html>

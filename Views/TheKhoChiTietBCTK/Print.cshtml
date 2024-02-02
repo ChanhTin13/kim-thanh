@@ -1,0 +1,153 @@
+﻿@using KimThanh.ModelsView;
+@model  List<Mona_sp_LoadTKTheKhoDetailByPeriod_by_tdt>
+@{
+    var cul = new System.Globalization.CultureInfo("vi-VN");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>BÁO CÁO BÁN HÀNG</title>
+    <meta http-equiv="Cache-control" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
+    <meta name="robots" content="noodp,noydir" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="og:site_name" content="" />
+    <meta name="description" content=" " />
+    <meta name="keywords" content="" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="" />
+    <meta property="og:description" content="" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/fonts/Averta/font.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/scss/style.css" />
+    <link rel="stylesheet" type="text/css" href="/App_Themes/export/css/fontawesome/css/all.css" />
+    <style>
+        #ul-don-hang ul {
+            list-style-type: none;
+            font-size: medium;
+            margin-right: 100px;
+            padding: 0;
+            display: inline-block;
+            *display: inline;
+            zoom: 1
+        }
+    </style>
+</head>
+<body>
+    <main class="wrapper">
+        <div>
+            <div class="note__header">
+                <div class="note__header--time">
+                    <div class="detail">
+                        <p class="text-time">
+                            <span class="date">Từ ngày @ViewBag.FilterFD</span>
+                        </p>
+                        <p>
+                            <span class="clock">Đến ngày @ViewBag.FilterTD</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="note__header--title">
+                    <h2 class="title">THẺ KHO CHI TIẾT</h2>
+                </div>
+            </div>
+            <div class="note__body">
+                <div class="note__body--table">
+                    <div class="wrap-height-table table-responsive">
+                        <table class="table-pnk display"
+                               id="table-in-bao-cao-banhang"
+                               style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Ngày</th>
+                                    <th>Kho</th>
+                                    <th>Mã hàng</th>
+                                    <th>Tên hàng</th>
+                                    <th>Phiếu nhập</th>
+                                    <th>Phiếu xuất</th>
+                                    <th>Diễn giải</th>
+                                    <th>Nhập</th>
+                                    <th>Xuất</th>
+                                    <th>Đơn giá</th>
+                                    <th>Ký xác nhận</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int STT = 0;
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@(++STT)</td>
+                                            <td>@item.NGAY</td>
+                                            <td>@item.KHOCODE</td>
+                                            <td>@item.MHCODE</td>
+                                            <td>@item.MHTEN</td>
+                                            <td>@item.PHIEUNHAP</td>
+                                            <td>@item.PHIEUXUAT</td>
+                                            <td>@item.DIENGIAI</td>
+                                            <td>@item.SLNHAP</td>
+                                            <td>@item.SLXUAT</td>
+                                            <td>@item.DONGIA</td>
+                                            <td>@item.KYXACNHAN</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                            <tfoot>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            @*<div class="note__footer">
+                <div id="ul-don-hang" class="mb-3 mt-3">
+                    <ul>
+                        <li>Tổng Số Lượng Mua: @ViewBag.SoLuongMua</li>
+                        <li>Tổng Số Lượng Trả Lại: @ViewBag.SoLuongMuaTra</li>
+                        <li>---------------------------------------------</li>
+                        <li>SL Mua-Trả lại: @ViewBag.TongSL</li>
+                    </ul>
+                    <ul>
+                        <li>Tổng Tiền Mua: @ViewBag.TongTienMua</li>
+                        <li>Tổng Tiền Trả Lại: @ViewBag.TongTienMuaTra</li>
+                        <li>---------------------------------------------</li>
+                        <li>Tiền Mua-Trả lại: @ViewBag.TongTien</li>
+                    </ul>
+                </div>
+                <div class="note__footer--row">
+                    <div class="box">
+                        <p class="sign-name">Trưởng ca</p>
+                        <span><i>(Ký và ghi rõ họ tên)</i></span>
+                    </div>
+                    <div class="box">
+                        <p class="sign-name">Kế toán</p>
+                        <span><i>(Ký và ghi rõ họ tên)</i></span>
+                    </div>
+                    <div class="box">
+                        <p class="sign-name">Phụ trách</p>
+                        <span><i>(Ký và ghi rõ họ tên)</i></span>
+                    </div>
+                </div>
+            </div>*@
+        </div>
+    </main>
+    <script type="text/javascript" src="/App_Themes/js/moment.js"></script>
+    <script src="~/App_Themes/js/jquery.js"></script>
+    @*<script type="text/javascript" src="js/jquery-3.2.1.slim.min.js"></script>
+        <script type="text/javascript" src="js/popper.min.js"></script>
+        <script type="text/javascript" src="../js/bootstrap.min.js"></script>*@
+    <script>
+
+        $(document).ready(function () {
+            window.print();
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutMaster.cshtml";
+}
+
+<style>
+    .table tr.selected td {
+        color: white !important;
+    }
+
+    #table-chinhanh td {
+        color: #212529;
+    }
+
+    /*.modal-dialog,
+    .modal-content {*/
+        /* 80% of window height */
+        /*height: 80%;
+    }
+
+    .modal-body {*/
+        /* 100% = dialog height, 120px = header + footer */
+        /*max-height: calc(100% - 120px);
+        overflow-y: auto;
+    }*/
+</style>
+
+<main class="wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ql-user user-table wrap-table-pq">
+                    <div class="user-table__header">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="list-button text-left">
+                                    <a href="#" class="btn inline" id="btn-insert-chi-nhanh">
+                                        <img src="/App_Themes/assets/images/btn-add.png"
+                                             alt="" class="inline">
+                                        <span class="inline">Thêm</span>
+                                    </a>
+                                    <a href="#" class="btn inline" id="btn-update-chi-nhanh">
+                                        <img src="/App_Themes/assets/images/btn-fix.png"
+                                             alt="" class="inline"><span class="inline">Sửa</span>
+                                    </a>
+                                    <a href="#" class="btn inline" id="btn-delete-chi-nhanh">
+                                        <img src="/App_Themes/assets/images/btn-del.png"
+                                             alt="" class="inline"><span class="inline">Xóa</span>
+                                    </a>
+                                    <a href="#" class="btn inline" id="btn-reset-chi-nhanh">
+                                        <img src="/App_Themes/assets/images/btn-import.png"
+                                             alt="" class="inline"><span class="inline">Nạp</span>
+                                    </a>
+                                    @*<a href="javascript:;" class="btn btn-send-email inline disabled">
+                                            <img src="/App_Themes/assets/images/btn-note.png"
+                                                 alt="" class="inline"><span class="inline">Notes</span>
+                                        </a>*@
+                                    @*<a href="javascript:;" class="btn inline" id="btn-print-chi-nhanh">
+                                            <img src="/App_Themes/assets/images/btn-print.png"
+                                                 alt="" class="inline"><span class="inline">In</span>
+                                        </a>*@
+                                    <a href="#" class="btn inline" id="btn-export-chi-nhanh">
+                                        <img src="/App_Themes/assets/images/paste-excel.png"
+                                             alt="" class="inline"><span class="inline">Excel</span>
+                                    </a>
+                                    <a href="#excel-chinhanh" data-toggle="modal" class="btn btn-export inline">
+                                        <img src="/App_Themes/assets/images/btn-import-2.png"
+                                             alt="" class="inline"><span class="inline">Nhập</span>
+                                    </a>
+                                    @*<a href="javascript:;" class="btn btn-export inline disabled">
+                                            <img src="/App_Themes/assets/images/nhapkh.png"
+                                                 alt="" class="inline"><span class="inline">Nhập KHCS</span>
+                                        </a>*@
+
+                                    @*<a href="javascript:;" class="btn btn-close inline disabled">
+                                            <img src="/App_Themes/assets/images/btn-close.png"
+                                                 alt="" class="inline"><span class="inline">Đóng</span>
+                                        </a>*@
+                                    @*<a href="javascript:;" class="btn inline disabled">
+                                            <img src="/App_Themes/assets/images/question.png"
+                                                 alt="" class="inline"><span class="inline">Hỏi</span>
+                                        </a>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wrap-height-table">
+                        <table class="table display nowrap table-striped row-border
+                        order-column fixed-2-column table-chinhanh"
+                               id="table-chinhanh" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tên chi nhánh</th>
+                                    <th>Mô tả</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thêm chi nhánh -->
+    <div class="modal fade default-popup popup-them-chi-nhanh" id="them-chi-nhanh"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Chi nhánh
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <div class="box-border">
+                                    <p class="box-border__title bg-gray"> Thông tin chi nhánh</p>
+                                    <input type="hidden" name="idChiNhanh" />
+                                    <div class="form-group">
+                                        <label for="">Tên chi nhánh</label>
+                                        <input type="text" name="tenChiNhanh" required="" style="width: 100%;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Mô tả</label>
+                                        <textarea name="moTaChiNhanh" cols="30" rows="3" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-primary" id="btn-save-chi-nhanh">Lưu</button>
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Thoát
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Nhập excel-->
+    <div class="modal fade default-popup popup-danh-sach-khach-hang" id="excel-chinhanh" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title title-popup" id="exampleModalLongTitle">
+                        Import chi nhánh
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid wrap-table-2 table-mat-hang p-0">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="wrap-height-table-2 bg-white p-2 mt-2 border" style="max-height: 250px;">
+                                    <p class="title-special">Danh sách chi nhánh chưa tồn tại trong hệ thống</p>
+                                    <div class="box-border p-2" style="border: none;">
+                                        <table class="table display table-striped" style="width: 100%;" id="table-chi-nhanh-chua-co">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Tên chi nhánh</th>
+                                                    <th>Ghi chú</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="form-inline" style="margin-top: .5rem !important;">
+                                    <span>Số bản ghi: </span> <span class="ml-5 count-new-chi-nhanh">0</span>
+                                    @*<button type="button" class="btn btn-primary" style="margin-left: 15%;" disabled>Ghi thêm mới</button>*@
+                                    <div class="ml-auto">
+                                        <button type="button" class="btn btn-primary btn-save-chi-nhanh-excel" value="0" disabled="disabled">Ghi thêm mới</button>
+                                        @*<button type="button" class="btn btn-primary">Export</button>
+                                        <button type="button" class="btn btn-primary">Validate</button>*@
+                                    </div>
+                                </div>
+
+                                <div class="wrap-height-table-2 bg-white p-2 mt-2 border" style="max-height: 250px;">
+                                    <p class="title-special">Danh sách chi nhánh đã tồn tại trong hệ thống</p>
+                                    <div class="box-border p-2" style="border: none;">
+                                        <table class="table display table-striped" style="width: 100%;" id="table-chi-nhanh-da-co">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Tên chi nhánh</th>
+                                                    <th>Ghi chú</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="form-inline" style="margin-top: .5rem !important;">
+                                    <span>Số bản ghi: </span> <span class="ml-5 count-old-chi-nhanh">0</span>
+                                    @*<button type="button" class="btn btn-primary" style="margin-left: 15%;" disabled>Ghi sửa thông tin</button>*@
+                                    <div class="ml-auto">
+                                        <button type="button" class="btn btn-primary btn-save-chi-nhanh-excel" value="1" disabled="disabled">Ghi sửa thông tin</button>
+                                        @*<button type="button" class="btn btn-primary">Export</button>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer mt-2">
+                        <div class="w-100">
+                            @*<p>Tìm Excel Sheets để nhập</p>
+                            <select name="slExcel" id=""></select>
+                            <input type=file name="excelMatHang" style="display: none">
+                            <button id="btn-import-mat-hang-excel" class="btn btn-default ">
+                                <img src="~/App_Themes/assets/images/paste-excel.png" alt=""
+                                     class="inline"><span class="inline">Import</span>
+                            </button>*@
+
+                            <span>Tìm Excel Sheets để nhập</span>
+                            <select name="slExcel-chinhanh" id="" class="w-25"></select>
+                            <input type="file" name="excelChiNhanh" style="display: none">
+                            <button id="btn-import-chi-nhanh" class="btn btn-default">
+                                <span class="inline">Tìm file export</span>
+                            </button>
+                        </div>
+
+                        <button type="button" id="btn-reset-chi-nhanh-excel" class="btn btn-primary">Refrersh</button>
+                        <button type="button" class="btn btn-primary" id="btn-create-chi-nhanh-excel">Tạo template</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+
+@section myScripts{
+    <script src="~/PageScript/ChiNhanh/ChiNhanhJS.js"></script>
+}
